@@ -563,6 +563,9 @@ if(createShootInput.campaign_format !== undefined) {
 if(createShootInput.generation_mode !== undefined) {
  formData.append(`generation_mode`, createShootInput.generation_mode);
  }
+if(createShootInput.model_reference !== undefined) {
+ formData.append(`model_reference`, createShootInput.model_reference);
+ }
 createShootInput.references.forEach(value => formData.append(`references`, value));
 
   return customFetch<Shoot>(getCreateShootUrl(),
