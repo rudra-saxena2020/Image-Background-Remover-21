@@ -816,6 +816,7 @@ export const CreateShootBody = zod.object({
   "speed_mode": zod.enum(['fast', 'campaign']).default(createShootBodySpeedModeDefault),
   "campaign_format": zod.enum(['compact-6', 'flexible-8', 'front-back-7']).default(createShootBodyCampaignFormatDefault).describe('Compact six-image model lookbook, flexible eight-frame campaign, or strict two-reference seven-image campaign'),
   "generation_mode": zod.enum(['product-only', 'human-model']).default(createShootBodyGenerationModeDefault).describe('Product-only catalog generation or category-aware human-model generation'),
+  "model_reference": zod.instanceof(File).optional().describe('Dedicated model master image. Required for human-model generation.'),
   "references": zod.array(zod.instanceof(File)).min(1).max(createShootBodyReferencesMax)
 })
 
