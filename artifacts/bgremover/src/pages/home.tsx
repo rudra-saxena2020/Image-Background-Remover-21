@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Link } from "wouter";
 import { useCreateShoot, useGetShoot, useCancelShoot, getGetShootQueryKey } from "@workspace/api-client-react";
+import { apiFetch, apiUrl } from "@/lib/api";
 import type { Shoot, ShootShot, CreateShootInput } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -182,7 +183,7 @@ export function Home() {
     setShopifyLoading(true);
     setShopifyError(null);
     try {
-      const response = await fetch(`/api/shopify/products?query=${encodeURIComponent(shopifyQuery)}`);
+      const response = await apiFetch(`/api/shopify/products?query=${encodeURIComponent(shopifyQuery)}`);
       const body = await response.json().catch(() => null);
       if (!response.ok) throw new Error(body?.detail || "Shopify products could not be loaded.");
       setShopifyProducts(Array.isArray(body) ? body as ShopifyProduct[] : []);
@@ -359,7 +360,7 @@ export function Home() {
     let mounted = true;
     const loadGenerationStatus = async () => {
       try {
-        const response = await fetch("/api/health");
+        const response = await apiFetch("/api/health");
         if (!response.ok) throw new Error("Generation status unavailable");
         const payload = await response.json() as { generation?: GenerationOptions };
         if (mounted) setGeneration(payload.generation ?? {});
@@ -442,12 +443,12 @@ export function Home() {
   };
   const downloadFrame = async (shot: ShootShot) => {
     if (!shot.image_url) return;
-    const a = document.createElement("a"); a.href = shot.image_url; a.download = `${productName}_${String(shot.number).padStart(2, "0")}.${output}`; a.target = "_blank"; a.click();
+    const a = document.createElement("a"); a.href = apiUrl(shot.image_url); a.download = `${productName}_${String(shot.number).padStart(2, "0")}.${output}`; a.target = "_blank"; a.click();
   };
   const downloadAll = async () => {
     if (!shootId) return;
     try {
-      const response = await fetch(`/api/shoots/${shootId}/export`);
+      const response = await apiFetch(`/api/shoots/${shootId}/export`);
       if (!response.ok) {
         const body = await response.json().catch(() => null);
         throw new Error(body?.detail || `Export failed (${response.status})`);

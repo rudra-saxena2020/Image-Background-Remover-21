@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2, Download, Play, CheckCircle2, XCircle, Clock, ArchiveRestore, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { apiFetch } from "@/lib/api";
 import JSZip from "jszip";
 
 type BatchItem = {
@@ -76,7 +77,7 @@ export function Batch() {
         formData.append('image', items[i].file);
         formData.append('quality', 'fast'); // Defaulting to fast for batch
         
-        const res = await fetch('/api/remove-background', { 
+        const res = await apiFetch('/api/remove-background', {
           method: 'POST', 
           body: formData 
         });

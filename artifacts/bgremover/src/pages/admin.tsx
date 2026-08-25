@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { Activity, CheckCircle2, CircleAlert, DollarSign, Gauge, Layers3, RefreshCw } from "lucide-react";
 
 type Metrics = {
@@ -50,7 +51,7 @@ export function Admin() {
   const load = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/admin/metrics");
+      const response = await apiFetch("/api/admin/metrics");
       if (!response.ok) throw new Error(`Metrics unavailable (${response.status})`);
       setMetrics(await response.json());
       setError(null);

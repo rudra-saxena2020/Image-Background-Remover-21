@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiFetch } from "@/lib/api";
 import { Download, Image as ImageIcon, LoaderCircle, UploadCloud, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -19,7 +20,7 @@ export function BackgroundRemoval() {
     setBusy(true);
     try {
       const form = new FormData(); form.append("image", file); form.append("quality", "fast");
-      const response = await fetch("/api/remove-background", { method: "POST", body: form });
+      const response = await apiFetch("/api/remove-background", { method: "POST", body: form });
       if (!response.ok) throw new Error(`${response.status} — Could not process this image.`);
       const blob = await response.blob(); setResult(URL.createObjectURL(blob));
     } catch (error) {

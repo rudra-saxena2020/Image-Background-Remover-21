@@ -3,6 +3,7 @@ import { getGetHistoryQueryKey, useGetHistory } from "@workspace/api-client-reac
 import { Button } from "@/components/ui/button";
 import { Download, Clock, Image as ImageIcon, LayoutGrid, Calendar, Activity } from "lucide-react";
 import { format } from "date-fns";
+import { apiFetch, apiUrl } from "@/lib/api";
 
 export function History() {
   const { data: history, isLoading } = useGetHistory({
@@ -14,7 +15,7 @@ export function History() {
 
   const handleDownload = async (url: string, filename: string) => {
     try {
-      const response = await fetch(url);
+      const response = await apiFetch(url);
       const blob = await response.blob();
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -153,7 +154,7 @@ function PaidShootHistory() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/shoots/history")
+    apiFetch("/api/shoots/history")
       .then((response) => {
         if (!response.ok) throw new Error("Paid shoot history unavailable");
         return response.json();
@@ -200,7 +201,7 @@ function PaidShootHistory() {
                   <span className="uppercase tracking-wider">{shoot.status}</span>
                   <span>{shoot.provider_request_count} requests</span>
                   <strong className="text-sm">${shoot.provider_cost_usd.toFixed(4)}</strong>
-                  {shoot.status.toLowerCase() === "completed" && <a href={`/api/shoots/${shoot.id}/export`} download className="text-primary hover:underline">Download ZIP</a>}
+                  {shoot.status.toLowerCase() === "completed" && <a href={apiUrl(`/api/shoots/${shoot.id}/export`)} download className="text-primary hover:underline">Download ZIP</a>}
                 </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3 p-4">
