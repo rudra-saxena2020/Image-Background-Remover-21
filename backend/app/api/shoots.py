@@ -498,13 +498,18 @@ CAMPAIGN_POLICY = (
 PRODUCT_ONLY_MASTER_PROMPT = (
     "PRODUCT-ONLY CATALOG MODE: generate no human, model, hands, props, packaging or environmental scene. "
     "The uploaded product reference is the single source of truth. Preserve the exact product identity, silhouette, "
-    "proportions, handles, straps, pockets, zippers, seams, stitching, hardware, logos, patterns, color, material "
-    "texture and construction. Never redesign, beautify, simplify or invent unseen details. Use controlled luxury "
+    "proportions, dimensions, geometry, panels, handles, straps, pockets, zippers, seams, stitching, piping, edges, "
+    "hardware, buckles, rings, chains, logos, branding, patterns, color, color distribution, material texture, metal "
+    "finish and construction. Every permanently attached component must keep its exact type, count, length, thickness, "
+    "shape, hardware, attachment points and physical relationship to the product; its visibility may change only through "
+    "natural perspective or occlusion. Never redesign, beautify, simplify or invent unseen details. Use controlled luxury "
     "e-commerce catalog photography comparable to premium Coach product listings: front hero, three-quarter, side "
     "or rear view, and detail views only when supported by the references. Keep every full product centered, fully "
     "visible, undistorted and consistently scaled with generous margins. Use soft controlled studio lighting, accurate "
     "color and realistic material detail. No extreme perspective, fisheye distortion, stretched geometry, cropped "
-    "handles, extra products, text or watermark. Do not fabricate an interior or hidden construction."
+    "handles, extra products, text or watermark. Do not fabricate an interior or hidden construction. The only allowed "
+    "meaningful change is camera viewpoint and framing; do not physically rearrange, open, unzip, unfold, deform, "
+    "recolor, tint, brighten, darken, add, remove, duplicate, merge, replace or modify any part of the product."
 )
 
 PRODUCT_ONLY_CAMPAIGN_POLICY = (
@@ -513,7 +518,9 @@ PRODUCT_ONLY_CAMPAIGN_POLICY = (
     "source of truth. Preserve the exact product shape, dimensions, color, material, grain, fabric, stitching, pattern, "
     "logo, embossing, hardware, buckles, handles, strap length, zippers, interior and proportions. Treat all supplied "
     "references as views of one fixed physical object. Lock the product's geometry, material, color, hardware, branding, "
-    "closure, camera scale, background tone, white balance and shadow treatment across the gallery. Reject redesigns, "
+    "closure, camera scale, background tone, white balance and shadow treatment across the gallery. Change only the "
+    "camera viewpoint and framing around the same fixed product; keep the studio setup and product configuration fixed. "
+    "Reject redesigns, "
     "hallucinated features, missing details, warped geometry, extra products, text, watermark, color drift, scale drift, "
     "contradictory silhouettes or physically impossible openings."
 )
