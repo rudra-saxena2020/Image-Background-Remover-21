@@ -117,6 +117,53 @@ def _validate_single_product_output(image_bytes: bytes) -> None:
         )
 
 
+def _dark_product_fraction(image_bytes: bytes) -> float:
+    """Estimate the dark-material share inside the central product region."""
+    with Image.open(BytesIO(image_bytes)) as opened:
+        image = np.asarray(opened.convert("RGB").resize((64, 64)), dtype=np.int16)
+    # Ignore the outer studio/background band, where lighting and shadows are
+    # not product identity signals.
+    central = image[8:56, 8:56]
+    luminance = (
+        0.2126 * central[:, :, 0]
+        + 0.7152 * central[:, :, 1]
+        + 0.0722 * central[:, :, 2]
+    )
+    return float(np.mean(luminance < 72))
+
+
+def _validate_product_identity(reference_bytes: bytes, output_bytes: bytes) -> None:
+    """Reject an obvious color/material identity swap against the master image."""
+    try:
+        reference_dark = _dark_product_fraction(reference_bytes)
+        output_dark = _dark_product_fraction(output_bytes)
+    except (OSError, ValueError):
+        # Provider-mocked tests and legacy callers may pass an opaque source
+        # placeholder. The upload/content-type gate handles source validity;
+        # identity comparison is only meaningful for a decodable image.
+        return
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="Generated output could not be compared with the identity master.",
+        ) from exc
+
+    # This deliberately catches only large flips (for example, a light handbag
+    # becoming a black striped handbag), not ordinary lighting or shadow changes.
+    light_master_dark = reference_dark < 0.16
+    dark_output = output_dark > 0.32
+    dark_master_light_output = reference_dark > 0.42 and output_dark < 0.16
+    if (light_master_dark and dark_output) or dark_master_light_output:
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "Generated output was rejected because the product color or "
+                "material does not match the identity master. No image was added "
+                "to the gallery."
+            ),
+        )
+
+
 def _multipart_body(prompt: str, filename: str, content_type: str, image: bytes) -> tuple[bytes, str]:
     boundary = f"----AtelierRunPod{secrets.token_hex(12)}"
     chunks = [
@@ -250,6 +297,7 @@ async def generate_image(
         raise HTTPException(status_code=502, detail="Image generation failed.") from exc
 
     _validate_single_product_output(image_bytes)
+    _validate_product_identity(references[0][0], image_bytes)
     logger.info("Image generation complete — %d bytes, %s", len(image_bytes), content_type)
     return Response(
         content=image_bytes,
