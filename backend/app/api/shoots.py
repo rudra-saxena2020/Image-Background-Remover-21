@@ -143,6 +143,33 @@ SOURCE_IMAGE_ENFORCEMENT = (
     "references in any way, reject the frame and regenerate."
 )
 
+MODEL_CONSISTENCY_AND_REALISM_LOCK = (
+    "ABSOLUTE HUMAN MODEL CONSISTENCY AND REALISM LOCK — when a human model is included, treat the model as a "
+    "second fixed identity, completely separate from the product identity. A dedicated uploaded model reference, or "
+    "the first accepted model anchor from this campaign, is the absolute identity source. If multiple references show "
+    "the same approved model, use them together as evidence of one person. Preserve the same face, facial proportions, "
+    "eyes, nose, lips, jawline, skin tone and texture, hair color, length, style and hairline, body proportions, height "
+    "appearance, body shape, age appearance and distinguishing features in every frame. Never generate a similar-looking "
+    "person, a new model, or a different ethnicity, facial structure, hairstyle, age appearance, body proportion or "
+    "skin tone. The model reference defines WHO; the product references define WHAT. Never merge, replace or confuse "
+    "these identities. Unless a different outfit is explicitly requested, keep the exact same outfit, garment design, "
+    "clothing colors, material, accessories, shoes, styling and makeup across the set; if a different outfit is "
+    "requested, change only the clothing while preserving both identities. "
+    "REAL HUMAN PHOTOGRAPHY LOCK — the result must look like a real commercial fashion photograph, with natural pores, "
+    "subtle skin variation, realistic asymmetry, authentic hair strands, natural body proportions, physically correct "
+    "hands and fingers, realistic fabric interaction, natural shadows, authentic camera optics and believable depth. "
+    "Reject plastic, wax-like, over-smoothed or AI-beauty skin, CGI or cartoon features, doll-like symmetry, artificial "
+    "body proportions, extra or missing fingers, fused hands, broken anatomy, impossible joints, crossed eyes, warped "
+    "limbs or floating contact. "
+    "MODEL AND PRODUCT SCALE LOCK — preserve the product's true apparent size and believable scale relative to the "
+    "same model in every frame. Do not make the product larger, smaller, wider, taller, thicker or thinner to fit the "
+    "composition. The model may change pose, camera, framing, background or explicitly requested environment, but the "
+    "person must remain the same person and the product the same physical object. "
+    "FINAL TWO-IDENTITY VALIDATION — before accepting a frame, verify the same model face, hair, skin tone, body "
+    "proportions and distinguishing features AND the same product shape, color distribution, proportions, material, "
+    "straps, hardware, chains, construction, graphics and pattern. If either identity changes, reject and regenerate. "
+)
+
 
 def _engine_unavailable_detail(engine: str, generation: dict[str, object]) -> str:
     if engine == "flux1-runpod":
@@ -772,6 +799,12 @@ def _product_prompt(shoot: Shoot, shot_kind: str, attempt: int = 1, previous_cou
         SOURCE_IMAGE_ENFORCEMENT
         + " "
         + (PRODUCT_ONLY_MASTER_PROMPT if shoot.generation_mode == GENERATION_MODE_PRODUCT_ONLY else "")
+        + " "
+        + (
+            MODEL_CONSISTENCY_AND_REALISM_LOCK
+            if shoot.generation_mode == GENERATION_MODE_HUMAN_MODEL
+            else ""
+        )
         + " "
         + (
             PRODUCT_ONLY_CAMPAIGN_POLICY
