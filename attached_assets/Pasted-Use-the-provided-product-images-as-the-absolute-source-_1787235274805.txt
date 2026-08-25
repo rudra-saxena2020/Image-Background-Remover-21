@@ -1,0 +1,363 @@
+Use the provided product images as the **absolute source of truth** and generate a complete set of premium e-commerce product images following the same photography style, framing system, angles, spacing, and presentation shown in the provided Coach Outlet examples.
+
+## PRIMARY OBJECTIVE
+
+Create a **consistent multi-angle product image set** that looks like a premium luxury brand product gallery.
+
+The product itself must remain **100% accurate to the original reference**.
+
+Do not redesign, reinterpret, beautify, simplify, or modify the product.
+
+The goal is:
+
+**Exact original product + premium Coach-style studio photography + standardized angles + consistent image dimensions and framing.**
+
+---
+
+# PRODUCT ACCURACY IS THE HIGHEST PRIORITY
+
+The supplied product reference is the single source of truth.
+
+Preserve exactly:
+
+* Original product shape and silhouette
+* Exact proportions
+* Width, height, depth, and aspect ratio
+* Handle height and curvature
+* Strap placement and length
+* Shoulder strap and crossbody strap construction
+* Chains and hardware
+* Zippers
+* Stitching
+* Seams
+* Pockets
+* Panels
+* Edge finishing
+* Product logo and branding
+* Logo position and size
+* Colors
+* Color distribution
+* Leather grain
+* Fabric texture
+* Canvas pattern
+* Material thickness
+* Hardware finish
+* Natural folds and construction
+
+Do not change the physical design for aesthetic reasons.
+
+**Never stretch, widen, narrow, flatten, shrink, enlarge, or distort the product to fit the canvas.**
+
+---
+
+# CREATE THESE PRODUCT GALLERY ANGLES
+
+Generate the appropriate angles based on the actual product type and available reference information.
+
+### IMAGE 1: FRONT HERO VIEW
+
+Create a clean, straight-on front-facing product image.
+
+Requirements:
+
+* Product centered horizontally
+* Product sitting naturally
+* Camera at product level
+* Minimal perspective distortion
+* Entire product visible
+* Handles and straps fully visible
+* Consistent space around the product
+* Premium catalog composition
+
+This should be the primary hero image.
+
+---
+
+### IMAGE 2: THREE-QUARTER FRONT VIEW
+
+Create a slightly rotated three-quarter angle.
+
+Show realistic product depth while preserving proportions.
+
+Requirements:
+
+* Approximately 20 to 45 degree rotation when appropriate
+* Natural perspective
+* No exaggerated depth
+* No wide-angle distortion
+* Product remains centered
+* Entire product visible
+* Same visual scale as the hero image
+
+---
+
+### IMAGE 3: SIDE PROFILE VIEW
+
+Show the actual side construction of the product.
+
+Requirements:
+
+* Accurate product depth
+* Correct gusset structure
+* Correct strap attachment
+* Correct zipper and hardware placement
+* No invented side details
+
+Do not generate this angle unless the product structure can be accurately determined from the reference images.
+
+---
+
+### IMAGE 4: BACK VIEW
+
+Generate a clean rear-facing product image.
+
+Requirements:
+
+* Match the exact back construction
+* Preserve seams and stitching
+* Preserve pockets if they exist
+* Preserve handle attachment points
+* Preserve all visible construction details
+
+Never invent a rear pocket, logo, zipper, or decorative element.
+
+---
+
+### IMAGE 5: OPEN / INTERIOR VIEW
+
+If the reference product supports an interior view, generate a professional top-down or elevated angle showing the inside.
+
+Show only accurate interior details.
+
+Preserve:
+
+* Lining color
+* Interior pockets
+* Compartments
+* Zippers
+* Interior structure
+* Closure mechanism
+
+Do not add random items inside the product unless specifically requested.
+
+---
+
+### IMAGE 6: DETAILED ANGLE
+
+Generate an elevated or angled product shot showing important construction details while keeping the entire product recognizable.
+
+Examples include:
+
+* Open zipper view
+* Top opening
+* Interior structure
+* Strap and hardware detail
+* Functional compartments
+
+Only create details that genuinely exist in the reference.
+
+---
+
+# CAMERA AND COMPOSITION SYSTEM
+
+Every generated image must use a **consistent premium e-commerce photography system**.
+
+Match the visual structure of the supplied examples:
+
+* Large clean canvas
+* Product centered
+* Product occupies a consistent percentage of the image
+* Generous empty space around the product
+* Similar top margin
+* Similar bottom margin
+* Consistent left and right spacing
+* No random zoom differences between images
+
+The product should generally occupy approximately **60% to 75% of the canvas height**, depending on its natural shape and handles.
+
+For tall products with long handles, scale the complete product down enough that:
+
+* Nothing is cropped
+* Handles remain fully visible
+* The product does not touch the top edge
+* The product does not touch the bottom edge
+* All images remain visually consistent
+
+**Never make one angle dramatically larger or smaller than another.**
+
+---
+
+# BACKGROUND AND STUDIO LOOK
+
+Use a clean, minimal luxury e-commerce studio environment matching the supplied examples.
+
+Background:
+
+* Very light warm grey or off-white
+* Clean seamless studio background
+* No visible walls
+* No props
+* No decorative elements
+* No environment
+* No distracting textures
+
+Add only a very subtle, realistic soft shadow directly beneath or slightly behind the product.
+
+The shadow must:
+
+* Be soft
+* Be subtle
+* Follow the product's natural contact points
+* Not look painted
+* Not overpower the product
+* Remain consistent across the entire image set
+
+Do not use dramatic shadows or floating products.
+
+---
+
+# LIGHTING
+
+Use soft professional studio lighting.
+
+The lighting should reveal:
+
+* Leather texture
+* Fabric texture
+* Stitching
+* Hardware
+* Product depth
+* Natural shape
+
+Avoid:
+
+* Harsh shadows
+* Dramatic lighting
+* Cinematic lighting
+* Colored lighting
+* Excessive reflections
+* Excessive gloss
+* Artificial HDR
+* Plastic-looking surfaces
+* Over-smoothing
+
+The product must look like a real professionally photographed physical item.
+
+---
+
+# CONSISTENT PAGE-SAFE DIMENSIONS
+
+This is critical.
+
+All generated images must use the **exact same output canvas dimensions and aspect ratio**.
+
+The image system must be designed so that replacing or uploading images into an e-commerce product gallery causes:
+
+* No page layout shift
+* No inconsistent product image height
+* No broken gallery layout
+* No unexpected cropping
+* No oversized product on one image
+* No tiny product on another image
+
+Standardize the product placement across the complete image set.
+
+**Maintain consistent canvas dimensions, consistent framing, and consistent product scale while preserving the product's real proportions.**
+
+Do not solve framing by stretching or distorting the product.
+
+---
+
+# STRICT QUALITY CONTROL
+
+Before finalizing each generated image, verify:
+
+1. Is this the exact same product as the reference?
+2. Is the shape accurate?
+3. Are the proportions correct?
+4. Are the handles and straps accurate?
+5. Is the logo accurate and correctly positioned?
+6. Is the texture preserved?
+7. Are the materials realistic?
+8. Is the camera angle natural?
+9. Is the entire product visible?
+10. Is the product centered consistently?
+11. Does the image match the same scale as the other gallery images?
+12. Does the background match the premium clean studio style?
+13. Is the shadow subtle and realistic?
+14. Will this image maintain a consistent height inside an e-commerce product gallery?
+
+If any answer is no, regenerate the image.
+
+---
+
+# STRICT NEGATIVE INSTRUCTIONS
+
+Do NOT:
+
+* Redesign the product
+* Change the shape
+* Change proportions
+* Change dimensions
+* Change handle height
+* Change strap placement
+* Add or remove hardware
+* Add or remove pockets
+* Invent details
+* Change stitching
+* Change texture
+* Make leather look like plastic
+* Change the logo
+* Misspell branding
+* Add fake branding
+* Crop the product
+* Cut off handles or straps
+* Use extreme perspective
+* Use a wide-angle lens effect
+* Create inconsistent product scale
+* Zoom randomly between images
+* Add props
+* Add people or hands
+* Add text
+* Add labels
+* Add watermarks
+* Add distracting backgrounds
+
+---
+
+# FINAL OUTPUT
+
+Generate a **complete premium e-commerce product gallery** using the supplied reference product.
+
+The final image set should feel visually consistent with the provided Coach Outlet examples:
+
+**Clean luxury studio presentation
+Centered product
+Soft neutral background
+Subtle natural shadow
+Professional catalog lighting
+Front view
+Three-quarter view
+Side view where accurate
+Back view
+Open/interior view where applicable
+Detail angle where applicable
+Consistent product scale
+Identical canvas dimensions
+Zero page layout disruption**
+
+## PRIORITY ORDER
+
+**1. Exact product identity and geometry**
+
+**2. Correct material, texture, logo, stitching, hardware and construction**
+
+**3. Accurate product angles**
+
+**4. Consistent framing and scale across every generated image**
+
+**5. Premium clean Coach-style e-commerce photography**
+
+**6. Soft neutral studio background and subtle shadow**
+
+Never sacrifice product accuracy for a more attractive AI-generated image.

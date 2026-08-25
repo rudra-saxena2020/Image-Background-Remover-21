@@ -1,0 +1,150 @@
+======================================================================
+ATELIER COLAB WORKER
+======================================================================
+
+[1/10] Installing dependencies...
+Dependencies installed.
+
+[2/10] Checking NVIDIA CUDA GPU...
+CUDA available: True
+GPU: Tesla T4
+VRAM: 14.56 GB
+CUDA: 12.8
+PyTorch: 2.11.0+cu128
+
+[3/10] NVIDIA status...
+
+[4/10] Creating Atelier FastAPI worker...
+
+[5/10] Running worker preflight...
+worker: atelier-colab
+required_routes_present: True
+
+Required routes:
+  /batch
+  /cancel/{job_id}
+  /generate
+  /health
+  /job/{job_id}
+  /verify
+
+[6/10] Starting FastAPI server...
+INFO:     Started server process [2761]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:7860 (Press CTRL+C to quit)
+
+[7/10] Testing local worker...
+INFO:     127.0.0.1:47952 - "GET /health HTTP/1.1" 200 OK
+Local /health: 200
+
+[8/10] Checking local OpenAPI...
+INFO:     127.0.0.1:47954 - "GET /openapi.json HTTP/1.1" 200 OK
+OpenAPI routes:
+  /
+  /batch
+  /cancel/{job_id}
+  /generate
+  /health
+  /job/{job_id}
+  /verify
+
+OpenAPI required routes: PASS
+
+[9/10] Starting ngrok tunnel...
+
+======================================================================
+ATELIER COLAB WORKER URL
+======================================================================
+https://entourage-happiness-vastly.ngrok-free.dev
+======================================================================
+
+[10/10] Testing public worker...
+INFO:     34.143.229.226:0 - "GET /health HTTP/1.1" 200 OK
+Public /health: 200
+{
+  "status": "ok",
+  "worker": "atelier-colab",
+  "service": "atelier-colab-worker",
+  "gpu": true,
+  "gpu_name": "Tesla T4",
+  "vram_gb": 14.56,
+  "cuda": "12.8",
+  "pytorch": "2.11.0+cu128",
+  "models": [],
+  "generation_ready": false,
+  "verification": "NOT_VERIFIED"
+}
+INFO:     34.143.229.226:0 - "GET /openapi.json HTTP/1.1" 200 OK
+
+Public /openapi.json: 200
+
+PUBLIC ROUTES:
+  /
+  /batch
+  /cancel/{job_id}
+  /generate
+  /health
+  /job/{job_id}
+  /verify
+
+Authentication test...
+INFO:     34.143.229.226:0 - "GET /health HTTP/1.1" 401 Unauthorized
+Wrong token status: 401
+INFO:     34.143.229.226:0 - "GET /health HTTP/1.1" 200 OK
+Correct token status: 200
+
+
+======================================================================
+ATELIER COLAB WORKER READY
+======================================================================
+worker: atelier-colab
+required_routes_present: True
+GPU: Tesla T4
+VRAM: 14.56 GB
+CUDA: 12.8
+FastAPI: ONLINE
+Authentication: PASS
+OpenAPI: PASS
+Public URL:
+https://entourage-happiness-vastly.ngrok-free.dev
+======================================================================
+
+IMPORTANT:
+
+The worker API is now operational.
+
+However, image generation is NOT marked VERIFIED yet.
+
+The actual image model must be installed and loaded before:
+
+/verify
+
+can legitimately return VERIFIED.
+
+Do NOT submit a fake verification result.
+
+Next stage:
+
+GPU
+  ↓
+Install/load actual image model
+  ↓
+Product references
+  ↓
+Real handbag + female model generation
+  ↓
+Product identity validation
+  ↓
+Human validation
+  ↓
+Contact validation
+  ↓
+Verification
+
+
+Copy this URL into Replit:
+https://entourage-happiness-vastly.ngrok-free.dev
+
+Use this same worker token in Replit:
+[HIDDEN - use the value you configured]

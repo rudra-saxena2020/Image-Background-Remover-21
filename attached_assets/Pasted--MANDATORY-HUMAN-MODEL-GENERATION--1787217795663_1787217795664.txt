@@ -1,0 +1,285 @@
+==================================================
+MANDATORY HUMAN MODEL GENERATION
+==================================================
+
+HUMAN MODEL GENERATION IS REQUIRED.
+
+For every frame marked as a MODEL FRAME, the system must generate a complete, photorealistic human model or the appropriate visible human body part interacting naturally with the uploaded product.
+
+A product-only image is a FAILURE for any model frame.
+
+A flat cutout composited onto a human image is also a FAILURE.
+
+The final image must look like a real professional fashion or ecommerce photoshoot where a real person is physically using the actual product.
+
+MODEL FRAMES MUST NOT FALL BACK TO:
+
+- Product-only generation
+- Background replacement only
+- Simple product cutout compositing
+- Empty studio scene
+- Generic AI mannequin
+- Cropped or missing human when a full model is required
+- Invisible model
+- Product floating beside the person
+
+==================================================
+PRODUCT-AWARE HUMANIZATION ENGINE
+==================================================
+
+Before generating each model frame, automatically determine the correct type of human interaction based on the product category.
+
+BAGS / HANDBAGS / TOTES:
+
+Generate a realistic adult fashion model.
+
+The model must physically:
+
+- Hold the bag
+- Carry the bag
+- Wear the bag on the shoulder
+- Carry it in the hand
+- Carry it on the arm
+
+depending on the selected frame direction.
+
+The bag must have realistic weight, scale and gravity.
+
+The hand must naturally grip the real handle or strap.
+
+The fingers must wrap around the handle correctly.
+
+The bag must not float.
+
+The bag must not pass through the arm, hand or body.
+
+The model must visibly interact with the exact uploaded product.
+
+WATCHES:
+
+Generate a realistic human wrist and hand.
+
+The watch must actually be worn on the wrist.
+
+The watch strap must wrap naturally around the wrist.
+
+The watch must have correct scale and orientation.
+
+Do not generate a floating watch.
+
+Do not generate a generic watch.
+
+Use the exact uploaded watch design.
+
+CLOTHING:
+
+Generate a realistic adult fashion model actually wearing the uploaded garment.
+
+The clothing must naturally follow the body's anatomy.
+
+The garment must preserve:
+
+- Design
+- Shape
+- Color
+- Pattern
+- Fabric
+- Sleeves
+- Collar
+- Buttons
+- Pockets
+- Stitching
+
+JEWELRY:
+
+Generate the appropriate human body area.
+
+For example:
+
+Necklace → realistic neck and upper body
+Earrings → realistic ears and face
+Ring → realistic hand
+Bracelet → realistic wrist
+Sunglasses → realistic face
+
+The product must be physically worn correctly.
+
+SHOES:
+
+Generate realistic human legs and feet.
+
+The uploaded shoes must be actually worn by the model.
+
+The feet and shoes must have correct anatomy and scale.
+
+==================================================
+MODEL GENERATION LOCK
+==================================================
+
+For one product campaign, generate and lock ONE MODEL IDENTITY.
+
+The same person must appear in all model frames for that specific product.
+
+Example:
+
+Frame 2 → Model A holding the product
+Frame 3 → Same Model A from another angle
+Frame 6 → Same Model A in lifestyle scene
+Frame 8 → Same Model A in a different pose
+
+Maintain consistency in:
+
+- Facial structure
+- Skin tone
+- Hair
+- Hair length
+- Body proportions
+- Age range
+
+The model may change:
+
+- Pose
+- Camera angle
+- Position
+- Expression
+- Scene
+- Styling when appropriate
+
+DO NOT generate a completely different person for each frame.
+
+For a new product, select a new model identity when appropriate.
+
+==================================================
+MANDATORY MODEL PROMPT
+==================================================
+
+For every MODEL FRAME, include instructions equivalent to:
+
+"MANDATORY HUMAN MODEL FRAME.
+
+Generate a photorealistic adult human fashion model physically and naturally interacting with the exact uploaded product.
+
+The human model must be clearly present in the final image.
+
+This is NOT a product-only shot.
+
+This is NOT a flat product composited onto a background.
+
+The model must physically hold, wear, carry or use the exact uploaded product according to its real-world function.
+
+The uploaded product references are the absolute source of truth.
+
+Preserve the exact product silhouette, proportions, material, texture, color, stitching, hardware, handles, straps and all distinctive details.
+
+The model must have realistic anatomy.
+
+Hands must have anatomically correct fingers and natural grip.
+
+The product must have realistic physical contact with the human body.
+
+No floating product.
+No product clipping.
+No broken hands.
+No extra fingers.
+No missing fingers.
+No distorted face.
+No distorted limbs.
+
+Generate a real luxury fashion photography composition, as if photographed by a professional commercial photographer.
+
+The final result must look like a real human model using the actual physical product."
+
+==================================================
+MODEL FRAME VALIDATION
+==================================================
+
+A model frame is VERIFIED only if ALL conditions are true:
+
+1. A human model or required human body part is visibly present.
+
+2. The human is actually interacting with the product.
+
+3. The product is the same product as the uploaded references.
+
+4. The product is not floating.
+
+5. The product is not simply pasted onto the image.
+
+6. Hands and visible anatomy are realistic.
+
+7. The product has correct scale relative to the human.
+
+8. The image has realistic lighting, shadows and physical interaction.
+
+If HUMAN_PRESENT = FALSE:
+
+FAIL THE FRAME.
+
+If PRODUCT_INTERACTION = FALSE:
+
+FAIL THE FRAME.
+
+If PRODUCT_IDENTITY = FAILED:
+
+FAIL THE FRAME.
+
+If HUMAN_ANATOMY = FAILED:
+
+FAIL THE FRAME.
+
+DO NOT mark the image READY.
+
+DO NOT silently replace the failed model frame with a product-only image.
+
+Instead:
+
+REGENERATE WITH HUMAN MODEL REQUIRED.
+
+==================================================
+FRAME REQUIREMENTS
+==================================================
+
+FRAME 1:
+PRODUCT ONLY
+
+FRAME 2:
+MANDATORY HUMAN MODEL
+Model naturally holding, carrying or wearing the product.
+
+FRAME 3:
+MANDATORY SAME HUMAN MODEL
+Different pose and camera angle.
+
+FRAME 4:
+PRODUCT DETAIL
+
+FRAME 5:
+ALTERNATIVE PRODUCT ANGLE
+
+FRAME 6:
+MANDATORY SAME HUMAN MODEL
+Lifestyle or editorial scene with real physical interaction.
+
+FRAME 7:
+PRODUCT CLOSE-UP
+
+FRAME 8:
+MANDATORY SAME HUMAN MODEL
+Clearly different pose, angle and composition.
+
+==================================================
+CRITICAL FAILURE RULE
+==================================================
+
+NEVER substitute a required human-model frame with:
+
+- Product-only image
+- Empty scene
+- Cutout composite
+- Generic mannequin
+- Product placed next to a person
+- Product floating near a person
+
+IF A HUMAN MODEL IS REQUIRED, GENERATE A HUMAN MODEL.
+
+IF THE MODEL IS NOT PRESENT OR NOT PHYSICALLY INTERACTING WITH THE PRODUCT, THE GENERATION HAS FAILED AND MUST BE RETRIED.

@@ -1,0 +1,234 @@
+Yes. The biggest improvement is to force the AI to **use the uploaded product images as the primary source of truth** instead of treating them as inspiration.
+
+Add this section near the top of your prompt.
+
+---
+
+# SOURCE IMAGE ENFORCEMENT (HIGHEST PRIORITY)
+
+The uploaded product images are the **only source of truth**.
+
+Every generated image must be created directly from the uploaded reference images using image-to-image conditioning or image editing, **not from text imagination alone**.
+
+The AI must always use the uploaded product images as the primary visual source.
+
+Never recreate the product from memory.
+
+Never redesign the product.
+
+Never approximate the product.
+
+Never invent missing details.
+
+Every generated image must preserve the uploaded product exactly.
+
+---
+
+# Reference Image Understanding
+
+The user may upload between **1 and 6 reference images**.
+
+Examples:
+
+* Front View
+* Back View
+* Left View
+* Right View
+* Top View
+* Close-up Details
+
+Before generating any image, analyze every uploaded reference.
+
+Build a complete Product Identity Profile containing:
+
+* Exact dimensions
+* Exact shape
+* Material
+* Texture
+* Leather grain
+* Fabric
+* Stitching
+* Logo placement
+* Hardware
+* Handle design
+* Strap design
+* Interior
+* Exterior
+* Color
+* Pattern
+* Product proportions
+
+Lock this profile for the entire generation.
+
+---
+
+# Source Image Lock
+
+The uploaded images are immutable.
+
+The generated product must remain identical to the uploaded references.
+
+Never change:
+
+* Shape
+* Width
+* Height
+* Thickness
+* Color
+* Material
+* Stitching
+* Hardware
+* Logo
+* Pattern
+* Texture
+* Handles
+* Straps
+* Buckles
+* Zip
+* Leather grain
+* Fabric weave
+* Product proportions
+
+If any generated image changes the product in any way, discard it and regenerate.
+
+---
+
+# Image Editing Mode
+
+Do **NOT** create a new product from a text prompt.
+
+Instead:
+
+1. Read the uploaded reference images.
+2. Extract the exact product.
+3. Preserve the product.
+4. Generate a new environment around it.
+
+Only modify:
+
+* Background
+* Lighting
+* Camera angle
+* Composition
+* Human model
+* Pose
+* Environment
+
+Never modify the product itself.
+
+---
+
+# Human Model Integration
+
+If the detected category requires a human model, **compose the uploaded product onto a newly generated human scene** while keeping the product visually identical.
+
+Examples:
+
+Luxury handbag
+
+→ Generate one realistic female fashion model.
+
+→ Preserve the uploaded handbag exactly.
+
+→ Place the handbag naturally on the model's shoulder or in her hand.
+
+Luxury watch
+
+→ Generate a realistic wrist.
+
+→ Preserve the uploaded watch exactly.
+
+→ Wear it naturally.
+
+Shoes
+
+→ Generate realistic legs and feet.
+
+→ Preserve the uploaded shoes exactly.
+
+→ Wear them naturally.
+
+---
+
+# Source Image Priority
+
+Priority order:
+
+1. Uploaded Product Images (Highest Priority)
+2. Product Identity Profile
+3. Product Category
+4. Scene Description
+5. Camera Angle
+6. Background
+7. Lighting
+
+If text instructions conflict with the uploaded product, **always trust the uploaded images**.
+
+---
+
+# Scene Generation Rules
+
+Generate a completely new scene while preserving the original product.
+
+Allowed changes:
+
+* Human model
+* Pose
+* Background
+* Camera
+* Lighting
+* Composition
+* Environment
+* Shadows
+* Reflections
+
+Forbidden changes:
+
+* Product design
+* Product dimensions
+* Product material
+* Product branding
+* Product details
+
+---
+
+# Quality Validation
+
+Before accepting an image, compare it against the uploaded references.
+
+Validate:
+
+* Product shape matches.
+* Logo matches.
+* Stitching matches.
+* Hardware matches.
+* Texture matches.
+* Material matches.
+* Color matches.
+* Handles match.
+* Straps match.
+* Product proportions match.
+
+If any comparison fails, reject the image and regenerate.
+
+---
+
+## One more thing for Replit
+
+If your backend is currently sending only a **text prompt** to HiDream/OpenAI, this prompt alone will **not** make it use the source images.
+
+Your backend must send the uploaded images as **image inputs** to the generation model (image-to-image or editing API), not just upload them to storage.
+
+For example, the workflow should be:
+
+```
+Upload Product Images
+        ↓
+Extract Product Features
+        ↓
+Send Images + Prompt to Image Generation Model
+        ↓
+Generate Edited Scene (not a new product)
+```
+
+If the source images are **not included in the API request**, no prompt can force the model to preserve the product accurately.

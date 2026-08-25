@@ -1,0 +1,615 @@
+Yes. The problem is now completely clear.
+
+**Your Replit app is working. The Colab connection is working. The failure is entirely inside the Colab worker because it has a GPU but zero generation models/providers loaded.**
+
+Do not keep modifying the Replit UI. Fix the Colab worker.
+
+Copy this prompt into Replit and tell it to implement the worker configuration properly:
+
+---
+
+# FIX COLAB GPU WORKER: INSTALL AND LOAD A REAL GENERATION MODEL
+
+The Atelier application is already successfully connected to the Google Colab GPU worker.
+
+Current worker status:
+
+```text
+GPU: available
+Worker: reachable
+Loaded models: []
+Model inference: not available
+Verification: NOT_VERIFIED
+Generation: blocked
+```
+
+The connection is not the problem.
+
+The problem is that the Colab worker has **no generation provider configured and no model loaded**.
+
+Fix the Colab worker so that it can actually load a model, expose inference endpoints, and report a non-empty model list.
+
+Do not fake:
+
+```text
+verification_state = verified
+human_product_verified = true
+```
+
+These values must only become true after real inference tests.
+
+---
+
+## PRIMARY GOAL
+
+Get one model working first.
+
+Use this priority:
+
+```text
+1. FLUX Schnell
+2. SDXL
+3. Qwen Image Edit
+4. Fooocus
+5. Other models later
+```
+
+Do not attempt to install every model simultaneously.
+
+The first milestone is:
+
+```text
+Colab GPU
+   ↓
+FLUX Schnell installed
+   ↓
+Model loaded
+   ↓
+API running
+   ↓
+/models returns ["flux-schnell"]
+   ↓
+Real image generation succeeds
+   ↓
+Atelier detects engine
+   ↓
+Generation enabled
+```
+
+---
+
+# 1. IMPLEMENT A REAL WORKER PROVIDER SYSTEM
+
+The worker currently expects:
+
+```text
+WORKER_PROVIDER_COMMAND
+WORKER_PROVIDER
+```
+
+Make these variables actually functional.
+
+Supported provider:
+
+```text
+WORKER_PROVIDER=flux-schnell
+```
+
+The command must start the selected provider.
+
+Example architecture:
+
+```text
+WORKER STARTUP
+       │
+       ▼
+Read WORKER_PROVIDER
+       │
+       ├── flux-schnell
+       ├── sdxl
+       ├── qwen-edit
+       └── fooocus
+       │
+       ▼
+Install/check dependencies
+       │
+       ▼
+Load selected model
+       │
+       ▼
+Start inference server
+       │
+       ▼
+Register loaded model
+```
+
+Do not return an empty model list after successful startup.
+
+---
+
+# 2. START WITH FLUX SCHNELL
+
+Configure:
+
+```text
+WORKER_PROVIDER=flux-schnell
+```
+
+If the worker requires a startup command:
+
+```text
+WORKER_PROVIDER_COMMAND=<actual command that starts the FLUX Schnell inference server>
+```
+
+The worker startup sequence must:
+
+### Step A: Check GPU
+
+```python
+import torch
+
+assert torch.cuda.is_available()
+
+print(torch.cuda.get_device_name(0))
+```
+
+Return:
+
+```text
+gpu_available: true
+gpu_name: Tesla T4 or actual GPU name
+```
+
+### Step B: Install required dependencies
+
+Install only the dependencies required for the selected provider.
+
+The worker must not install every model package at startup.
+
+### Step C: Download/load FLUX Schnell
+
+The startup must verify:
+
+```text
+model weights available
+pipeline initialized
+model moved to appropriate device
+memory optimization enabled
+```
+
+For a T4 GPU, use appropriate memory-efficient settings.
+
+### Step D: Register the model
+
+After successful pipeline initialization:
+
+```python
+loaded_models = [
+    "flux-schnell"
+]
+```
+
+The `/health` endpoint must return:
+
+```json
+{
+  "worker": "online",
+  "gpu": "available",
+  "models": ["flux-schnell"],
+  "inference_available": true
+}
+```
+
+---
+
+# 3. ADD REAL API ENDPOINTS
+
+The Colab worker must expose:
+
+```text
+GET /health
+GET /models
+POST /generate
+POST /audit
+```
+
+## GET /health
+
+Example:
+
+```json
+{
+  "status": "online",
+  "gpu_available": true,
+  "gpu_name": "Tesla T4",
+  "models_loaded": 1,
+  "inference_available": true,
+  "verification_state": "pending"
+}
+```
+
+## GET /models
+
+Example:
+
+```json
+{
+  "models": [
+    {
+      "id": "flux-schnell",
+      "name": "FLUX.1 Schnell",
+      "loaded": true,
+      "available": true,
+      "capabilities": [
+        "text_to_image"
+      ]
+    }
+  ]
+}
+```
+
+## POST /generate
+
+Input:
+
+```json
+{
+  "prompt": "Professional luxury fashion photography of a woman carrying a handbag",
+  "width": 768,
+  "height": 1024,
+  "steps": 4,
+  "seed": null
+}
+```
+
+The endpoint must:
+
+1. Generate an image.
+2. Validate that output exists.
+3. Save the image.
+4. Return the generated image URL or encoded result.
+5. Return generation metadata.
+
+Do not return success without an actual generated image.
+
+---
+
+# 4. ADD A REAL STARTUP TEST
+
+Immediately after loading the model, run a smoke test.
+
+Example:
+
+```text
+Prompt:
+"A professional studio photograph of a leather handbag on a white background"
+```
+
+Verify:
+
+```text
+Inference completes
+Image exists
+Image is readable
+Width > 512
+Height > 512
+Image is not blank
+```
+
+Only then:
+
+```json
+{
+  "inference_passed": true
+}
+```
+
+---
+
+# 5. SEPARATE ENGINE AVAILABILITY FROM PRODUCT VERIFICATION
+
+This is important.
+
+FLUX Schnell may successfully generate images but should not automatically be marked:
+
+```text
+human_product_verified = true
+```
+
+Use separate states:
+
+```text
+ENGINE STATUS
+
+OFFLINE
+STARTING
+ONLINE
+FAILED
+
+MODEL STATUS
+
+NOT_INSTALLED
+LOADING
+LOADED
+FAILED
+
+INFERENCE STATUS
+
+NOT_TESTED
+PASSED
+FAILED
+
+PRODUCT LOCK STATUS
+
+NOT_TESTED
+PASSED
+FAILED
+
+HUMAN + PRODUCT STATUS
+
+NOT_TESTED
+PASSED
+FAILED
+```
+
+Therefore, after the first successful FLUX generation:
+
+```text
+Engine: ONLINE
+Model: LOADED
+Inference: PASSED
+Product Lock: NOT_TESTED
+Human + Product: NOT_TESTED
+Overall Engine: AVAILABLE
+```
+
+This allows Atelier to use the model while accurately displaying its capabilities.
+
+---
+
+# 6. DO NOT BLOCK ALL GENERATION
+
+Currently Atelier blocks generation because:
+
+```text
+models = []
+```
+
+Once one model passes inference:
+
+```text
+models.length > 0
+AND
+inference_available == true
+```
+
+Enable generation.
+
+However, route jobs according to capability.
+
+Example:
+
+```text
+Basic product scene
+→ FLUX Schnell
+
+White background product
+→ Reference-preserved pipeline
+
+Human carrying exact product
+→ Only use an engine that passes human + product validation
+
+Clothing try-on
+→ Dedicated virtual try-on engine
+```
+
+Do not send every request to FLUX Schnell.
+
+---
+
+# 7. AFTER FLUX SCHNELL WORKS, ADD SDXL
+
+Use:
+
+```text
+WORKER_PROVIDER=sdxl
+```
+
+or allow multiple loaded providers if VRAM permits.
+
+SDXL must have:
+
+```text
+text_to_image: true
+inference_test: passed
+```
+
+Run a fresh smoke test.
+
+If successful:
+
+```json
+{
+  "models": [
+    "flux-schnell",
+    "sdxl"
+  ]
+}
+```
+
+If the T4 cannot hold both models simultaneously, implement lazy loading:
+
+```text
+Generation request
+      ↓
+Check requested model
+      ↓
+Unload previous model if required
+      ↓
+Clear CUDA cache
+      ↓
+Load requested model
+      ↓
+Generate
+```
+
+Do not load all heavyweight models into VRAM simultaneously.
+
+---
+
+# 8. ADD QWEN IMAGE EDIT SEPARATELY
+
+Qwen Image Edit should not be treated as a normal text-to-image engine.
+
+Its API must accept:
+
+```text
+Source image
++
+Edit instruction
++
+Optional product mask
+```
+
+Example:
+
+```json
+{
+  "source_image": "<uploaded product image>",
+  "prompt": "Place this exact handbag naturally in the hand of a professional female fashion model. Preserve the exact bag shape, woven leather texture, burgundy color, gold hardware, handles, dimensions and proportions."
+}
+```
+
+Its capabilities should be:
+
+```json
+{
+  "image_edit": true,
+  "reference_edit": true,
+  "product_reference": true
+}
+```
+
+---
+
+# 9. IMPLEMENT ACTUAL PROVIDER COMMAND VALIDATION
+
+When the worker starts:
+
+```text
+Read WORKER_PROVIDER
+Read WORKER_PROVIDER_COMMAND
+```
+
+Validate both.
+
+If:
+
+```text
+WORKER_PROVIDER is empty
+```
+
+return:
+
+```json
+{
+  "error": "NO_PROVIDER_CONFIGURED",
+  "models": [],
+  "inference_available": false
+}
+```
+
+If the command fails:
+
+```json
+{
+  "error": "PROVIDER_START_FAILED",
+  "details": "<actual stderr>"
+}
+```
+
+Do not silently report the worker as healthy.
+
+---
+
+# 10. UPDATE ATELIER AFTER SUCCESSFUL TEST
+
+Once the worker reports:
+
+```json
+{
+  "gpu_available": true,
+  "models": ["flux-schnell"],
+  "inference_available": true
+}
+```
+
+Atelier must automatically change:
+
+```text
+Colab GPU
+
+NOT VERIFIED
+```
+
+to:
+
+```text
+Colab GPU
+
+ONLINE
+
+FLUX Schnell: AVAILABLE
+Inference: PASSED
+```
+
+Do not call it `PRODUCT VERIFIED` yet.
+
+---
+
+# FINAL ACCEPTANCE TEST
+
+The implementation is complete only when this exact flow works:
+
+```text
+1. Start Colab
+        ↓
+2. GPU detected
+        ↓
+3. WORKER_PROVIDER=flux-schnell
+        ↓
+4. FLUX Schnell downloads/loads
+        ↓
+5. Smoke test runs
+        ↓
+6. Image successfully generated
+        ↓
+7. /models returns:
+   ["flux-schnell"]
+        ↓
+8. Atelier polling detects the model
+        ↓
+9. Colab GPU status becomes ONLINE
+        ↓
+10. Generation button becomes available
+```
+
+Expected worker response:
+
+```json
+{
+  "status": "online",
+  "gpu_available": true,
+  "models": ["flux-schnell"],
+  "inference_available": true,
+  "inference_passed": true,
+  "product_lock_verified": false,
+  "human_product_verified": false
+}
+```
+
+Only after this works should additional models be installed and tested one at a time.
+
+**Do not modify the UI to fake readiness. Fix the Colab runtime, configure the provider, load the actual model, expose the inference API, run a real smoke test, and let Atelier detect the real backend state.**
+
+The immediate target is **one working model, not ten broken ones**.

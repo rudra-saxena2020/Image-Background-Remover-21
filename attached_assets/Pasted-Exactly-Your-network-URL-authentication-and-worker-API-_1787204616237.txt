@@ -1,0 +1,140 @@
+Exactly. Your **network, URL, authentication, and worker API are already working**. The remaining blocker is:
+
+```text
+provider_configured: false
+models: []
+worker_state: reachable-empty
+```
+
+So now you need to start the actual provider inside the **current Colab runtime**.
+
+## Do this now
+
+Since you already downloaded Qwen, I would **not switch to `flux-schnell` yet**. Your current runtime already loaded:
+
+```text
+Qwen/Qwen-Image-Edit-2509
+```
+
+The issue is that your FastAPI worker does not know about the loaded `pipe`. The provider needs to be attached to the worker process.
+
+### Best approach
+
+Do not run:
+
+```python
+os.environ["WORKER_PROVIDER"] = "flux-schnell"
+```
+
+unless you actually want to download and configure Flux separately.
+
+Your current target should be:
+
+```text
+WORKER_PROVIDER = qwen-image-edit
+```
+
+The architecture should become:
+
+```text
+Replit
+   ↓
+Atelier FastAPI Worker
+   ↓
+Qwen Provider Adapter
+   ↓
+Loaded QwenImageEditPlusPipeline
+   ↓
+Tesla T4
+```
+
+### First, check if the Qwen pipeline is still alive
+
+Run this in a new Colab cell:
+
+```python
+print("pipe exists:", "pipe" in globals())
+
+if "pipe" in globals():
+    print("Pipeline:", type(pipe))
+else:
+    print("Qwen pipeline is NOT available in this Python session.")
+```
+
+If you get:
+
+```text
+pipe exists: True
+```
+
+then **do not download anything again**.
+
+Your model is already in memory.
+
+## Next: create the provider configuration
+
+Run:
+
+```python
+import os
+
+os.environ["WORKER_PROVIDER"] = "qwen-image-edit"
+os.environ["WORKER_PROVIDER_COMMAND"] = "python /content/colab_qwen_provider.py"
+os.environ["QWEN_MODEL_ID"] = "Qwen/Qwen-Image-Edit-2509"
+
+print("WORKER_PROVIDER:", os.environ["WORKER_PROVIDER"])
+print("QWEN_MODEL_ID:", os.environ["QWEN_MODEL_ID"])
+```
+
+But there is one important problem:
+
+Your current FastAPI worker was started with:
+
+```text
+models: []
+generation_ready: false
+```
+
+Changing environment variables **after the worker is already running does not automatically attach Qwen to it**.
+
+You need a provider adapter and then restart the FastAPI worker.
+
+## The correct next move
+
+You should update your worker so `/health` reports something like:
+
+```json
+{
+  "status": "ok",
+  "worker": "atelier-colab",
+  "provider_configured": true,
+  "provider": "qwen-image-edit",
+  "models": [
+    "Qwen/Qwen-Image-Edit-2509"
+  ],
+  "inference_passed": true,
+  "generation_ready": true
+}
+```
+
+Only after that should you call:
+
+```text
+POST /verify
+```
+
+with your real handbag images.
+
+### Important
+
+Do **not** mark:
+
+```text
+inference_passed: true
+```
+
+just because the model loaded.
+
+The model must generate at least **one real image successfully** first.
+
+Your immediate next action is to run the `pipe exists` check above. If it says `True`, send me that output and I can give you the **single Colab code block that connects your already-loaded Qwen pipeline to `/health`, `/generate`, and `/verify` without downloading the 57 GB model again**.

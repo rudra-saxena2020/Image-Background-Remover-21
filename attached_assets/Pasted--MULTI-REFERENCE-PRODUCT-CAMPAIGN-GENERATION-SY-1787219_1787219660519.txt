@@ -1,0 +1,466 @@
+====================================================
+MULTI-REFERENCE PRODUCT CAMPAIGN GENERATION SYSTEM
+====================================================
+
+INPUT:
+
+The user uploads exactly two primary product reference images:
+
+REFERENCE IMAGE 1 = FRONT VIEW
+REFERENCE IMAGE 2 = BACK VIEW
+
+These two images are the absolute PRODUCT SOURCE OF TRUTH.
+
+The AI must analyze BOTH images together before generating anything.
+
+Do not treat the front image and back image as two separate products.
+
+They represent the same physical product from different sides.
+
+====================================================
+PRODUCT IDENTITY LOCK
+====================================================
+
+Create one internal PRODUCT IDENTITY PROFILE using both references.
+
+Extract and lock:
+
+- Exact silhouette
+- Overall proportions
+- Width and height ratio
+- Front design
+- Back design
+- Side construction
+- Material
+- Texture
+- Color
+- Pattern
+- Stitching
+- Hardware
+- Logos
+- Handles
+- Straps
+- Closures
+- Zippers
+- Pockets
+- Decorative elements
+- Product thickness
+- Surface details
+
+REFERENCE IMAGE 1 controls the FRONT appearance.
+
+REFERENCE IMAGE 2 controls the BACK appearance.
+
+When generating a new angle, intelligently reconstruct the correct product using information from BOTH references.
+
+Never invent a different product.
+
+Never copy the front design onto the back.
+
+Never copy the back design onto the front.
+
+Never randomly redesign hidden areas.
+
+The generated product must look like the SAME physical product photographed from another angle.
+
+====================================================
+PRODUCT IDENTITY PRIORITY
+====================================================
+
+Priority order:
+
+1. Exact uploaded product identity
+2. Correct product geometry
+3. Correct front and back appearance
+4. Correct material and texture
+5. Correct proportions
+6. Correct human interaction
+7. Scene and artistic styling
+
+If the artistic prompt conflicts with the uploaded product, the uploaded product always wins.
+
+DO NOT sacrifice product accuracy for aesthetics.
+
+====================================================
+GENERATE 7 FINAL IMAGES
+====================================================
+
+Generate exactly 7 unique images from the two uploaded references.
+
+Each image must have a different purpose, composition, pose, angle or crop.
+
+Do not generate near-duplicate images.
+
+----------------------------------------------------
+IMAGE 1: CLEAN PRODUCT HERO
+----------------------------------------------------
+
+Generate a premium ecommerce product photograph.
+
+Show the primary hero angle, usually the front or strongest selling angle.
+
+Requirements:
+
+- Product only
+- No human
+- No model
+- Clean neutral background
+- Professional studio lighting
+- Accurate shadows
+- Entire product clearly visible
+- Correct proportions
+- Maximum product accuracy
+
+This should be suitable as the main ecommerce listing image.
+
+----------------------------------------------------
+IMAGE 2: HUMAN MODEL HERO
+----------------------------------------------------
+
+Generate a photorealistic adult fashion model naturally using the exact uploaded product.
+
+For bags:
+The model must physically hold or carry the bag.
+
+The fingers must naturally grip the real handle or strap.
+
+The bag must have realistic scale, weight and gravity.
+
+The product must not float or clip through the body.
+
+The model must be clearly visible.
+
+This is a mandatory HUMAN MODEL FRAME.
+
+Product-only output is a failure.
+
+----------------------------------------------------
+IMAGE 3: SAME MODEL, DIFFERENT ANGLE
+----------------------------------------------------
+
+Use the SAME MODEL IDENTITY from Image 2.
+
+Maintain:
+
+- Same face
+- Same skin tone
+- Same hairstyle
+- Same body proportions
+
+Change:
+
+- Camera angle
+- Pose
+- Product position
+- Composition
+
+Show another realistic way of carrying or using the product.
+
+Possible directions:
+
+- Side angle
+- Three-quarter angle
+- Walking pose
+- Shoulder carry
+- Arm carry
+
+The product must remain identical to the uploaded references.
+
+----------------------------------------------------
+IMAGE 4: LUXURY PRODUCT DETAIL
+----------------------------------------------------
+
+Generate a high-end close-up or detail photograph.
+
+Focus on one important product characteristic.
+
+For example:
+
+- Leather texture
+- Stitching
+- Hardware
+- Handle
+- Strap
+- Closure
+- Zipper
+- Interior
+- Material craftsmanship
+
+Use information from the uploaded references only.
+
+Do not invent new hardware or decorative details.
+
+Macro commercial photography quality.
+
+----------------------------------------------------
+IMAGE 5: DIFFERENT PRODUCT ANGLE
+----------------------------------------------------
+
+Generate a realistic alternative product view.
+
+The angle may show:
+
+- Side
+- Three-quarter front
+- Three-quarter back
+- Back
+- Low angle
+
+The generated geometry must logically combine information from both the FRONT and BACK references.
+
+This must look like a photograph of the same physical product rotated in space.
+
+Do not create a new product design.
+
+----------------------------------------------------
+IMAGE 6: SAME MODEL LIFESTYLE FRAME
+----------------------------------------------------
+
+Use the SAME MODEL IDENTITY from Images 2 and 3.
+
+Generate a premium fashion or lifestyle photograph.
+
+The model must naturally interact with the exact product.
+
+Possible situations:
+
+- Walking
+- Holding product naturally
+- Carrying product on shoulder
+- Editorial fashion pose
+- Premium street or studio lifestyle
+
+The scene must not overpower the product.
+
+The product must remain clearly visible and recognizable.
+
+----------------------------------------------------
+IMAGE 7: SAME MODEL, FINAL EDITORIAL ANGLE
+----------------------------------------------------
+
+Use the SAME MODEL IDENTITY.
+
+Create a clearly different pose and composition.
+
+Examples:
+
+- Close crop with product
+- Side profile
+- Sitting pose
+- Walking shot
+- Looking away
+- Product held at a different position
+
+Do not repeat Images 2, 3 or 6.
+
+This should feel like a professional luxury fashion campaign.
+
+====================================================
+CATEGORY-AWARE HUMAN GENERATION
+====================================================
+
+Automatically determine the correct human interaction according to product category.
+
+BAGS:
+Generate an adult fashion model physically holding, carrying or wearing the bag.
+
+WATCHES:
+Generate a realistic human wrist and hand wearing the exact watch.
+
+JEWELRY:
+Generate the appropriate realistic body area wearing the product.
+
+CLOTHING:
+Generate a realistic fashion model actually wearing the uploaded garment.
+
+SHOES:
+Generate realistic legs and feet wearing the exact uploaded shoes.
+
+ACCESSORIES:
+Determine the real-world method of wearing or using the product.
+
+Never use the wrong type of human interaction.
+
+====================================================
+MODEL CONSISTENCY LOCK
+====================================================
+
+For one product campaign:
+
+Select ONE model identity.
+
+Lock this identity for all human-model frames.
+
+Human model frames:
+
+IMAGE 2
+IMAGE 3
+IMAGE 6
+IMAGE 7
+
+The same person must appear in all four images.
+
+DO NOT change:
+
+- Face
+- Skin tone
+- Hair
+- Age appearance
+- Body proportions
+
+Only change:
+
+- Pose
+- Camera angle
+- Body position
+- Product position
+- Expression
+- Scene
+
+For a different product, a new model identity may be selected.
+
+====================================================
+HUMAN REALISM VALIDATION
+====================================================
+
+Before accepting any model image, verify:
+
+HUMAN_PRESENT = TRUE
+PRODUCT_INTERACTION = TRUE
+PRODUCT_IDENTITY_MATCH = TRUE
+ANATOMY_CORRECT = TRUE
+HANDS_CORRECT = TRUE
+FACE_REALISTIC = TRUE
+PRODUCT_SCALE_CORRECT = TRUE
+
+If any condition fails:
+
+REJECT IMAGE
+REGENERATE IMAGE
+
+Do not silently replace a failed human-model image with a product-only image.
+
+====================================================
+ANATOMY REQUIREMENTS
+====================================================
+
+Generate realistic professional human anatomy.
+
+Mandatory:
+
+- Correct number of fingers
+- Natural finger positions
+- Realistic hands
+- Correct wrists
+- Correct arms
+- Correct shoulders
+- Correct body proportions
+- Realistic face
+- Natural eyes
+- Natural skin texture
+- No duplicated limbs
+- No distorted body parts
+
+Hands must interact physically with the actual product.
+
+For bags:
+
+The fingers must grip the handle or strap naturally.
+
+The handle must respond naturally to the weight and position of the bag.
+
+The bag must not merge into the hand.
+
+The bag must not float.
+
+====================================================
+NEGATIVE RULES
+====================================================
+
+NEVER generate:
+
+- Different product design
+- Changed product shape
+- Changed texture
+- Changed material
+- Changed color
+- Missing handles
+- Extra handles
+- Wrong hardware
+- Invented logos
+- Invented pockets
+- Product deformation
+- Product melting
+- Product morphing
+- Floating products
+- Flat product pasted onto model
+- Generic mannequin
+- Missing human in model frame
+- Extra fingers
+- Missing fingers
+- Deformed hands
+- Distorted face
+- Duplicate limbs
+- Different model identity within the same campaign
+- Near-duplicate campaign images
+
+====================================================
+FINAL QUALITY GATE
+====================================================
+
+Every generated image must pass:
+
+1. PRODUCT IDENTITY CHECK
+Compare against FRONT and BACK references.
+
+2. GEOMETRY CHECK
+Confirm proportions and construction remain logical.
+
+3. HUMAN CHECK
+Required only for model frames.
+
+4. ANATOMY CHECK
+Validate face, hands and body.
+
+5. UNIQUENESS CHECK
+Ensure every image has a different composition or purpose.
+
+6. QUALITY CHECK
+Reject low-resolution, blurry, distorted or AI-artifact-heavy outputs.
+
+If an image fails any required check:
+
+REGENERATE ONLY THAT IMAGE.
+
+Do not regenerate the entire campaign unnecessarily.
+
+====================================================
+FINAL OUTPUT
+====================================================
+
+INPUT:
+
+2 PRODUCT REFERENCE IMAGES
+
+1. FRONT VIEW
+2. BACK VIEW
+
+OUTPUT:
+
+7 HIGH-QUALITY UNIQUE CAMPAIGN IMAGES
+
+1. Clean Product Hero
+2. Human Model Hero
+3. Same Model, Different Angle
+4. Luxury Product Detail
+5. Alternative Product Angle
+6. Same Model Lifestyle Shot
+7. Same Model Editorial Pose
+
+The final output must look like a professionally photographed luxury ecommerce campaign.
+
+The uploaded front and back product images are the source of truth.
+
+The AI's job is to create NEW PHOTOGRAPHIC ANGLES AND HUMAN MODEL SHOTS of the SAME EXACT PRODUCT.
+
+PRODUCT ACCURACY IS MORE IMPORTANT THAN CREATIVE FREEDOM.

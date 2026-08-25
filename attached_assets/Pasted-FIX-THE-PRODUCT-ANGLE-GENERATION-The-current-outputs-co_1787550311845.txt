@@ -1,0 +1,91 @@
+FIX THE PRODUCT ANGLE GENERATION.
+
+The current outputs contain repeated and near-identical views. Do not generate duplicate angles or small variations of the same camera position.
+
+Generate a structured set of UNIQUE product images where every output has a clearly different camera angle.
+
+STRICT RULES:
+
+• Each output must contain ONLY ONE complete image.
+• Never create a collage, grid, contact sheet, split-screen, or multiple views inside one image.
+• Generate ONLY ONE product per image.
+• Do not duplicate the product, strap, accessories, or any product components.
+• Every generated image must use a genuinely different camera angle.
+• Do not repeat front views with only a slightly different zoom, rotation, or product position.
+• Do not generate decorative borders, frames, graphic corners, or unnecessary background elements.
+
+PRODUCT CONSISTENCY:
+
+The exact product from the reference must remain identical in every image.
+
+Preserve the exact:
+- Product shape and proportions
+- Color and material
+- Texture and stitching
+- Branding, logos, text, graphics, and artwork
+- Hardware and accessories
+- Strap design and attachment points
+- All unique visual details
+
+Do not redesign, modify, simplify, add, remove, duplicate, or distort any part of the product.
+
+GENERATE THESE DISTINCT VIEWS:
+
+IMAGE 01: Straight front view. Product centered, no obstruction.
+
+IMAGE 02: Front-left three-quarter view, approximately 45 degrees.
+
+IMAGE 03: Front-right three-quarter view, approximately 45 degrees.
+
+IMAGE 04: Full left-side view.
+
+IMAGE 05: Full right-side view.
+
+IMAGE 06: Straight back view.
+
+IMAGE 07: Back-left three-quarter view.
+
+IMAGE 08: Back-right three-quarter view.
+
+IMAGE 09: A unique detail or close-up view showing an important product feature that has not been clearly shown in previous images.
+
+Do not generate the same front-facing composition more than once.
+
+ANGLE DIFFERENCE REQUIREMENT:
+
+Each image must be visually distinguishable from all previous images immediately. The camera must move to a genuinely different position around the product, not just slightly shift left, right, zoom in, or rotate by a few degrees.
+
+For example, if Image 01 is front-facing, Images 02, 03, 04, etc. must not look like another front view.
+
+REALISM:
+
+Create premium, photorealistic commercial product photography.
+
+The product must look like a real physical object, not AI-generated, CGI, 3D-rendered, plastic, overly smooth, or illustrated.
+
+Use:
+- Realistic materials and textures
+- Accurate geometry
+- Correct perspective
+- Natural shadows
+- Physically realistic lighting
+- Authentic reflections
+- Sharp details
+- Realistic stitching and hardware
+- Professional e-commerce studio photography
+
+STRICTLY AVOID:
+
+Near-duplicate angles, repeated front views, warped products, melted details, distorted text or logos, duplicated straps, floating accessories, extra product parts, altered proportions, inconsistent colors, AI artifacts, unrealistic geometry, decorative frames, graphic borders, or CGI appearance.
+
+FINAL REQUIREMENT:
+
+Before generating each new image, compare its intended camera angle with all previous outputs. If the new image looks too similar to an existing output, change the camera position significantly.
+
+PRIORITY ORDER:
+1. Exact product consistency
+2. Truly unique angle for every output
+3. No duplicate or near-duplicate generations
+4. One product only
+5. One angle per image
+6. Photorealistic commercial quality

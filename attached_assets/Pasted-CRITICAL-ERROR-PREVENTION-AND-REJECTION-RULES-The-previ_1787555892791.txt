@@ -1,0 +1,201 @@
+CRITICAL ERROR PREVENTION AND REJECTION RULES
+
+The previous outputs contained unacceptable generation errors. Do not repeat them.
+
+The generated image must contain ONLY the exact reference product and nothing else.
+
+REFERENCE EXTRACTION RULE:
+First isolate and understand the exact product shown in the reference. Ignore everything that is not physically part of the product.
+
+If the reference contains:
+- multiple products
+- packaging
+- boxes
+- shopping bags
+- props
+- background objects
+- hands
+- people
+- models
+- clothing
+- mannequins
+- screenshots
+- thumbnails
+- UI elements
+
+DO NOT reproduce them.
+
+Extract ONLY the intended physical product.
+
+STRICT PRODUCT COUNT:
+The final image must contain EXACTLY ONE product.
+
+Never generate:
+- a second bag
+- a duplicate product
+- a miniature version
+- an alternate product
+- another handbag
+- packaging beside the product
+- a box
+- a shopping bag
+- an accessory that is not permanently attached
+- extra decorative objects
+
+ZERO HUMAN RULE:
+Absolutely no humans or human elements.
+
+Do not generate:
+- models
+- people
+- hands
+- fingers
+- arms
+- legs
+- faces
+- bodies
+- clothing being worn
+- mannequins
+- product being carried
+- product being held
+- product being worn
+
+Even if a reference image shows the product with a person, completely remove and ignore the person. Generate the product alone.
+
+NO PRODUCT HALLUCINATION:
+Do not invent another product design.
+
+Do not transform the reference product into:
+- another handbag
+- a different purse
+- a different color variant
+- a different product category
+- a generic luxury product
+- a simplified version
+- a redesigned version
+
+Do not add features that are not present in the reference.
+
+Do not remove features that are present in the reference.
+
+IDENTITY CONSISTENCY CHECK:
+Before generating, verify that the output matches the reference in:
+
+1. Overall silhouette
+2. Exact proportions
+3. Exact color
+4. Exact material
+5. Exact texture
+6. Exact artwork and graphics
+7. Exact logo placement
+8. Exact hardware
+9. Exact chain or strap
+10. Exact attachment points
+11. Exact zipper and closure structure
+12. Exact shape of every visible component
+
+The product must be IDENTICAL to the reference product.
+
+CAMERA ANGLE ONLY, NOT PRODUCT CHANGE:
+When generating a different view, change ONLY the camera position.
+
+Do NOT change:
+- the product design
+- the product color
+- the material
+- the graphics
+- the hardware
+- the strap
+- the chain
+- the proportions
+- the construction
+
+A new angle must reveal the SAME physical product.
+
+ONE IMAGE = ONE PRODUCT = ONE ANGLE.
+
+PRODUCT STATE LOCK:
+Keep the product exactly as a normal complete physical object.
+
+Do not:
+- open it
+- unfold it
+- unzip it
+- expose the interior
+- separate parts
+- explode the product
+- create floating components
+- create a cutaway
+- add packaging
+- place the product inside a box
+
+If the requested product is closed in the reference, it must remain closed.
+
+NO FALSE DETAIL GENERATION:
+Do not invent hidden details that are not visible or supported by the reference.
+
+If a detail is unclear, preserve the most conservative physically plausible interpretation rather than inventing a new design.
+
+REAL PRODUCT PHOTOGRAPHY:
+The final result must look like a real photograph of a manufactured physical product.
+
+Avoid:
+- CGI appearance
+- 3D render appearance
+- AI-art appearance
+- plastic texture
+- melted geometry
+- warped edges
+- asymmetrical distortion
+- impossible stitching
+- duplicated hardware
+- malformed chains
+- broken straps
+- floating attachments
+- unrealistic reflections
+
+Use realistic product photography with physically believable geometry, materials, shadows, lighting, perspective, and construction.
+
+FINAL OUTPUT REJECTION CHECK:
+
+Reject and regenerate the image if ANY of the following appear:
+
+✗ Human or model
+✗ Hand or body part
+✗ Second product
+✗ Duplicate product
+✗ Different product
+✗ Different color variant
+✗ Box or packaging
+✗ Shopping bag
+✗ Random prop
+✗ Multiple products
+✗ Product collage
+✗ Multiple angles in one image
+✗ Open or interior view
+✗ Changed artwork
+✗ Changed logo
+✗ Missing or extra strap
+✗ Incorrect hardware
+✗ Distorted geometry
+✗ AI-looking material
+✗ CGI appearance
+
+FINAL ABSOLUTE RULE:
+
+Generate exactly ONE isolated, complete, closed, photorealistic physical product that is an exact identity match to the reference.
+
+The output must contain ONLY that one product, photographed from one requested angle, in a clean empty professional studio.
+
+NO PERSON.
+NO HAND.
+NO MODEL.
+NO MANNEQUIN.
+NO SECOND PRODUCT.
+NO PACKAGING.
+NO BOX.
+NO PROP.
+NO DUPLICATE.
+NO REDESIGN.
+NO COLOR CHANGE.
+NO INVENTED PRODUCT.

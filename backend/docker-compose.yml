@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - model-cache:/model-cache   # persist HuggingFace model weights
+    environment:
+      - DEVICE=auto
+      - USE_FP16=true
+      - MODEL_WARMUP=true
+      - MAX_UPLOAD_MB=20
+      - MAX_GPU_CONCURRENCY=1
+      - ENABLE_RESULT_CACHE=true
+      - RESULT_CACHE_TTL=3600
+      - CORS_ORIGINS=http://localhost:5173
+      - HF_HOME=/model-cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  model-cache:

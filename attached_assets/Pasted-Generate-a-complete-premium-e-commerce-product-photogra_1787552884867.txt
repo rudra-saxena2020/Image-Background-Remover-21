@@ -1,0 +1,105 @@
+Generate a complete premium e-commerce product photography set using the provided reference image(s) as the exact product identity source.
+
+CRITICAL OUTPUT RULE:
+Generate ONE separate image file for EACH requested angle. Every output must contain exactly ONE photograph of exactly ONE product from exactly ONE camera angle. Never combine multiple angles into one image.
+
+PRODUCT IDENTITY LOCK:
+The reference product is the absolute source of truth. Before generating, identify and preserve every visible physical characteristic of the product.
+
+The product must remain identical across every generated image:
+- exact shape and silhouette
+- exact proportions and dimensions
+- exact material and texture
+- exact color and color calibration
+- exact stitching, seams, piping, edges and construction
+- exact logos, branding, graphics and text placement
+- exact hardware, buckles, rings, chains, zippers and metal finish
+- exact handles, straps and attachment points
+- exact pockets, panels, closures and exterior details
+
+Do not redesign, reinterpret, simplify, beautify, invent, replace, remove, duplicate, merge, distort, recolor, tint, or modify any product feature.
+
+SINGLE PRODUCT ONLY:
+Every image must contain exactly ONE complete product.
+No duplicate product.
+No second product.
+No color variants.
+No accessories unless permanently attached to the product.
+No props.
+No hands.
+No models unless explicitly requested.
+No floating components.
+
+PRODUCT STATE:
+Keep the product in its normal, complete, realistic CLOSED state.
+Do not open, unzip, unfold, disassemble, explode, cut away, or expose the interior.
+Do not generate an opening image or interior view.
+
+ANGLE GENERATION:
+Generate genuinely different and useful e-commerce angles. Each output must represent only one of these views:
+
+1. Straight front view
+2. Front three-quarter left view
+3. Front three-quarter right view
+4. Full left side view
+5. Full right side view
+6. Straight rear view
+7. Rear three-quarter view
+8. Exterior detail close-up, only if the complete product remains clearly identifiable
+
+Do not generate near-duplicate angles with only tiny camera movement.
+Do not repeat the same front view multiple times.
+Each generated image must provide new visual information about the product.
+
+PHOTOGRAPHY QUALITY:
+The result must look like a real premium commercial studio photograph taken by a professional product photographer.
+
+NOT CGI.
+NOT a 3D render.
+NOT an illustration.
+NOT an AI-art style image.
+NOT artificially smooth or plastic-looking.
+
+Use:
+- physically accurate geometry
+- realistic material texture
+- authentic stitching and construction
+- believable metal reflections
+- natural surface imperfections where appropriate
+- realistic shadows
+- accurate perspective
+- sharp, high-resolution product details
+- consistent color accuracy
+
+COMPOSITION:
+Show the entire product unless generating a requested detail image.
+The product should occupy approximately 70–85% of the frame.
+Keep comfortable margins around the product.
+Do not crop handles, straps, edges, or important product components.
+Use a centered, balanced premium e-commerce composition.
+
+STUDIO CONSISTENCY:
+Use the same clean commercial studio environment for every image:
+- plain warm-white or light-gray background
+- soft diffused professional lighting
+- subtle realistic contact shadow
+- consistent camera height
+- consistent focal length
+- consistent exposure
+- consistent scale
+- consistent white balance
+- consistent color calibration
+
+STRICT NEGATIVE CONSTRAINTS:
+Do not create a collage.
+Do not create a contact sheet.
+Do not create a grid.
+Do not create a split screen.
+Do not show multiple angles in one image.
+Do not add angle numbers.
+Do not add labels, captions, descriptions, UI elements, borders, frames, watermarks, or decorative text.
+Do not generate multiple copies of the product.
+Do not change the product between images.
+
+FINAL REQUIREMENT:
+Each output must look like it belongs to the same professional e-commerce product photography campaign, while every image shows one clearly distinct, accurate, realistic angle of the exact same product.

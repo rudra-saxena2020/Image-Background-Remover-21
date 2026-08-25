@@ -1,0 +1,22 @@
+INFO:     100.64.1.36:33136 - "GET /generate?prompt=test HTTP/1.1" 200 OK
+Received prompt: a red circle on white
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:10<00:00,  2.68s/it]
+INFO:     100.64.1.35:44538 - "GET /generate?prompt=a+red+circle+on+white HTTP/1.1" 200 OK
+Received prompt: a red circle on white background
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:10<00:00,  2.60s/it]
+INFO:     100.64.1.32:42036 - "GET /generate?prompt=a+red+circle+on+white+background HTTP/1.1" 200 OK
+Received prompt: A lone signal tower above a lavender salt flat, dusk fog rolling in, cinematic wide shot, practical film grain
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:10<00:00,  2.74s/it]
+INFO:     100.64.1.35:56242 - "GET /generate?prompt=A+lone+signal+tower+above+a+lavender+salt+flat%2C+dusk+fog+rolling+in%2C+cinematic+wide+shot%2C+practical+film+grain HTTP/1.1" 200 OK
+Received prompt: a lonely girl
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:10<00:00,  2.64s/it]
+INFO:     100.64.1.36:45664 - "GET /generate?prompt=a+lonely+girl HTTP/1.1" 200 OK
+Received prompt: A lone signal tower above a lavender salt flat, dusk fog rolling in, cinematic wide shot, practical film grain
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:10<00:00,  2.65s/it]
+INFO:     100.64.1.33:58002 - "GET /generate?prompt=A+lone+signal+tower+above+a+lavender+salt+flat%2C+dusk+fog+rolling+in%2C+cinematic+wide+shot%2C+practical+film+grain HTTP/1.1" 200 OK
+INFO:     100.64.1.34:39204 - "GET /generate HTTP/1.1" 422 Unprocessable Entity
+INFO:     100.64.1.68:36900 - "GET / HTTP/1.1" 404 Not Found
+INFO:     100.64.1.68:48510 - "GET / HTTP/1.1" 404 Not Found
+INFO:     100.64.1.66:43366 - "GET / HTTP/1.1" 404 Not Found
+INFO:     100.64.1.64:50706 - "GET / HTTP/1.1" 404 Not Found
+INFO:     100.64.1.65:52354 - "GET / HTTP/1.1" 404 Not Found

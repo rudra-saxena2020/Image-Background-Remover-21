@@ -1,0 +1,369 @@
+Your current workflow is fundamentally wrong.
+
+Right now it is generating **the same product shot 8 times** with tiny variations in crop and background.
+
+What you actually want is a **complete luxury fashion campaign**, where every frame has a different purpose, just like MyTheresa, Bottega Veneta, Louis Vuitton, Dior, etc.
+
+Replace your generation instructions with something like this:
+
+---
+
+# Campaign Generation Rules
+
+The objective is **NOT** to generate 8 similar images.
+
+The objective is to generate an entire luxury product campaign where every image serves a unique purpose.
+
+Every generated frame must be visually different in:
+
+* Camera angle
+* Composition
+* Subject placement
+* Model pose
+* Lighting
+* Background
+* Crop
+* Storytelling
+
+No two frames should look alike.
+
+---
+
+# Product Identity Lock
+
+The uploaded product is the source of truth.
+
+Never modify
+
+* Color
+* Shape
+* Material
+* Leather texture
+* Stitching
+* Hardware
+* Handles
+* Logo
+* Size
+* Dimensions
+
+The generated product must be identical to the uploaded reference.
+
+---
+
+# Model Identity Lock
+
+For each uploaded product
+
+Generate exactly ONE unique fashion model.
+
+Use this same model throughout the campaign.
+
+Never change
+
+* Face
+* Hair
+* Skin tone
+* Height
+* Body
+* Outfit
+* Accessories
+
+Only change
+
+* Pose
+* Hand position
+* Walking direction
+* Camera angle
+* Expression
+* Background
+* Lighting
+
+When another product is uploaded,
+
+Generate an entirely new model.
+
+Never reuse previous models.
+
+---
+
+# Every image must have a different purpose
+
+## Image 1
+
+Luxury Studio Product
+
+No model
+
+White background
+
+Front view
+
+Shopify primary image
+
+Centered
+
+Entire product visible
+
+---
+
+## Image 2
+
+Model Carrying Bag
+
+Medium shot
+
+Bag on shoulder
+
+Standing
+
+Luxury studio
+
+Natural pose
+
+---
+
+## Image 3
+
+Editorial Campaign
+
+Same model
+
+Walking
+
+Different outfit styling
+
+Different pose
+
+Camera from side
+
+Luxury interior
+
+Looks like a magazine advertisement
+
+NOT another standing pose.
+
+---
+
+## Image 4
+
+Close-Up Detail
+
+No model
+
+Extreme macro
+
+Focus on
+
+Leather
+
+Hardware
+
+Texture
+
+Craftsmanship
+
+NOT another full bag image.
+
+---
+
+## Image 5
+
+Different Product Perspective
+
+No model
+
+Back view
+
+45°
+
+Side angle
+
+Top angle
+
+Choose whichever is missing.
+
+---
+
+## Image 6
+
+Lifestyle Image
+
+Same model
+
+Walking naturally
+
+Holding coffee
+
+Luxury shopping district
+
+Luxury hotel
+
+Modern architecture
+
+Looks completely different from Image 2.
+
+---
+
+## Image 7
+
+Luxury Detail
+
+Macro shot
+
+Focus only on
+
+Handle
+
+Gold hardware
+
+Logo
+
+Interior
+
+Leather
+
+Not full product.
+
+---
+
+## Image 8
+
+Luxury Hero Campaign
+
+Same model
+
+Wide shot
+
+Luxury architecture
+
+Editorial composition
+
+Homepage banner quality
+
+Looks like Bottega Veneta campaign photography.
+
+---
+
+# Diversity Rules
+
+Reject any generated image if
+
+Camera angle repeats
+
+Pose repeats
+
+Background repeats
+
+Composition repeats
+
+Crop repeats
+
+Lighting repeats
+
+Image purpose repeats
+
+Model pose repeats
+
+Image resembles another generated frame by more than 20%.
+
+Automatically regenerate until every frame is unique.
+
+---
+
+# Camera Rules
+
+Randomly choose
+
+Front
+
+Side
+
+Rear
+
+45°
+
+Top
+
+Low Angle
+
+High Angle
+
+Over Shoulder
+
+Portrait
+
+Landscape
+
+Macro
+
+Editorial
+
+Do not repeat camera positions.
+
+---
+
+# Background Rules
+
+Randomly choose
+
+Luxury studio
+
+Luxury apartment
+
+Gallery
+
+Concrete wall
+
+Stone texture
+
+Architectural interior
+
+Minimal beige
+
+Premium gray
+
+Luxury hotel
+
+Modern fashion showroom
+
+Never repeat backgrounds.
+
+---
+
+# Crop Rules
+
+Generate a mix of
+
+Entire product
+
+Half body
+
+Portrait
+
+Full body
+
+Macro
+
+Extreme macro
+
+Wide shot
+
+Hero banner
+
+Detail shot
+
+No crop should repeat.
+
+---
+
+# Campaign Validation
+
+Before completing the campaign, compare all generated images.
+
+If any two images appear visually similar, automatically regenerate the weaker image.
+
+The final campaign must feel like it was photographed by a luxury fashion photographer over an entire day, not like the same image copied eight times with minor changes.
+
+---
+
+This single addition is what separates an average AI generator from a professional luxury product photography engine. It forces the model to think in terms of an editorial campaign rather than producing repeated catalog shots.

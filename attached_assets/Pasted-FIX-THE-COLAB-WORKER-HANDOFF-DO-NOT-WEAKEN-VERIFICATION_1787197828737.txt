@@ -1,0 +1,597 @@
+FIX THE COLAB WORKER HANDOFF. DO NOT WEAKEN VERIFICATION.
+
+The current re-check reports:
+
+"the same endpoint is still an incompatible Mirage service"
+
+and:
+
+"WORKER_AUTH_FAILED"
+
+The external worker has NOT successfully connected as the shipped Atelier Colab worker.
+
+Fix the actual backend connection. Do not bypass authentication, do not mark the worker verified manually, and do not fabricate generation results.
+
+==================================================
+1. COLAB WORKER MUST BE THE CORRECT SERVICE
+==================================================
+
+The public COLAB_WORKER_URL must point to the actual Atelier Colab worker.
+
+The worker must expose:
+
+GET  /health
+POST /verify
+POST /generate
+GET  /job/{job_id}
+POST /batch
+POST /cancel/{job_id}
+
+The root endpoint "/" is not sufficient.
+
+Do not treat a generic FastAPI service as a valid Atelier worker.
+
+==================================================
+2. FIX WORKER AUTHENTICATION
+==================================================
+
+Use exactly one shared authentication secret:
+
+COLAB_WORKER_TOKEN
+
+The same token must exist in:
+
+Replit secret:
+COLAB_WORKER_TOKEN
+
+and:
+
+Colab environment/runtime:
+COLAB_WORKER_TOKEN
+
+Do NOT generate a different token when the Colab runtime starts.
+
+Do NOT hard-code a different token inside FastAPI.
+
+Do NOT use an ngrok token as the worker token.
+
+Do NOT expose the worker without authentication.
+
+==================================================
+3. AUTH HEADER
+==================================================
+
+The worker must accept the authentication format expected by the existing Replit bridge.
+
+Support:
+
+X-Worker-Token
+
+and, if the existing Replit bridge uses Authorization, support:
+
+Authorization: Bearer <COLAB_WORKER_TOKEN>
+
+Normalize both forms to the same internal token.
+
+Do not log the token.
+
+==================================================
+4. HEALTH ENDPOINT
+==================================================
+
+Implement:
+
+GET /health
+
+It must verify authentication and return:
+
+{
+  "status": "ok",
+  "worker": "atelier-colab",
+  "service": "atelier-colab-worker",
+  "gpu": true/false,
+  "gpu_name": "...",
+  "vram_gb": 0,
+  "cuda": "...",
+  "models": []
+}
+
+If authentication fails:
+
+HTTP 401
+
+{
+  "error": "WORKER_AUTH_FAILED"
+}
+
+==================================================
+5. WORKER IDENTITY
+==================================================
+
+The worker must identify itself as:
+
+atelier-colab
+
+Do NOT identify itself as:
+
+mirage-worker
+generic-fastapi
+test-worker
+development-worker
+
+The frontend must be able to distinguish the Atelier worker from an incompatible service.
+
+==================================================
+6. OPENAPI
+==================================================
+
+FastAPI must expose valid OpenAPI documentation.
+
+Verify:
+
+GET /openapi.json
+
+The schema MUST contain:
+
+/health
+/verify
+/generate
+/job/{job_id}
+/batch
+/cancel/{job_id}
+
+Do not fake these routes in the OpenAPI schema.
+
+They must actually exist.
+
+==================================================
+7. GENERATE ENDPOINT
+==================================================
+
+Implement:
+
+POST /generate
+
+Request:
+
+{
+  "product_id": "...",
+  "source_images": [],
+  "category": "handbag",
+  "frames": 7,
+  "model": "auto",
+  "quality": "high",
+  "transparent": false
+}
+
+Return:
+
+{
+  "job_id": "...",
+  "status": "queued"
+}
+
+Create an actual generation job.
+
+Do not return a fake completed image.
+
+==================================================
+8. JOB ENDPOINT
+==================================================
+
+Implement:
+
+GET /job/{job_id}
+
+Return:
+
+{
+  "job_id": "...",
+  "status": "queued|running|validating|completed|failed",
+  "progress": 0,
+  "images": [],
+  "errors": []
+}
+
+The status must represent the real GPU job.
+
+==================================================
+9. VERIFY ENDPOINT
+==================================================
+
+Implement:
+
+POST /verify
+
+This must perform a REAL engine verification.
+
+It must:
+
+1. Receive actual product reference images.
+2. Load the configured image-generation engine.
+3. Generate a fresh human + product test.
+4. Validate the human.
+5. Validate the product.
+6. Validate product identity.
+7. Validate physical contact.
+8. Validate scale.
+9. Return the real result.
+
+Never return VERIFIED merely because the model loaded.
+
+==================================================
+10. BATCH ENDPOINT
+==================================================
+
+Implement:
+
+POST /batch
+
+Accept multiple products.
+
+Use a queue.
+
+Do not attempt unlimited parallel GPU generation.
+
+Respect available GPU VRAM.
+
+==================================================
+11. CANCEL ENDPOINT
+==================================================
+
+Implement:
+
+POST /cancel/{job_id}
+
+Cancel queued/running jobs safely.
+
+==================================================
+12. PRODUCT GENERATION
+==================================================
+
+For the handbag test:
+
+Use the actual uploaded handbag references.
+
+Generate:
+
+1. Product studio
+2. Female model holding exact handbag
+3. Same model different angle
+4. Product detail
+5. Product alternative angle
+6. Same model lifestyle
+7. Same model editorial
+
+The generated handbag must preserve:
+
+- shape
+- silhouette
+- color
+- woven texture
+- clasp
+- hardware
+- handle
+- cord
+- eyelets
+- proportions
+
+A generic handbag is a failure.
+
+==================================================
+13. GPU CHECK
+==================================================
+
+Before generation:
+
+Check:
+
+torch.cuda.is_available()
+
+If false:
+
+return:
+
+{
+  "status": "unavailable",
+  "error": "NO_CUDA_GPU"
+}
+
+Do not silently fall back to CPU for large production generation.
+
+==================================================
+14. MODEL CHECK
+==================================================
+
+At startup report:
+
+GPU
+VRAM
+CUDA
+PyTorch
+loaded model
+model path
+model provider
+
+Only expose an engine as available if it can actually perform inference.
+
+==================================================
+15. NGROK URL
+==================================================
+
+The ngrok URL is only the transport layer.
+
+Architecture must be:
+
+Replit
+ ↓
+COLAB_WORKER_URL
+ ↓
+ngrok
+ ↓
+FastAPI Atelier Worker
+ ↓
+GPU model
+
+Do not confuse:
+
+NGROK_AUTHTOKEN
+
+with:
+
+COLAB_WORKER_TOKEN
+
+They are completely different credentials.
+
+==================================================
+16. VERIFY CURRENT CONFIGURATION
+==================================================
+
+Print safe diagnostics:
+
+WORKER ID:
+atelier-colab
+
+PUBLIC URL:
+configured
+
+WORKER TOKEN:
+configured: YES/NO
+
+GPU:
+YES/NO
+
+CUDA:
+YES/NO
+
+OPENAPI:
+YES/NO
+
+REQUIRED ROUTES:
+health
+verify
+generate
+job
+batch
+cancel
+
+Do NOT print the actual token.
+
+==================================================
+17. TEST FROM INSIDE COLAB
+==================================================
+
+Before asking Replit to verify the worker, run:
+
+GET /health
+
+with the exact worker authentication header.
+
+Then:
+
+GET /openapi.json
+
+Then:
+
+POST /verify
+
+using one real handbag reference.
+
+Do not proceed if any of these fail.
+
+==================================================
+18. TEST FROM OUTSIDE COLAB
+==================================================
+
+Use the public ngrok URL.
+
+Test:
+
+GET:
+
+https://PUBLIC_URL/health
+
+with:
+
+X-Worker-Token: COLAB_WORKER_TOKEN
+
+Then:
+
+https://PUBLIC_URL/openapi.json
+
+Then verify the required routes exist.
+
+==================================================
+19. IMPORTANT AUTH TEST
+==================================================
+
+Test three cases:
+
+CASE 1:
+Correct token
+
+Expected:
+200
+
+CASE 2:
+Wrong token
+
+Expected:
+401 WORKER_AUTH_FAILED
+
+CASE 3:
+No token
+
+Expected:
+401 WORKER_AUTH_FAILED
+
+This proves authentication is actually working.
+
+==================================================
+20. REPLIT CONFIGURATION
+==================================================
+
+Replit must contain:
+
+COLAB_WORKER_URL
+COLAB_WORKER_TOKEN
+
+COLAB_WORKER_URL must be:
+
+https://<current-ngrok-domain>
+
+No trailing slash.
+
+COLAB_WORKER_TOKEN must exactly match the Colab worker token.
+
+Do not automatically overwrite either value.
+
+==================================================
+21. REMOVE OLD WORKER CONFIGURATION
+==================================================
+
+Find any old configuration referring to:
+
+Mirage worker
+old Colab URL
+old tunnel
+old worker token
+old FastAPI service
+
+Do not accidentally continue calling the old endpoint.
+
+Make the active worker configuration explicit.
+
+==================================================
+22. FAIL-CLOSED BEHAVIOR
+==================================================
+
+If:
+
+authentication fails
+OR
+OpenAPI is incompatible
+OR
+required endpoint is missing
+OR
+GPU unavailable
+OR
+model unavailable
+
+the system must remain:
+
+BLOCKED
+
+Do not mark:
+
+VERIFIED
+
+Do not fabricate:
+
+generation success
+
+Do not bypass the verification gate.
+
+==================================================
+23. FINAL CONNECTION TEST
+==================================================
+
+After fixing the worker, run:
+
+1. /health
+2. /openapi.json
+3. /verify
+4. /generate
+5. /job/{job_id}
+
+using the REAL public URL.
+
+Only after all tests work should the Replit bridge accept the worker.
+
+==================================================
+24. FINAL RESPONSE
+==================================================
+
+Report:
+
+WORKER:
+atelier-colab
+
+AUTH:
+PASS/FAIL
+
+HEALTH:
+PASS/FAIL
+
+OPENAPI:
+PASS/FAIL
+
+VERIFY:
+PASS/FAIL
+
+GENERATE:
+PASS/FAIL
+
+JOB:
+PASS/FAIL
+
+GPU:
+PASS/FAIL
+
+MODEL:
+PASS/FAIL
+
+PUBLIC URL:
+configured
+
+Do not claim success unless the real external request succeeds.
+
+==================================================
+FINAL OBJECTIVE
+==================================================
+
+Make this work end-to-end:
+
+Replit
+ ↓
+COLAB_WORKER_URL
+ ↓
+ngrok
+ ↓
+Atelier FastAPI worker
+ ↓
+authenticated request
+ ↓
+GPU
+ ↓
+image model
+ ↓
+real handbag generation
+ ↓
+validation
+ ↓
+Replit
+
+The worker must be a REAL functioning Atelier worker, not a generic FastAPI endpoint.
+
+Do not weaken the fail-closed safeguards.

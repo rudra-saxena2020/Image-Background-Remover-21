@@ -1,0 +1,848 @@
+Yes. The current result is failing because it is treating the model like a **generic cutout mannequin** instead of generating a proper fashion campaign model. Also, "without background" must mean **true transparent PNG**, not a white background.
+
+Use this as the **master Replit implementation prompt**. It is written as an engineering specification, not just an image-generation prompt.
+
+---
+
+# REPLIT MASTER PROMPT: AI PRODUCT + HUMAN MODEL GENERATION ENGINE
+
+Build and enforce a production-grade AI product photography system for e-commerce fashion products.
+
+The system must take uploaded product reference images and generate **high-quality, photorealistic product photography with an appropriate human model when the product category requires one**.
+
+The output must look like a professional luxury fashion campaign, not an AI-generated cutout, mannequin, collage, or generic stock photo.
+
+The system must support transparent-background output.
+
+---
+
+# 1. CORE OBJECTIVE
+
+The user uploads **1 to 6 product reference images**.
+
+The system must:
+
+1. Analyze all uploaded product images.
+2. Detect the product category.
+3. Determine whether a human model is required.
+4. Determine the appropriate model type.
+5. Create a realistic model appropriate for the product.
+6. Preserve the exact uploaded product.
+7. Place the product naturally on/in the model's body when required.
+8. Generate a professional pose appropriate to the product.
+9. Generate a premium commercial photograph.
+10. Remove the complete background.
+11. Return a **true transparent PNG**.
+12. Upscale the final image.
+13. Run quality checks.
+14. Automatically regenerate failed images.
+
+---
+
+# 2. IMPORTANT: DO NOT USE A GENERIC MODEL
+
+Never use the same generic woman/man for every product.
+
+The model must be selected/generated based on the product.
+
+Examples:
+
+### Women's handbag
+
+Use:
+
+* Female fashion model
+* Adult
+* Professional fashion appearance
+* Natural proportions
+* Appropriate styling
+* Product clearly visible
+
+The model should actually **hold or wear the handbag**.
+
+### Men's briefcase
+
+Use:
+
+* Male model
+* Adult
+* Professional/luxury styling
+* Naturally holding the briefcase
+
+### Women's watch
+
+Use:
+
+* Female wrist/hand model
+* Realistic wrist
+* Watch naturally worn
+
+### Men's watch
+
+Use:
+
+* Male wrist/hand model
+* Realistic wrist
+* Watch naturally worn
+
+### Ring
+
+Use:
+
+* Realistic human hand
+* Correct finger
+* Natural skin
+* Natural nails
+
+### Bracelet
+
+Use:
+
+* Realistic wrist/forearm
+
+### Necklace
+
+Use:
+
+* Realistic female or male upper-body model
+* Visible neck and collarbone
+
+### Earrings
+
+Use:
+
+* Realistic human model
+* Proper ear visibility
+* Natural hairstyle
+
+### Shoes
+
+Use:
+
+* Full or lower-body fashion model
+* Shoes actually worn
+* Feet and legs anatomically correct
+
+### Clothing
+
+Use:
+
+* Appropriate adult fashion model
+* Full body where necessary
+* Garment properly worn
+
+### Perfume
+
+Default to:
+
+* Product-only luxury photography
+
+Do not unnecessarily add a human.
+
+### Furniture
+
+Use:
+
+* Interior environment
+* Human only if it improves scale/context
+
+---
+
+# 3. CATEGORY-AWARE MODEL SELECTION
+
+Before image generation, create an internal object:
+
+```text
+product_category
+product_gender
+model_required
+model_gender
+model_visibility
+product_interaction
+recommended_pose
+recommended_camera
+recommended_crop
+```
+
+Example:
+
+```json
+{
+  "product_category": "luxury_womens_handbag",
+  "model_required": true,
+  "model_gender": "female",
+  "model_visibility": "full_body_or_three_quarter",
+  "product_interaction": "holding_or_shoulder_carry",
+  "recommended_pose": "walking_editorial",
+  "recommended_camera": "85mm_fashion",
+  "recommended_crop": "three_quarter"
+}
+```
+
+Do not use one universal image prompt for all products.
+
+---
+
+# 4. HUMAN MODEL REQUIREMENT
+
+When `model_required = true`:
+
+**THE HUMAN MUST BE PRESENT.**
+
+The generated image is invalid if:
+
+* No model exists
+* Model is only partially generated when a full model is required
+* Product is floating
+* Product is pasted onto the model
+* Product is not physically interacting with the model
+* Model looks like a mannequin
+* Model looks like a plastic CGI character
+* Model has obvious AI artifacts
+
+Do not silently fall back to product-only generation.
+
+Do not silently generate a cutout product.
+
+If the model generation fails, mark the frame as `FAILED_MODEL_GENERATION` and retry.
+
+---
+
+# 5. HUMAN MODEL QUALITY
+
+The model must look like a **real adult professional fashion model photographed with a high-end camera**.
+
+Do NOT create:
+
+* Mannequin
+* Plastic human
+* CGI character
+* Cartoon
+* Illustration
+* Low-resolution model
+* Stock-photo-looking model
+* Oversmoothed face
+* Unrealistic body
+
+Required:
+
+* Realistic skin texture
+* Natural pores
+* Natural hair
+* Individual hair strands
+* Realistic eyes
+* Natural eye reflections
+* Natural facial proportions
+* Natural body proportions
+* Realistic clothing
+* Natural fabric folds
+* Physically correct lighting
+* Realistic shadows
+
+The model should look like a genuine fashion photograph.
+
+---
+
+# 6. FACE QUALITY
+
+The face is extremely important.
+
+Reject the image if:
+
+* Eyes are misaligned
+* Eyes point in different directions
+* Face is distorted
+* Nose is malformed
+* Mouth is distorted
+* Teeth are malformed
+* Ears are malformed
+* Skin looks plastic
+* Face is blurry
+* Face has unnatural symmetry
+* Face changes between campaign images when identity should remain consistent
+
+Use a realistic editorial expression.
+
+Do not create an exaggerated smile unless appropriate to the campaign.
+
+---
+
+# 7. HAND QUALITY
+
+Hands are a critical validation area.
+
+Reject immediately if:
+
+* More than five fingers
+* Fewer than five fingers
+* Missing fingers
+* Fused fingers
+* Extra fingers
+* Deformed fingers
+* Impossible thumb placement
+* Broken wrist
+* Floating hand
+* Product passing through fingers
+* Fingers clipping through the product
+
+For bags:
+
+The hand must grip the handle naturally.
+
+For watches:
+
+The wrist and fingers must have realistic anatomy.
+
+For jewelry:
+
+The jewelry must sit correctly on the actual finger/wrist/neck.
+
+---
+
+# 8. PRODUCT SOURCE IMAGE IS THE HIGHEST PRIORITY
+
+The uploaded product images are the **absolute source of truth**.
+
+Never recreate the product purely from text.
+
+The generation pipeline MUST pass the source product images into the image-generation/editing model as image references.
+
+Do not only send the textual prompt.
+
+The product must be conditioned from the uploaded images.
+
+---
+
+# 9. PRODUCT PRESERVATION
+
+The exact uploaded product must be preserved.
+
+Never change:
+
+* Color
+* Shape
+* Dimensions
+* Proportions
+* Material
+* Texture
+* Pattern
+* Stitching
+* Logo
+* Branding
+* Hardware
+* Buckles
+* Zippers
+* Handles
+* Straps
+* Chains
+* Embossing
+* Buttons
+* Construction
+
+The AI may change the **environment around the product**, but not the product itself.
+
+---
+
+# 10. MULTI-REFERENCE PRODUCT UNDERSTANDING
+
+If the user uploads 1-6 images, use **all images together**.
+
+Do not treat each image as a separate product.
+
+For example:
+
+```text
+Image 1 = front
+Image 2 = side
+Image 3 = back
+Image 4 = interior
+Image 5 = hardware
+Image 6 = detail
+```
+
+Combine them into one product identity.
+
+Use the additional references to resolve details that are not visible in the primary image.
+
+---
+
+# 11. BAG GENERATION SPECIFICALLY
+
+For handbags, the model must physically interact with the bag.
+
+Valid examples:
+
+### Pose A
+
+Female model holding the bag by the handles.
+
+### Pose B
+
+Female model carrying it over the shoulder.
+
+### Pose C
+
+Female model carrying it naturally while walking.
+
+### Pose D
+
+Female model holding it beside the body.
+
+### Pose E
+
+Female model wearing it crossbody if the product has a crossbody strap.
+
+### Pose F
+
+Female model sitting with the bag beside or on her lap.
+
+The bag must have realistic contact with:
+
+* Hand
+* Shoulder
+* Arm
+* Body
+
+depending on the pose.
+
+Never generate a bag floating next to the model.
+
+Never paste the product onto a mannequin.
+
+---
+
+# 12. DO NOT MAKE THE MODEL LOOK LIKE THE PROVIDED EXAMPLE
+
+The uploaded model example/reference should NOT be copied as a generic mannequin template.
+
+Do not reproduce:
+
+* Same body pose
+* Same body shape
+* Same clothing
+* Same background
+* Same composition
+* Same stiff posture
+
+Instead generate a **new realistic adult fashion model** appropriate for the product.
+
+The model should have:
+
+* Natural posture
+* Natural weight distribution
+* Relaxed shoulders
+* Natural arms
+* Natural hands
+* Natural facial expression
+* Professional fashion styling
+
+---
+
+# 13. MODEL STYLING
+
+Automatically select clothing appropriate for the product.
+
+For a luxury handbag:
+
+Use sophisticated minimal fashion such as:
+
+* Tailored trousers
+* Premium knitwear
+* Minimal blouse
+* Wool coat
+* Leather jacket
+* Elegant dress
+* Neutral luxury styling
+
+Avoid:
+
+* Loud graphics
+* Cheap-looking clothing
+* Distracting patterns
+* Logos
+* Streetwear unless appropriate
+* Clothing that hides the product
+
+The product must remain the visual hero.
+
+---
+
+# 14. CAMERA
+
+Use professional photography characteristics.
+
+Possible lenses:
+
+* 35mm
+* 50mm
+* 85mm
+* 105mm macro
+
+For fashion models:
+
+Prefer 50mm or 85mm.
+
+For product details:
+
+Use macro.
+
+Avoid excessive wide-angle distortion.
+
+---
+
+# 15. PHOTOGRAPHIC REALISM
+
+The image should have:
+
+* Realistic depth of field
+* Natural lens compression
+* Realistic skin
+* Correct shadows
+* Realistic reflections
+* Correct contact shadows
+* Correct material response
+* Realistic fabric folds
+* Correct product-to-body scale
+* Professional color grading
+
+Do not use artificial-looking HDR.
+
+Do not oversharpen.
+
+Do not create unrealistic glossy skin.
+
+---
+
+# 16. TRANSPARENT BACKGROUND
+
+This requirement is mandatory.
+
+The final output must have **NO BACKGROUND**.
+
+Do NOT use:
+
+* White background
+* Gray background
+* Studio wall
+* Transparent-looking white background
+
+The final image must contain a genuine **RGBA alpha channel**.
+
+Example:
+
+```text
+Foreground:
+Model + Product
+
+Background:
+100% Transparent
+```
+
+The output must be:
+
+```text
+PNG
+RGBA
+Transparent background
+```
+
+Do not flatten the image against white.
+
+---
+
+# 17. BACKGROUND REMOVAL
+
+After generation:
+
+```text
+Generated Image
+      ↓
+Foreground Segmentation
+      ↓
+Model + Product Mask
+      ↓
+Edge Refinement
+      ↓
+Hair Refinement
+      ↓
+Transparent PNG
+```
+
+The background-removal stage must preserve:
+
+* Hair
+* Fingers
+* Bag straps
+* Thin straps
+* Jewelry
+* Shoe laces
+* Small product details
+
+Do not cut off thin edges.
+
+Do not leave background halos.
+
+Do not leave white pixels around the model.
+
+---
+
+# 18. EDGE QUALITY
+
+Transparent output must have clean edges.
+
+Reject if:
+
+* White halo
+* Gray halo
+* Background fragments
+* Missing hair
+* Missing fingers
+* Missing straps
+* Jagged edges
+* Transparent holes inside the product
+* Product edges are cut off
+
+Perform alpha-matte refinement before export.
+
+---
+
+# 19. FINAL IMAGE FORMAT
+
+Default:
+
+```text
+PNG
+RGBA
+Transparent Background
+High Resolution
+```
+
+Optional:
+
+```text
+WEBP
+JPEG
+```
+
+But JPEG must only be generated as an additional flattened version.
+
+The primary output must remain transparent PNG.
+
+---
+
+# 20. GENERATION QUALITY
+
+Target:
+
+* 4K output
+* High detail
+* Commercial photography quality
+* Sharp product
+* Sharp model
+* Natural skin
+* Detailed material
+* Realistic lighting
+* Clean edges
+
+If the generation model produces lower resolution, upscale using Real-ESRGAN or an equivalent high-quality upscaler.
+
+---
+
+# 21. REQUIRED IMAGE TYPES
+
+For each product generate 6-8 images.
+
+Do NOT generate eight variations of the same product shot.
+
+### Image 1
+
+Product-only hero shot.
+
+### Image 2
+
+Appropriate human model using/wearing product.
+
+### Image 3
+
+Same model, different pose and camera angle.
+
+### Image 4
+
+Product detail/macro.
+
+### Image 5
+
+Different product angle.
+
+### Image 6
+
+Same model in a different lifestyle pose.
+
+### Image 7
+
+Extreme product detail.
+
+### Image 8
+
+Premium campaign/editorial shot.
+
+For categories that don't require humans, intelligently replace model shots with appropriate lifestyle/product compositions.
+
+---
+
+# 22. MODEL CONSISTENCY
+
+For one product:
+
+Generate one model identity.
+
+Create a persistent `model_identity_id`.
+
+All model images for that product must use the same identity.
+
+Example:
+
+```text
+Product A
+ └── Model ID: MODEL_A_001
+      ├── Image 2
+      ├── Image 3
+      ├── Image 6
+      └── Image 8
+```
+
+For Product B:
+
+```text
+Product B
+ └── Model ID: MODEL_B_001
+```
+
+Never reuse Product A's model for Product B unless explicitly requested.
+
+---
+
+# 23. QUALITY CONTROL PIPELINE
+
+Every image must pass:
+
+```text
+Product Identity Check
+        ↓
+Human Presence Check
+        ↓
+Face Quality Check
+        ↓
+Hand/Anatomy Check
+        ↓
+Product Interaction Check
+        ↓
+Background Removal Check
+        ↓
+Transparency Check
+        ↓
+Resolution Check
+        ↓
+Final Quality Score
+```
+
+Only images that pass all checks become `READY`.
+
+---
+
+# 24. AUTOMATIC REGENERATION
+
+If an image fails:
+
+```text
+FAILED
+   ↓
+Identify failure reason
+   ↓
+Adjust generation parameters
+   ↓
+Regenerate
+   ↓
+Validate again
+```
+
+Do not return bad images to the user.
+
+Maximum retry:
+
+```text
+3 attempts per frame
+```
+
+If all attempts fail:
+
+```text
+STATUS: MANUAL_REVIEW
+```
+
+Do not silently return a poor-quality image.
+
+---
+
+# 25. FINAL QUALITY GATE
+
+An image can only be marked:
+
+```text
+READY
+```
+
+if:
+
+* Product is correct.
+* Model is present when required.
+* Model is realistic.
+* Face is correct.
+* Hands are correct.
+* Product interaction is physically realistic.
+* Product is not distorted.
+* Background is completely transparent.
+* Alpha channel is valid.
+* No AI artifacts are visible.
+* Resolution is sufficient.
+* Image looks like professional commercial photography.
+
+---
+
+# MOST IMPORTANT IMPLEMENTATION RULE
+
+Do not rely on the text prompt alone.
+
+The application must actually implement:
+
+```text
+SOURCE IMAGES
+      ↓
+PRODUCT ANALYSIS
+      ↓
+CATEGORY DETECTION
+      ↓
+MODEL REQUIREMENT
+      ↓
+SCENE PLANNING
+      ↓
+IMAGE + SOURCE REFERENCES
+      ↓
+IMAGE GENERATION / EDITING
+      ↓
+ANATOMY + PRODUCT VALIDATION
+      ↓
+BACKGROUND SEGMENTATION
+      ↓
+ALPHA REFINEMENT
+      ↓
+UPSCALE
+      ↓
+FINAL TRANSPARENT PNG
+```
+
+If the selected AI model/API does not support **image conditioning/editing with the uploaded source images**, do not pretend that it does. Mark that capability as unavailable and use a compatible image-editing/generation model.
+
+**Never fall back to text-only generation for a product where exact product preservation is required.**
+
+The final result should be a **realistic human model + the exact uploaded product + professional fashion photography + completely transparent background**, not a generic AI model, not a mannequin, not a product-only image, and not a white-background cutout.

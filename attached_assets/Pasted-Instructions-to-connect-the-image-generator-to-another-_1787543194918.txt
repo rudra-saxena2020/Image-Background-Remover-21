@@ -1,0 +1,365 @@
+Instructions to connect the image generator to another project
+Use the existing API server as the connection point. Do not connect the other project directly to RunPod, because that would expose the private RUNPOD_URL and may cause CORS/security problems.
+
+The connection flow should be:
+
+Other Project
+     |
+     | POST /api/generate
+     v
+Image Generator API Server
+     |
+     | GET /generate?prompt=...
+     v
+RunPod FLUX Server
+     |
+     | image/png
+     v
+Other Project receives image
+
+1. Make sure the image generator API is published
+The API server must be running and published separately from the other project.
+
+The API endpoint is:
+
+POST https://YOUR_PUBLISHED_API_SERVER_URL/api/generate
+
+Do not use:
+
+http://localhost:8080/api/generate
+
+from another deployed project. localhost would refer to the other project itself.
+
+Get the real API server URL from the API server's Publish section. Do not construct the production URL manually.
+
+2. Keep the RunPod secret only in the image generator project
+The image generator API project should contain this secret:
+
+RUNPOD_URL=https://krozhxdvyy5a4k-8000.proxy.runpod.net/generate
+
+The URL must:
+
+Use https
+Use port 8000
+End with /generate
+Not point to port 8888
+Not be placed in frontend code
+Not be copied into the other project
+The other project only needs the published API server URL, for example:
+
+IMAGE_GENERATOR_API_URL=https://YOUR_PUBLISHED_API_SERVER_URL
+
+If the other project has a backend, store this as a backend environment variable or secret.
+
+3. API request format
+Send a POST request to:
+
+/api/generate
+
+with this JSON body:
+
+{
+  "prompt": "A beautifully drawn animatic storyboard frame of a couple's first meeting under a glowing street lamp"
+}
+
+Requirements:
+
+prompt is required
+Minimum length: 1 character
+Maximum length: 1000 characters
+Content-Type must be application/json
+4. API response format
+A successful response returns the generated image as binary data:
+
+HTTP 200
+Content-Type: image/png
+
+It may also return:
+
+Content-Type: image/jpeg
+
+The response is not JSON. The other project must read it as a Blob, ArrayBuffer, or binary file.
+
+Errors use JSON, for example:
+
+{
+  "error": "Image server could not be reached"
+}
+
+Possible statuses:
+
+Status	Meaning
+200	Image generated successfully
+400	Invalid request or missing prompt
+502	RunPod/image server failure
+504 or network timeout	Generation took too long or the server was unavailable
+Image generation can take around 10–120 seconds, so the other project must allow a long request timeout.
+
+Frontend JavaScript/React connection
+Use this code in the other project's frontend if the API server allows browser requests:
+
+const API_URL = import.meta.env.VITE_IMAGE_GENERATOR_API_URL;
+export async function generateImage(prompt: string): Promise<string> {
+  const response = await fetch(`${API_URL}/api/generate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prompt }),
+  });
+  if (!response.ok) {
+    let message = `Image generation failed with status ${response.status}`;
+    try {
+      const error = await response.json();
+      if (error.error) {
+        message = error.error;
+      }
+    } catch {
+      // The response may not be JSON.
+    }
+    throw new Error(message);
+  }
+  const imageBlob = await response.blob();
+  if (!imageBlob.type.startsWith("image/")) {
+    throw new Error("The image generator returned an invalid file type");
+  }
+  return URL.createObjectURL(imageBlob);
+}
+
+Set this environment variable in the other project:
+
+VITE_IMAGE_GENERATOR_API_URL=https://YOUR_PUBLISHED_API_SERVER_URL
+
+Example React usage:
+
+import { useState } from "react";
+import { generateImage } from "./api";
+export function ImageGenerator() {
+  const [prompt, setPrompt] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  async function handleGenerate() {
+    if (!prompt.trim()) {
+      setError("Please enter a prompt");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+      const nextImageUrl = await generateImage(prompt);
+      setImageUrl(nextImageUrl);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Image generation failed",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <div>
+      <textarea
+        value={prompt}
+        onChange={(event) => setPrompt(event.target.value)}
+        maxLength={1000}
+        placeholder="Describe the image you want..."
+      />
+      <button onClick={handleGenerate} disabled={loading || !prompt.trim()}>
+        {loading ? "Generating..." : "Generate image"}
+      </button>
+      {error && <p>{error}</p>}
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={prompt}
+          style={{ maxWidth: "100%" }}
+        />
+      )}
+    </div>
+  );
+}
+
+Important frontend cleanup
+When replacing an image, revoke the previous object URL:
+
+URL.revokeObjectURL(previousImageUrl);
+
+This prevents memory leaks after multiple generations.
+
+Backend Node.js connection
+If the other project has a backend, this is the recommended approach.
+
+const IMAGE_GENERATOR_API_URL =
+  process.env.IMAGE_GENERATOR_API_URL;
+export async function generateImage(prompt: string): Promise<Buffer> {
+  if (!IMAGE_GENERATOR_API_URL) {
+    throw new Error("IMAGE_GENERATOR_API_URL is not configured");
+  }
+  if (!prompt.trim()) {
+    throw new Error("Prompt is required");
+  }
+  if (prompt.length > 1000) {
+    throw new Error("Prompt must be 1000 characters or fewer");
+  }
+  const response = await fetch(
+    `${IMAGE_GENERATOR_API_URL}/api/generate`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+      signal: AbortSignal.timeout(130_000),
+    },
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Image generation failed with status ${response.status}: ${errorText}`,
+    );
+  }
+  return Buffer.from(await response.arrayBuffer());
+}
+
+Express route example:
+
+app.post("/api/create-image", async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    if (typeof prompt !== "string" || !prompt.trim()) {
+      res.status(400).json({
+        error: "A prompt is required",
+      });
+      return;
+    }
+    const image = await generateImage(prompt);
+    res
+      .type("png")
+      .send(image);
+  } catch (error) {
+    console.error("Image generation failed:", error);
+    res.status(502).json({
+      error:
+        error instanceof Error
+          ? error.message
+          : "Image generation failed",
+    });
+  }
+});
+
+This approach keeps the image generator URL on the server and prevents users from inspecting the API connection details in browser code.
+
+Python connection
+import os
+import requests
+API_URL = os.environ["IMAGE_GENERATOR_API_URL"]
+def generate_image(prompt: str, output_path: str = "generated.png") -> None:
+    response = requests.post(
+        f"{API_URL}/api/generate",
+        json={"prompt": prompt},
+        timeout=130,
+    )
+    if response.status_code != 200:
+        try:
+            error = response.json()
+        except ValueError:
+            error = response.text
+        raise RuntimeError(
+            f"Image generation failed with status "
+            f"{response.status_code}: {error}"
+        )
+    content_type = response.headers.get("content-type", "")
+    if not content_type.startswith("image/"):
+        raise RuntimeError(
+            f"Expected an image response, received {content_type}"
+        )
+    with open(output_path, "wb") as image_file:
+        image_file.write(response.content)
+    print(f"Image saved to {output_path}")
+if __name__ == "__main__":
+    generate_image(
+        "A beautifully drawn animatic storyboard frame of a couple's first meeting"
+    )
+
+Set the environment variable in the other project:
+
+IMAGE_GENERATOR_API_URL=https://YOUR_PUBLISHED_API_SERVER_URL
+
+cURL test
+After publishing the API server, test it with:
+
+curl -X POST \
+  "https://YOUR_PUBLISHED_API_SERVER_URL/api/generate" \
+  -H "Content-Type: application/json" \
+  --data '{"prompt":"A red circle on a white background"}' \
+  --output generated.png
+
+Check the generated file:
+
+file generated.png
+
+Expected result:
+
+PNG image data
+
+Health check
+The API server also has a health endpoint:
+
+GET https://YOUR_PUBLISHED_API_SERVER_URL/api/healthz
+
+Test it:
+
+curl -i \
+  "https://YOUR_PUBLISHED_API_SERVER_URL/api/healthz"
+
+Expected status:
+
+HTTP 200
+
+Use this to show whether the API server is online. Note that a healthy API server does not always mean the RunPod GPU is ready; the actual generation request is the final connectivity test.
+
+Ready-to-paste instruction for the other project
+Copy this to the other project's agent:
+
+Connect this project to the existing image generator API.
+
+Use the environment variable IMAGE_GENERATOR_API_URL for the published URL of the image generator API server. Do not use the RunPod URL directly and do not expose RUNPOD_URL in frontend code.
+
+Send image generation requests using:
+
+POST ${IMAGE_GENERATOR_API_URL}/api/generate
+Content-Type: application/json
+
+Request body:
+
+{
+  "prompt": "the user's image prompt"
+}
+
+The prompt must be between 1 and 1000 characters.
+
+The successful response is binary image data with image/png or image/jpeg content type. It is not JSON. In the browser, read it with response.blob() and display it with URL.createObjectURL(blob). On the backend, read it as an ArrayBuffer or Buffer.
+
+Allow at least 130 seconds for the request because GPU image generation can take up to 120 seconds.
+
+Handle these errors:
+
+400: invalid prompt
+502: image server or RunPod failure
+timeout/network error: generation did not complete
+Add loading, success, and error states to the UI. Disable the Generate button while a request is active. Revoke old browser object URLs when replacing generated images.
+
+Verify the connection with:
+
+curl -X POST \
+  "${IMAGE_GENERATOR_API_URL}/api/generate" \
+  -H "Content-Type: application/json" \
+  --data '{"prompt":"A red circle on a white background"}' \
+  --output generated.png
+
+Do not change the image generator API server's RUNPOD_URL unless the RunPod server itself changes.
+

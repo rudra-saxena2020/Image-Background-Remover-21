@@ -1,0 +1,958 @@
+ATELIER: ACTUALLY RUN, VERIFY AND ENABLE HUMAN + PRODUCT GENERATION
+
+Do not only modify the UI.
+
+Do not only change the verification status.
+
+Do not mark an engine VERIFIED manually.
+
+I need you to actually make the generation backend run, generate a real test image using the uploaded product references, validate it, and only then mark the engine VERIFIED.
+
+The final result I need is:
+
+UPLOAD PRODUCT
+        ↓
+SELECT ENGINE
+        ↓
+GENERATE
+        ↓
+REAL HUMAN + EXACT PRODUCT
+        ↓
+VALIDATE
+        ↓
+VERIFIED
+        ↓
+GENERATE 6-8 CAMPAIGN IMAGES
+
+===========================================================
+PHASE 1: INSPECT CURRENT RUNTIME
+===========================================================
+
+First inspect the existing project.
+
+Do not rewrite working code.
+
+Find:
+
+- generation service
+- engine registry
+- engine router
+- verification service
+- audit script
+- Fooocus integration
+- Qwen integration
+- SDXL integration
+- BiRefNet
+- Real-ESRGAN
+- image storage
+- job queue
+- frontend engine selector
+
+Run actual runtime diagnostics.
+
+Check:
+
+python version
+pip
+PyTorch
+CUDA
+CUDA version
+GPU name
+GPU VRAM
+torch.cuda.is_available()
+available disk space
+available RAM
+
+Return the actual values.
+
+Do not assume GPU availability.
+
+===========================================================
+PHASE 2: DETERMINE THE BEST AVAILABLE ENGINE
+===========================================================
+
+Test the configured engines in this order:
+
+1. Qwen Edit
+2. Fooocus
+3. FLUX Schnell
+4. Other compatible local image-editing engine
+
+Do not select an engine simply because its name appears in the UI.
+
+An engine is usable only if:
+
+MODEL EXISTS
++
+MODEL LOADS
++
+IMAGE INPUT WORKS
++
+INFERENCE WORKS
++
+OUTPUT IMAGE IS RETURNED
+
+===========================================================
+PHASE 3: IF CUDA GPU EXISTS
+===========================================================
+
+If:
+
+torch.cuda.is_available() == true
+
+use the available NVIDIA GPU.
+
+Print:
+
+GPU:
+VRAM:
+CUDA:
+PyTorch CUDA:
+
+Then load the best compatible engine.
+
+Prioritize Qwen Image Edit for product-preserving human + product generation.
+
+If Qwen cannot load or cannot run:
+
+try Fooocus.
+
+If Fooocus works:
+
+use Fooocus as the active engine.
+
+Do not stop merely because the first engine failed.
+
+===========================================================
+PHASE 4: IF NO CUDA GPU EXISTS
+===========================================================
+
+If the current Replit environment has no CUDA GPU:
+
+DO NOT pretend local generation is production-ready.
+
+DO NOT spend several minutes repeatedly attempting CPU inference.
+
+Instead automatically determine whether an existing remote GPU configuration/provider already exists in the project.
+
+Check:
+
+GPU worker URL
+worker API
+environment variables
+provider configuration
+existing inference endpoint
+
+If an existing GPU worker exists:
+
+connect to it and run the generation there.
+
+If no GPU worker exists:
+
+create the required provider configuration and expose a clear setup requirement.
+
+Do not mark an engine VERIFIED without actually running inference.
+
+CPU generation may be used only for product-only processing.
+
+===========================================================
+PHASE 5: FOOOCUS MUST ACTUALLY RUN
+===========================================================
+
+Use the official Fooocus repository already configured in the project.
+
+Repository:
+
+https://github.com/lllyasviel/Fooocus
+
+Create or fix:
+
+/providers/fooocus/
+
+with:
+
+fooocus_provider
+fooocus_runner
+fooocus_client
+fooocus_health
+fooocus_config
+
+The runner must be NON-INTERACTIVE.
+
+It must accept a generation job from Atelier.
+
+Input:
+
+source_images
+prompt
+negative_prompt
+seed
+resolution
+generation_mode
+reference_images
+
+Output:
+
+image_path
+provider
+model
+seed
+resolution
+generation_time
+status
+
+Do not require a human to manually operate the Fooocus UI.
+
+Atelier must be able to invoke it programmatically.
+
+===========================================================
+PHASE 6: QWEN EDIT MUST ACTUALLY RUN
+===========================================================
+
+If Qwen Image Edit is configured:
+
+Verify the actual model path.
+
+Verify the actual weights exist.
+
+Verify dependencies.
+
+Verify CUDA.
+
+Load the model.
+
+Run one real image-editing inference.
+
+Do not consider:
+
+"model configured"
+
+as success.
+
+Success means:
+
+SOURCE IMAGE
+        ↓
+QWEN
+        ↓
+OUTPUT IMAGE
+
+actually works.
+
+===========================================================
+PHASE 7: USE THE ACTUAL UPLOADED HANDBAG
+===========================================================
+
+Do not use a fake test image.
+
+Use the actual handbag references uploaded by the user.
+
+Use ALL available source references.
+
+For example:
+
+source_01
+source_02
+source_03
+source_04
+source_05
+source_06
+
+Treat them as one product.
+
+Create:
+
+ProductIdentityProfile
+
+The source product is immutable.
+
+===========================================================
+PHASE 8: GENERATE REAL HUMAN + EXACT PRODUCT
+===========================================================
+
+For this test product:
+
+CATEGORY:
+
+Women's handbag
+
+MODEL:
+
+Adult female fashion model
+
+REQUIRED:
+
+The woman must visibly carry the handbag.
+
+The generated scene must show:
+
+REAL WOMAN
++
+EXACT UPLOADED HANDBAG
+
+The AI must not create a similar handbag.
+
+The AI must not redesign the handbag.
+
+The AI must not substitute a generic tote.
+
+===========================================================
+PHASE 9: PRODUCT PRESERVATION
+===========================================================
+
+For the supplied handbag preserve:
+
+- exact color
+- exact woven pattern
+- exact shape
+- exact silhouette
+- exact handle
+- exact handle geometry
+- exact braided cord
+- exact gold clasp
+- exact eyelets
+- exact hardware
+- exact proportions
+- exact material appearance
+
+The following is a FAILURE:
+
+"woman carrying a similar burgundy handbag"
+
+The following is SUCCESS:
+
+"woman carrying the exact uploaded handbag"
+
+===========================================================
+PHASE 10: HUMAN GENERATION STRATEGY
+===========================================================
+
+Do not ask the generative model to freely redraw both:
+
+human + handbag
+
+if that causes product identity loss.
+
+Prefer:
+
+1. Generate realistic woman and scene.
+2. Extract exact product from source.
+3. Insert exact product into scene.
+4. Create correct occlusion.
+5. Create realistic contact.
+6. Match lighting.
+7. Validate.
+
+Use the source product image as the actual product reference.
+
+===========================================================
+PHASE 11: PRODUCT EXTRACTION
+===========================================================
+
+Use BiRefNet.
+
+Pipeline:
+
+SOURCE PRODUCT
+      ↓
+BiRefNet
+      ↓
+MASK
+      ↓
+EDGE REFINEMENT
+      ↓
+EXACT PRODUCT PNG
+
+Preserve:
+
+- handles
+- straps
+- thin edges
+- hardware
+- texture
+
+Do not regenerate the extracted product.
+
+===========================================================
+PHASE 12: HUMAN + PRODUCT COMPOSITING
+===========================================================
+
+For the handbag:
+
+Generate an adult female fashion model.
+
+Possible pose:
+
+Three-quarter fashion pose.
+
+The woman should naturally hold the handbag by its handle or carry it over the shoulder.
+
+The bag must:
+
+- touch the model
+- have believable scale
+- have realistic perspective
+- have realistic occlusion
+- have realistic shadows
+
+The hand must interact naturally with the handle.
+
+No floating.
+
+No clipping.
+
+No pasted appearance.
+
+===========================================================
+PHASE 13: HUMAN QUALITY CHECK
+===========================================================
+
+Before verification:
+
+Check:
+
+face
+eyes
+skin
+hands
+fingers
+arms
+body
+pose
+
+Reject:
+
+extra fingers
+missing fingers
+fused fingers
+broken wrists
+distorted face
+distorted eyes
+duplicated limbs
+unnatural anatomy
+
+===========================================================
+PHASE 14: PRODUCT IDENTITY CHECK
+===========================================================
+
+Do NOT rely only on object detection.
+
+Object detection can prove:
+
+"there is a handbag."
+
+It cannot prove:
+
+"this is the exact uploaded handbag."
+
+Create a product identity score.
+
+Compare generated product against ALL source references.
+
+Check:
+
+- silhouette
+- color
+- texture
+- pattern
+- clasp
+- hardware
+- handle
+- cord
+- eyelets
+- proportions
+
+For this handbag:
+
+GOLD CLASP MUST MATCH
+BRAIDED CORD MUST MATCH
+EYELETS MUST MATCH
+WOVEN TEXTURE MUST MATCH
+HANDLE MUST MATCH
+SILHOUETTE MUST MATCH
+
+If these features are missing:
+
+FAIL.
+
+===========================================================
+PHASE 15: CONTACT CHECK
+===========================================================
+
+Verify:
+
+PERSON detected
++
+HANDBAG detected
++
+PERSON/HANDBAG contact detected
+
+The handbag must actually be:
+
+held
+OR
+worn
+OR
+carried
+
+If the bag is merely next to the model:
+
+FAIL.
+
+===========================================================
+PHASE 16: SCALE CHECK
+===========================================================
+
+Verify that the handbag has believable physical scale relative to the model.
+
+Reject:
+
+too small
+too large
+distorted
+incorrect perspective
+
+===========================================================
+PHASE 17: RUN REAL VERIFICATION
+===========================================================
+
+Create a real verification job.
+
+Example:
+
+POST /api/engines/qwen/verify
+
+or equivalent existing architecture.
+
+The verification job must actually generate an image.
+
+Do not use mocked output.
+
+Do not use a placeholder.
+
+Do not use an existing successful image.
+
+Generate a fresh image.
+
+===========================================================
+PHASE 18: VERIFICATION CRITERIA
+===========================================================
+
+Engine becomes VERIFIED only when ALL conditions pass:
+
+[PASS] Model detected
+[PASS] Product detected
+[PASS] Exact product identity
+[PASS] Physical contact
+[PASS] Believable scale
+[PASS] Human anatomy
+[PASS] Image generated successfully
+
+Then:
+
+ENGINE STATUS = VERIFIED
+
+Otherwise:
+
+ENGINE STATUS = NOT VERIFIED
+
+===========================================================
+PHASE 19: STORE VERIFICATION RESULT
+===========================================================
+
+Persist:
+
+engine
+model
+model_version
+provider
+gpu
+vram
+test_product_id
+test_image
+generation_time
+product_identity_score
+contact_score
+scale_score
+human_score
+verified_at
+
+Example:
+
+{
+  "engine": "qwen-edit",
+  "status": "VERIFIED",
+  "product_identity_score": 0.92,
+  "contact_score": 0.94,
+  "scale_score": 0.96,
+  "human_score": 0.97
+}
+
+===========================================================
+PHASE 20: UI MUST UPDATE AUTOMATICALLY
+===========================================================
+
+Before successful test:
+
+Qwen Edit
+NOT VERIFIED
+
+After successful test:
+
+Qwen Edit
+VERIFIED ✓
+
+Do not hardcode this.
+
+The UI must read the actual persisted verification state.
+
+===========================================================
+PHASE 21: ENABLE VERIFIED ENGINE
+===========================================================
+
+Once an engine is VERIFIED:
+
+Enable it in:
+
+Generation Engine
+
+The user must be able to select it.
+
+Example:
+
+Qwen Edit
+VERIFIED ✓
+[SELECT]
+
+Then:
+
+[GENERATE CAMPAIGN]
+
+must actually create images.
+
+===========================================================
+PHASE 22: GENERATE 8-IMAGE CAMPAIGN
+===========================================================
+
+After verification succeeds, immediately run the full campaign test.
+
+Generate:
+
+01 PRODUCT STUDIO
+
+Exact handbag.
+
+02 MODEL
+
+Same adult female model holding exact handbag.
+
+03 MODEL DIFFERENT ANGLE
+
+Same woman.
+
+Different pose.
+
+Exact handbag.
+
+04 PRODUCT DETAIL
+
+Exact clasp, woven material, hardware.
+
+05 PRODUCT ANGLE
+
+Different product view.
+
+Exact product.
+
+06 LIFESTYLE MODEL
+
+Same woman.
+
+Walking/carrying handbag.
+
+Exact product.
+
+07 MACRO
+
+Exact product detail.
+
+08 EDITORIAL HERO
+
+Same woman.
+
+Different fashion pose.
+
+Exact handbag.
+
+===========================================================
+PHASE 23: MODEL CONSISTENCY
+===========================================================
+
+Create:
+
+model_identity_id
+
+For this campaign:
+
+MODEL_001
+
+Use MODEL_001 for:
+
+02
+03
+06
+08
+
+Do not randomly change the woman.
+
+For another product:
+
+MODEL_002
+
+===========================================================
+PHASE 24: NO DUPLICATE IMAGES
+===========================================================
+
+Do not produce eight nearly identical frames.
+
+Change:
+
+pose
+camera
+distance
+angle
+crop
+environment
+lighting
+composition
+
+Compare image similarity.
+
+If two frames are excessively similar:
+
+regenerate one.
+
+===========================================================
+PHASE 25: TRANSPARENT OUTPUT
+===========================================================
+
+Product-only images:
+
+Must be:
+
+PNG
+RGBA
+transparent background
+
+Use:
+
+BiRefNet
++
+alpha refinement
+
+No white background.
+
+No fake transparency.
+
+For model images, follow the user's selected background mode.
+
+If transparent mode is enabled:
+
+remove the entire background while preserving:
+
+hair
+hands
+bag
+straps
+clothing
+thin edges
+
+===========================================================
+PHASE 26: UPSCALE
+===========================================================
+
+Only after validation passes:
+
+Real-ESRGAN
+
+Upscale the successful image.
+
+Never upscale failed images.
+
+===========================================================
+PHASE 27: AUTOMATIC RETRY
+===========================================================
+
+If generation fails:
+
+Retry up to 3 times.
+
+Each retry must change:
+
+seed
+pose
+camera
+generation parameters
+
+Do not repeatedly submit the identical failed request.
+
+If all retries fail:
+
+status = FAILED
+
+Show the real reason.
+
+===========================================================
+PHASE 28: ENGINE PRIORITY
+===========================================================
+
+Use:
+
+QUALITY:
+Qwen Edit
+
+FAST:
+Fooocus
+
+AUTO:
+
+choose the best VERIFIED engine.
+
+Never choose an engine that is:
+
+NOT VERIFIED
+
+or
+
+UNAVAILABLE
+
+===========================================================
+PHASE 29: DO NOT USE BAD FALLBACKS
+===========================================================
+
+If Qwen fails:
+
+Try Fooocus only if Fooocus supports the requested operation and is actually available.
+
+If Fooocus fails:
+
+Try another compatible VERIFIED engine.
+
+If no VERIFIED engine exists:
+
+STOP.
+
+Do not produce:
+
+generic handbag
+generic model + bag
+product-only image when human is required
+
+===========================================================
+PHASE 30: RUN NOW
+===========================================================
+
+Do not stop after modifying code.
+
+Actually execute the following:
+
+1. Runtime diagnostics
+2. Engine health checks
+3. Model loading
+4. Real handbag verification
+5. Human + product generation
+6. Product identity validation
+7. Contact validation
+8. Anatomy validation
+9. Scale validation
+10. Verification state update
+11. Full 8-frame campaign test
+
+===========================================================
+PHASE 31: FINAL REPORT
+===========================================================
+
+At the end provide:
+
+ENGINE TEST RESULTS
+
+Qwen Edit:
+STATUS:
+GPU:
+VRAM:
+MODEL:
+LOAD:
+INFERENCE:
+VERIFICATION:
+
+Fooocus:
+STATUS:
+GPU:
+MODEL:
+LOAD:
+INFERENCE:
+VERIFICATION:
+
+FLUX Schnell:
+STATUS:
+GPU:
+LOAD:
+INFERENCE:
+VERIFICATION:
+
+Then:
+
+SUCCESSFUL ENGINE:
+<engine>
+
+PRODUCT IDENTITY SCORE:
+<number>
+
+HUMAN SCORE:
+<number>
+
+CONTACT SCORE:
+<number>
+
+SCALE SCORE:
+<number>
+
+GENERATION TIME:
+<number>
+
+CAMPAIGN:
+<number successful frames>/8
+
+===========================================================
+FINAL REQUIREMENT
+===========================================================
+
+Do not tell me:
+
+"implemented"
+
+unless you actually ran it.
+
+Do not tell me:
+
+"ready"
+
+unless an actual generated image passed the verification pipeline.
+
+Do not change NOT VERIFIED to VERIFIED manually.
+
+The final goal is:
+
+SELECT VERIFIED ENGINE
+        ↓
+UPLOAD PRODUCT
+        ↓
+GENERATE
+        ↓
+REAL HUMAN
+        +
+EXACT PRODUCT
+        ↓
+6-8 HIGH QUALITY IMAGES
+
+Make this actually work end-to-end.

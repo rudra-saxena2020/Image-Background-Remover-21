@@ -1,0 +1,1182 @@
+# AI Product Photography Engine
+
+## Build Objective
+
+Build a production-ready AI SaaS inside Replit that converts uploaded e-commerce product images into professional, high-quality fashion/product photography.
+
+The application must support products such as:
+
+* Handbags
+* Tote bags
+* Shoulder bags
+* Crossbody bags
+* Backpacks
+* Wallets
+* Watches
+* Jewelry
+* Shoes
+* Sneakers
+* Clothing
+* Sunglasses
+* Belts
+* Perfumes
+* Beauty products
+* Accessories
+* Other physical products
+
+The most important requirement is:
+
+**Use the user's uploaded product images as the actual source product. Do not hallucinate or recreate the product from text.**
+
+The system should generate 6 to 8 different professional images per product while preserving the exact product identity.
+
+---
+
+# 1. MODEL STRATEGY
+
+Do not hard-code a single image model.
+
+Create a model abstraction layer:
+
+```text
+ImageGenerationProvider
+    |
+    +-- Qwen Image Edit 2511
+    |
+    +-- FLUX Schnell
+    |
+    +-- Optional future models
+```
+
+### Primary model
+
+Use:
+
+**Qwen-Image-Edit-2511**
+
+Use it primarily for:
+
+* Product-preserving image editing
+* Product + human composition
+* New viewpoints
+* Lifestyle scenes
+* Character consistency
+* Image-to-image generation
+
+Qwen-Image-Edit-2511 is specifically an image-to-image editing model and its current model documentation highlights improved character consistency and reduced image drift. It is released under Apache 2.0.
+
+### Fast fallback
+
+Use:
+
+**FLUX.1 Schnell**
+
+Use it when:
+
+* Qwen is unavailable
+* Qwen generation fails
+* Fast preview generation is requested
+* User selects Fast mode
+
+FLUX.1 Schnell is an open-weight model under Apache 2.0 and is designed for high-quality generation in only 1 to 4 steps.
+
+Do NOT use FLUX.1 Dev for the default commercial pipeline because its current model documentation lists a non-commercial license.
+
+---
+
+# 2. IMPORTANT: FREE DOES NOT MEAN FREE GPU
+
+The models themselves are open-weight/free to use under their respective licenses.
+
+However, GPU compute is still required.
+
+The application must detect whether CUDA is available.
+
+If CUDA is unavailable:
+
+```text
+STATUS:
+GPU unavailable
+```
+
+Do not pretend local generation is working.
+
+Do not silently fall back to CPU for large image generation.
+
+Instead provide:
+
+```text
+GPU Required
+
+Choose:
+[Connect GPU]
+[Hosted GPU]
+[Configure Provider]
+```
+
+The architecture must support a remote GPU worker later.
+
+---
+
+# 3. GENERATION MODES
+
+Provide three modes.
+
+## FAST
+
+Optimized for speed.
+
+Use:
+
+FLUX.1 Schnell or accelerated Qwen configuration.
+
+Purpose:
+
+* Preview
+* Testing prompts
+* Quick product generation
+
+## QUALITY
+
+Use Qwen-Image-Edit-2511.
+
+Purpose:
+
+* Product catalog
+* Shopify
+* E-commerce
+* Fashion photography
+
+## AUTO
+
+Automatically select the best available model.
+
+Priority:
+
+```text
+Qwen Image Edit
+      ↓
+FLUX Schnell
+      ↓
+Available compatible provider
+```
+
+Never fall back to a model that cannot accept the required source images.
+
+---
+
+# 4. INPUT
+
+Allow:
+
+1 to 6 product reference images.
+
+Supported:
+
+* PNG
+* JPG
+* JPEG
+* WEBP
+
+Example:
+
+```text
+Product references:
+
+01 Front
+02 Back
+03 Side
+04 Detail
+05 Interior
+06 Hardware
+```
+
+The user may upload fewer images.
+
+The system must work with one image when that is all the user has.
+
+---
+
+# 5. MULTI-REFERENCE PRODUCT ANALYSIS
+
+Before generation, analyze every uploaded image.
+
+Create an internal Product Identity Profile.
+
+Example:
+
+```json
+{
+  "category": "womens_handbag",
+  "gender": "female",
+  "material": "woven_leather",
+  "primary_color": "dark_burgundy",
+  "hardware": "gold",
+  "shape": "large_tote",
+  "handles": 2,
+  "strap": true,
+  "pattern": "woven",
+  "logo": true
+}
+```
+
+Never expose unnecessary internal analysis to the user.
+
+Use all uploaded references together.
+
+Do not treat them as separate products.
+
+---
+
+# 6. SOURCE IMAGE LOCK
+
+This is the highest-priority rule.
+
+The uploaded product images are the source of truth.
+
+The generation request MUST include the source product image(s) as image inputs.
+
+Do not send only a text prompt.
+
+Do not recreate the product from a text description.
+
+Do not generate a generic replacement product.
+
+Do not approximate the product.
+
+The source image must be used for image-to-image/editing conditioning.
+
+---
+
+# 7. PRODUCT PRESERVATION
+
+Preserve exactly:
+
+* Shape
+* Dimensions
+* Proportions
+* Color
+* Material
+* Texture
+* Pattern
+* Stitching
+* Logo
+* Branding
+* Hardware
+* Buckles
+* Handles
+* Straps
+* Zippers
+* Buttons
+* Embossing
+* Construction
+
+The AI is allowed to change:
+
+* Model
+* Pose
+* Environment
+* Camera
+* Lighting
+* Background
+* Composition
+
+The AI is NOT allowed to redesign the product.
+
+---
+
+# 8. CATEGORY DETECTION
+
+Automatically classify the product.
+
+Examples:
+
+```text
+handbag
+watch
+shoe
+jewelry
+clothing
+wallet
+perfume
+sunglasses
+belt
+accessory
+```
+
+Then select a category-specific photography strategy.
+
+Never use the same photography template for every product.
+
+---
+
+# 9. MODEL DECISION ENGINE
+
+Create:
+
+```text
+model_required
+model_gender
+model_body_visibility
+product_interaction
+```
+
+Examples:
+
+### Women's handbag
+
+```text
+model_required = true
+model_gender = female
+interaction = holding / shoulder carry
+visibility = half-body or full-body
+```
+
+### Men's watch
+
+```text
+model_required = true
+model_gender = male
+interaction = wrist
+visibility = wrist / hand
+```
+
+### Women's watch
+
+```text
+model_required = true
+model_gender = female
+interaction = wrist
+visibility = wrist / hand
+```
+
+### Ring
+
+```text
+model_required = true
+model_gender = appropriate
+interaction = finger
+visibility = hand
+```
+
+### Necklace
+
+```text
+model_required = true
+interaction = neck
+visibility = upper body
+```
+
+### Shoes
+
+```text
+model_required = true
+interaction = wearing
+visibility = legs / full body
+```
+
+### Perfume
+
+```text
+model_required = false
+```
+
+### Furniture
+
+```text
+model_required = false
+```
+
+---
+
+# 10. HUMAN MODEL RULE
+
+If `model_required = true`:
+
+A human MUST appear in the final image.
+
+The image is invalid without the human.
+
+Never silently return a product-only image.
+
+Never use a mannequin.
+
+Never use a generic flat cutout model.
+
+Never use a pasted human.
+
+The model must look like a real adult fashion/commercial model.
+
+---
+
+# 11. MODEL CONSISTENCY
+
+Generate a unique model identity for each product.
+
+Example:
+
+```text
+Product A
+Model ID: MODEL_A_001
+
+Image 2
+Image 3
+Image 6
+Image 8
+```
+
+All lifestyle images for Product A use the same model identity.
+
+For Product B:
+
+```text
+Model ID: MODEL_B_001
+```
+
+Never reuse Product A's model unless explicitly requested.
+
+---
+
+# 12. MODEL QUALITY
+
+The model must have:
+
+* Realistic face
+* Natural skin
+* Natural hair
+* Natural body proportions
+* Realistic eyes
+* Natural facial expression
+* Realistic clothing
+* Natural posture
+* Realistic lighting
+
+Avoid:
+
+* Plastic skin
+* CGI appearance
+* Mannequin appearance
+* Over-smoothed skin
+* Distorted face
+* Unnatural body
+* Bad anatomy
+
+---
+
+# 13. BAG-SPECIFIC GENERATION
+
+For handbags, the model MUST actually hold or wear the bag.
+
+Examples:
+
+### Frame 1
+
+Product-only studio image.
+
+### Frame 2
+
+Female model holding the bag by its handles.
+
+### Frame 3
+
+Same female model carrying the bag over her shoulder.
+
+### Frame 4
+
+Close-up of the bag's material and hardware.
+
+### Frame 5
+
+Different product perspective.
+
+### Frame 6
+
+Same female model walking naturally with the bag.
+
+### Frame 7
+
+Close-up of craftsmanship.
+
+### Frame 8
+
+Same female model in a luxury editorial campaign.
+
+The bag must physically interact with the model.
+
+No floating.
+
+No clipping.
+
+No pasted appearance.
+
+---
+
+# 14. WATCH-SPECIFIC GENERATION
+
+For watches:
+
+Do not generate a generic full-body fashion image.
+
+Generate realistic wrist/hand photography.
+
+Men's watch:
+
+Male wrist.
+
+Women's watch:
+
+Female wrist.
+
+Show:
+
+* Wrist
+* Hand
+* Watch
+* Correct strap placement
+* Correct watch proportions
+
+Possible scenes:
+
+* Wrist resting on table
+* Checking time
+* Driving
+* Business environment
+* Luxury desk
+* Coffee
+* Formal clothing
+
+---
+
+# 15. SHOES
+
+Generate an actual human wearing the shoes.
+
+Show:
+
+* Standing
+* Walking
+* Side profile
+* Full-body fashion
+* Lower-body editorial
+* Close-up
+
+The shoes must remain identical to the source.
+
+---
+
+# 16. CLOTHING
+
+Generate an appropriate adult fashion model actually wearing the uploaded garment.
+
+Preserve:
+
+* Fit
+* Color
+* Pattern
+* Fabric
+* Stitching
+* Buttons
+* Logo
+
+Generate:
+
+* Front
+* Side
+* Back
+* Walking
+* Editorial
+* Detail
+
+---
+
+# 17. OUTPUT SEQUENCE
+
+Generate 6 to 8 images.
+
+Default sequence:
+
+```text
+01 Product Studio
+02 Model / Product Interaction
+03 Same Model / Different Angle
+04 Product Detail
+05 Product Alternative Angle
+06 Same Model / Lifestyle
+07 Product Macro
+08 Same Model / Hero Editorial
+```
+
+Every frame must have a different purpose.
+
+---
+
+# 18. DO NOT GENERATE 8 SIMILAR IMAGES
+
+This is mandatory.
+
+The system must vary:
+
+* Camera angle
+* Lens
+* Distance
+* Crop
+* Pose
+* Composition
+* Background
+* Lighting
+* Environment
+* Product interaction
+
+If two frames are too similar, regenerate one.
+
+---
+
+# 19. PHOTOGRAPHY STYLE
+
+Target:
+
+Luxury fashion e-commerce.
+
+Visual direction:
+
+* MyTheresa
+* Net-a-Porter
+* SSENSE
+* Farfetch
+* Bottega Veneta
+* Prada
+* Dior
+* Saint Laurent
+* Loewe
+
+Do not copy any specific campaign.
+
+Use them only as general quality references.
+
+---
+
+# 20. CAMERA ENGINE
+
+Use:
+
+35mm
+
+50mm
+
+85mm
+
+105mm macro
+
+Prefer:
+
+85mm for fashion portraits.
+
+50mm for lifestyle.
+
+105mm macro for product details.
+
+Avoid excessive wide-angle distortion.
+
+---
+
+# 21. LIGHTING
+
+Use realistic commercial lighting:
+
+* Softbox
+* Natural window
+* Diffused daylight
+* Luxury studio
+* Editorial lighting
+* Golden-hour lighting
+* Premium interior lighting
+
+Lighting must remain physically plausible.
+
+---
+
+# 22. TRANSPARENT OUTPUT
+
+The final product image must have a TRUE transparent background.
+
+Primary output:
+
+```text
+PNG
+RGBA
+Alpha Channel
+Transparent Background
+```
+
+Do NOT return:
+
+* White background
+* Gray background
+* Fake transparency
+* Checkerboard baked into image
+* Background-colored pixels
+
+---
+
+# 23. BACKGROUND REMOVAL
+
+Pipeline:
+
+```text
+Generated Image
+       ↓
+Foreground Segmentation
+       ↓
+Mask Refinement
+       ↓
+Hair/Finger/Strap Edge Refinement
+       ↓
+Alpha Matte
+       ↓
+Transparent PNG
+```
+
+Use BiRefNet or another high-quality segmentation model.
+
+Do not remove important foreground elements.
+
+Preserve:
+
+* Hair
+* Fingers
+* Thin straps
+* Jewelry
+* Shoe laces
+* Product edges
+
+---
+
+# 24. QUALITY VALIDATION
+
+Every generated image must pass automated checks.
+
+### Product check
+
+Verify:
+
+* Color
+* Shape
+* Logo
+* Hardware
+* Material
+* Texture
+* Proportions
+
+### Human check
+
+Verify:
+
+* Face
+* Eyes
+* Hands
+* Fingers
+* Arms
+* Legs
+* Body proportions
+
+### Interaction check
+
+Verify:
+
+* Product physically touches model correctly
+* Hands hold product correctly
+* Watch sits correctly on wrist
+* Shoes are actually worn
+* Jewelry sits correctly
+
+### Transparency check
+
+Verify:
+
+* PNG
+* RGBA
+* Alpha channel
+* No background pixels
+* No halo
+
+---
+
+# 25. AUTOMATIC REGENERATION
+
+If validation fails:
+
+```text
+Generation
+    ↓
+Validation
+    ↓
+FAIL
+    ↓
+Analyze failure
+    ↓
+Modify prompt/parameters
+    ↓
+Regenerate
+```
+
+Maximum:
+
+3 retries per image.
+
+Never show a failed image as READY.
+
+---
+
+# 26. PERFORMANCE
+
+Optimize for fast generation.
+
+Use:
+
+* FP16/BF16 where supported
+* Model caching
+* Persistent model loading
+* GPU memory management
+* Batch processing where safe
+* Concurrent jobs
+* Queue system
+* Reusable model instances
+* Avoid loading the model for every image
+
+Do not initialize the model separately for every request.
+
+Load it once per worker.
+
+---
+
+# 27. GPU ARCHITECTURE
+
+The Replit application should act as the control plane.
+
+```text
+Replit Web App
+      ↓
+Job Queue
+      ↓
+GPU Worker
+      ↓
+Qwen / FLUX
+      ↓
+BiRefNet
+      ↓
+Upscaler
+      ↓
+Quality Validator
+      ↓
+Storage
+      ↓
+Replit Dashboard
+```
+
+Do not assume Replit itself has a CUDA GPU.
+
+The application must support an external GPU worker.
+
+---
+
+# 28. PROVIDER ABSTRACTION
+
+Create an interface similar to:
+
+```text
+generateImage({
+    model,
+    sourceImages,
+    prompt,
+    category,
+    scene,
+    width,
+    height,
+    seed
+})
+```
+
+Then implement:
+
+```text
+QwenImageEditProvider
+FluxSchnellProvider
+```
+
+This allows changing models without rewriting the application.
+
+---
+
+# 29. USER INTERFACE
+
+Create a professional dashboard.
+
+Sidebar:
+
+```text
+New Shoot
+Products
+Batch Generation
+History
+Models
+Settings
+```
+
+New Shoot:
+
+```text
+Upload Product Images
+
+[ Drag & Drop ]
+
+1-6 images
+```
+
+Then:
+
+```text
+Detected Category:
+Women's Handbag
+
+Model:
+Female Fashion Model
+
+Generation:
+6 / 8 Images
+
+Quality:
+High
+
+Background:
+Transparent
+
+[ Generate Campaign ]
+```
+
+---
+
+# 30. LIVE GENERATION STATUS
+
+Show:
+
+```text
+Analyzing Product        ✓
+Detecting Category       ✓
+Creating Scene Plan      ✓
+Generating Image 1      ✓
+Generating Image 2      ⏳
+Generating Image 3      ⏳
+Quality Validation       ⏳
+Background Removal       ⏳
+Upscaling                ⏳
+```
+
+Never show a fake progress bar.
+
+Use actual job status.
+
+---
+
+# 31. IMAGE RESULT UI
+
+Each frame should show:
+
+```text
+READY
+
+01
+Luxury Studio
+
+[ IMAGE ]
+
+Product Identity: PASS
+Model: N/A
+Anatomy: PASS
+Transparency: PASS
+Quality: 94%
+
+[Regenerate]
+[Download]
+```
+
+For model images:
+
+```text
+Model Identity: PASS
+Face: PASS
+Hands: PASS
+Product Interaction: PASS
+```
+
+---
+
+# 32. DOWNLOAD
+
+Allow:
+
+* Download individual image
+* Download all
+* ZIP
+* PNG
+* WEBP
+* Optional JPEG
+
+Default download:
+
+PNG with transparent background.
+
+---
+
+# 33. IMAGE NAMING
+
+Use:
+
+```text
+PRODUCT_ID_01_STUDIO.png
+PRODUCT_ID_02_MODEL.png
+PRODUCT_ID_03_MODEL_ANGLE.png
+PRODUCT_ID_04_DETAIL.png
+PRODUCT_ID_05_ANGLE.png
+PRODUCT_ID_06_LIFESTYLE.png
+PRODUCT_ID_07_MACRO.png
+PRODUCT_ID_08_HERO.png
+```
+
+---
+
+# 34. ERROR HANDLING
+
+Never hide errors.
+
+Examples:
+
+```text
+NO_GPU
+MODEL_LOAD_FAILED
+SOURCE_IMAGE_INVALID
+GENERATION_FAILED
+MODEL_NOT_AVAILABLE
+QUOTA_EXCEEDED
+VALIDATION_FAILED
+TRANSPARENCY_FAILED
+UPSCALE_FAILED
+```
+
+Show the actual reason.
+
+Provide Retry.
+
+---
+
+# 35. IMPORTANT FALLBACK RULE
+
+Never silently change the generation method.
+
+For example:
+
+If Qwen Image Edit fails, do not automatically produce a product-only image.
+
+Instead:
+
+```text
+Qwen Image Edit failed
+       ↓
+Try FLUX Schnell if compatible
+       ↓
+If no compatible model:
+       ↓
+Show generation failure
+```
+
+The system must never return an image that does not satisfy the requested scene.
+
+---
+
+# 36. FIRST MVP
+
+Do not overbuild the first version.
+
+Implement this first:
+
+```text
+Upload 1-6 images
+        ↓
+Detect category
+        ↓
+Qwen Image Edit
+        ↓
+Generate 6 images
+        ↓
+Human model when required
+        ↓
+Product preservation
+        ↓
+BiRefNet transparency
+        ↓
+Quality validation
+        ↓
+Download
+```
+
+Then add:
+
+* 8-frame campaigns
+* Batch generation
+* GPU workers
+* Shopify
+* Model memory
+* Analytics
+* Multiple providers
+
+---
+
+# 37. ACCEPTANCE TEST
+
+Do not consider the application complete until this test passes.
+
+Upload the provided handbag references.
+
+The system must produce:
+
+```text
+01 Product-only handbag
+02 Female model holding handbag
+03 SAME female model, different angle
+04 Close-up handbag detail
+05 Different handbag angle
+06 SAME female model walking with handbag
+07 Close-up craftsmanship
+08 SAME female model editorial hero
+```
+
+Images 2, 3, 6 and 8 MUST contain a real human model.
+
+The handbag must be the exact uploaded handbag.
+
+The model must not be reused from another product.
+
+The model must not change identity between frames.
+
+Hands and face must pass quality validation.
+
+The final PNG must have a genuine transparent background.
+
+If the system produces eight product-only images, the implementation is considered FAILED.
+
+If the system produces a generic mannequin, the implementation is considered FAILED.
+
+If the system changes the handbag design, the implementation is considered FAILED.
+
+If the system returns a white background instead of alpha transparency, the implementation is considered FAILED.
+
+---
+
+# FINAL ENGINEERING PRINCIPLE
+
+Do not optimize for "generating an image."
+
+Optimize for:
+
+**SOURCE PRODUCT PRESERVATION + CATEGORY-AWARE HUMAN GENERATION + REALISTIC PRODUCT INTERACTION + CONSISTENT MODEL + TRANSPARENT OUTPUT + AUTOMATIC QUALITY CONTROL.**
+
+The system should behave like an automated luxury product photographer, not like a generic text-to-image generator.

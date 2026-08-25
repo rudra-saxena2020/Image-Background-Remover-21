@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Product Background Remover"
+version = "1.0.0"
+id = "artifacts/bgremover"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24690
+
+[services.development]
+run = "pnpm --filter @workspace/bgremover run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bgremover", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/bgremover/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24690"
+BASE_PATH = "/"

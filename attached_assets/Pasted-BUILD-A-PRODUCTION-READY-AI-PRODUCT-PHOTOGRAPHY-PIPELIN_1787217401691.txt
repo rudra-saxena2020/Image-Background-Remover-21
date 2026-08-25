@@ -1,0 +1,636 @@
+BUILD A PRODUCTION-READY AI PRODUCT PHOTOGRAPHY PIPELINE USING FLUX.2 PRO
+
+OBJECTIVE
+
+The system must transform uploaded product reference images into 6 to 8 high-quality ecommerce and luxury campaign images.
+
+The uploaded product is the absolute source of truth.
+
+The AI must NOT redesign, reinterpret, simplify, replace, approximate, or hallucinate the product.
+
+This is not a normal text-to-image generator.
+
+This is a PRODUCT-PRESERVATION AND CONTROLLED IMAGE EDITING SYSTEM.
+
+The final output must look like a real luxury ecommerce photoshoot suitable for brands and stores such as premium fashion retailers.
+
+==================================================
+1. INPUT SYSTEM
+==================================================
+
+Allow the user to upload between 1 and 8 reference images of the same product.
+
+Recommended inputs:
+
+- Front view
+- Back view
+- Left side
+- Right side
+- Top view
+- Bottom view
+- Close-up of material
+- Close-up of hardware, logo, stitching, zipper, buckle, or important details
+
+Before generation, analyze all references and create an internal PRODUCT IDENTITY PROFILE.
+
+The profile must identify:
+
+- Exact product category
+- Exact silhouette
+- Width and height proportions
+- Material
+- Texture
+- Color
+- Pattern
+- Stitching
+- Seams
+- Hardware
+- Metal color
+- Handles
+- Straps
+- Buckles
+- Zippers
+- Closures
+- Logo placement
+- Important visual details
+
+For example, if the product is a burgundy woven leather handbag with a gold clasp and specific handle construction, every generated image must preserve those exact characteristics.
+
+The product reference images have higher priority than the generation prompt.
+
+==================================================
+2. PRODUCT IDENTITY LOCK
+==================================================
+
+Create a strict PRODUCT IDENTITY LOCK.
+
+The AI must treat the uploaded product as immutable.
+
+LOCK:
+
+- Product silhouette
+- Product dimensions and proportions
+- Material
+- Texture
+- Surface pattern
+- Color
+- Hardware
+- Number of handles
+- Handle shape
+- Strap construction
+- Buckles
+- Zippers
+- Stitching
+- Logo placement
+- Decorative elements
+
+The system must NOT:
+
+- Invent a similar product
+- Replace the product with a generic version
+- Change leather texture
+- Change the weave pattern
+- Add extra handles
+- Remove handles
+- Change the hardware
+- Change the shape
+- Change the color
+- Merge different reference views incorrectly
+- Hallucinate logos or text
+- Turn the product into a different size or category
+
+If product identity cannot be preserved, reject the generation.
+
+DO NOT save or deliver an image that contains a visibly altered product.
+
+==================================================
+3. GENERATION ENGINE
+==================================================
+
+Use FLUX.2 PRO as the primary generation engine.
+
+Use the uploaded product images as multi-reference inputs.
+
+The reference images must be passed to the actual FLUX.2 Pro image editing or multi-reference workflow.
+
+DO NOT simply describe the product in text.
+
+DO NOT generate a new product from a text description.
+
+The generation must visually reference the uploaded product images.
+
+Architecture:
+
+UPLOAD PRODUCT REFERENCES
+        ↓
+REFERENCE VALIDATION
+        ↓
+PRODUCT IDENTITY PROFILE
+        ↓
+FLUX.2 PRO MULTI-REFERENCE GENERATION
+        ↓
+GENERATED IMAGE
+        ↓
+PRODUCT IDENTITY VALIDATION
+        ↓
+HUMAN ANATOMY VALIDATION
+        ↓
+QUALITY CHECK
+        ↓
+PASS → SAVE OUTPUT
+FAIL → RETRY / REGENERATE
+
+==================================================
+4. HUMAN MODEL GENERATION
+==================================================
+
+The system must intelligently determine how a human model should interact with the product.
+
+This is mandatory.
+
+The system must NOT generate only product cutouts when a model shot is required.
+
+The model must physically and naturally interact with the actual uploaded product.
+
+PRODUCT-AWARE MODEL SELECTION:
+
+HANDBAGS / TOTES / PURSES:
+- Generate an appropriate adult fashion model
+- Model must naturally hold, carry, wear, or place the bag
+- Hands must physically support the bag
+- Straps and handles must interact naturally with the body
+- The bag must not float
+- The bag must not clip through the body
+- The bag must have realistic scale
+
+WATCHES:
+- Generate a realistic wrist/hand or partial human model
+- The watch must correctly wrap around the wrist
+- Correct orientation
+- Correct scale
+- No floating watch
+- No distorted fingers
+
+JEWELRY:
+- Use an appropriate neck, ear, hand, wrist, or full model depending on product type
+- Product must physically sit where it would in reality
+
+CLOTHING:
+- Generate an appropriate adult model actually wearing the product
+- Garment must follow realistic body anatomy
+- Preserve garment color, pattern, material, seams, and design
+
+SHOES:
+- Generate realistic legs and feet
+- Shoe proportions and placement must be correct
+
+SUNGLASSES:
+- Generate a realistic face/head model
+- Frames must sit naturally on the face
+
+GENERAL RULE:
+
+SELECT THE MODEL TYPE BASED ON HOW THE PRODUCT IS USED IN REAL LIFE.
+
+==================================================
+5. MODEL CONSISTENCY
+==================================================
+
+For one product campaign, select ONE model identity.
+
+The same model must be used for all required model frames.
+
+For example:
+
+Frame 2 → Model A
+Frame 3 → Same Model A
+Frame 6 → Same Model A
+Frame 8 → Same Model A
+
+The model may change pose, camera angle, clothing styling, and composition where appropriate.
+
+However, do not randomly generate a completely different person in every image.
+
+Maintain consistency in:
+
+- Face
+- Age range
+- Skin tone
+- Hair
+- Body proportions
+
+Do not modify the model identity during the same product campaign.
+
+For a different product, a new appropriate model may be selected.
+
+Do not reuse the exact same model for every product in the entire catalog.
+
+==================================================
+6. HUMAN QUALITY REQUIREMENTS
+==================================================
+
+Human realism is mandatory.
+
+Reject and regenerate any image containing:
+
+- Extra fingers
+- Missing fingers
+- Deformed hands
+- Broken wrists
+- Twisted arms
+- Unnatural joints
+- Deformed faces
+- Uneven eyes
+- Distorted mouths
+- Floating limbs
+- Impossible body positions
+- Product clipping through hands
+- Product floating in the air
+- Incorrect grip
+- Unrealistic interaction between product and human
+
+Every visible hand must have anatomically believable fingers and natural proportions.
+
+Do not use a model shot if the model or hands fail quality validation.
+
+==================================================
+7. REQUIRED 8-IMAGE CAMPAIGN
+==================================================
+
+Generate the following sequence.
+
+FRAME 1: CLEAN PRODUCT HERO
+
+- Exact product
+- Clean premium ecommerce composition
+- Neutral or white background
+- Full product clearly visible
+- No human model unless required by product type
+- Correct proportions
+- High detail
+- Suitable for primary Shopify product image
+
+FRAME 2: MODEL HERO
+
+- Appropriate human model
+- Model naturally using, wearing, holding, or carrying the exact product
+- Product clearly visible
+- Realistic interaction
+- Luxury fashion photography
+
+FRAME 3: SAME MODEL, DIFFERENT ANGLE
+
+- Same model identity
+- Different pose
+- Different camera angle
+- Product remains clearly visible
+- Do not duplicate Frame 2
+
+FRAME 4: PRODUCT DETAIL / MACRO
+
+Focus on important details such as:
+
+- Material texture
+- Stitching
+- Hardware
+- Zipper
+- Buckle
+- Logo
+- Weave
+- Craftsmanship
+
+The details must match the uploaded reference exactly.
+
+FRAME 5: ALTERNATIVE PRODUCT ANGLE
+
+Generate a clearly different product angle.
+
+Examples:
+
+- Side view
+- Three-quarter view
+- Rear view
+- Low angle
+- Elevated angle
+
+Use reference images to ensure the generated angle is physically consistent with the actual product.
+
+FRAME 6: SAME MODEL, LIFESTYLE IMAGE
+
+Use the same model from Frames 2 and 3.
+
+Create a realistic premium lifestyle or editorial shot.
+
+The product must remain the hero.
+
+Do not hide the product behind clothing, hands, or objects.
+
+FRAME 7: PREMIUM CLOSE-UP
+
+Generate a detailed luxury close-up.
+
+Prioritize:
+
+- Material realism
+- Product craftsmanship
+- Hardware
+- Surface detail
+
+Do not invent details that do not exist in the reference.
+
+FRAME 8: SAME MODEL, NEW POSE
+
+Use the same model identity.
+
+Create a distinctly different composition.
+
+Examples:
+
+- Walking
+- Standing
+- Sitting
+- Over-the-shoulder carry
+- Handheld pose
+- Editorial pose
+
+The pose must be physically natural.
+
+==================================================
+8. PROMPT PRIORITY
+==================================================
+
+Use the following priority order:
+
+PRIORITY 1:
+Uploaded product reference images
+
+PRIORITY 2:
+Product Identity Lock
+
+PRIORITY 3:
+Frame-specific instructions
+
+PRIORITY 4:
+Luxury art direction
+
+PRIORITY 5:
+Optional creative styling
+
+Creative styling must NEVER override product accuracy.
+
+==================================================
+9. MASTER GENERATION PROMPT
+==================================================
+
+For every generation, dynamically construct a prompt similar to:
+
+"Use the uploaded product reference images as the absolute visual source of truth.
+
+Generate a photorealistic luxury ecommerce photograph featuring the exact uploaded product.
+
+The product identity is locked.
+
+Preserve the exact product silhouette, proportions, dimensions, material, texture, color, pattern, stitching, seams, hardware, handles, straps, closures, decorative elements and all distinctive characteristics visible in the reference images.
+
+Do not redesign, reinterpret, simplify, replace, approximate or invent the product.
+
+The generated product must be visually recognizable as the same physical product shown in the uploaded references.
+
+[INSERT FRAME-SPECIFIC INSTRUCTIONS]
+
+If a human model is required, generate a realistic adult model naturally interacting with the exact product.
+
+The product must physically interact with the model.
+
+No floating product.
+No clipping.
+No impossible grip.
+No distorted hands.
+No extra fingers.
+No missing fingers.
+No broken anatomy.
+
+Professional luxury fashion photography.
+Photorealistic materials.
+Realistic lighting.
+Natural shadows.
+Accurate scale.
+High-end ecommerce quality.
+Sharp product detail.
+Physically believable composition.
+
+The product is the hero of the image."
+
+==================================================
+10. NEGATIVE CONSTRAINTS
+==================================================
+
+Apply strict negative constraints:
+
+DO NOT:
+
+- Generate a generic similar product
+- Change product design
+- Change product texture
+- Change product color
+- Change product proportions
+- Add or remove product components
+- Invent logos
+- Distort text
+- Melt the product
+- Duplicate product parts
+- Create extra handles
+- Create impossible straps
+- Create floating products
+- Hide the product
+- Generate product-only output for a required model frame
+- Generate broken hands
+- Generate extra fingers
+- Generate missing fingers
+- Generate distorted faces
+- Generate duplicate limbs
+- Generate unrealistic anatomy
+- Generate blurry low-detail output
+- Generate plastic-looking materials
+- Generate obvious AI artifacts
+
+==================================================
+11. AUTOMATIC VALIDATION
+==================================================
+
+Every generated image must pass validation before being marked READY.
+
+Create separate validation scores:
+
+PRODUCT_IDENTITY_SCORE
+
+Evaluate:
+
+- Silhouette match
+- Color match
+- Texture match
+- Hardware match
+- Component match
+- Proportion match
+
+HUMAN_REALISM_SCORE
+
+Evaluate:
+
+- Face quality
+- Hand anatomy
+- Finger count
+- Body anatomy
+- Pose realism
+- Product interaction
+
+COMPOSITION_SCORE
+
+Evaluate:
+
+- Product visibility
+- Product focus
+- Frame diversity
+- Luxury visual quality
+
+QUALITY_SCORE
+
+Only mark the image READY if:
+
+PRODUCT_IDENTITY_SCORE >= required threshold
+AND
+HUMAN_REALISM_SCORE >= required threshold for model images
+AND
+COMPOSITION_SCORE >= required threshold
+
+If validation fails:
+
+REGENERATE
+
+Do not silently mark failed output as READY.
+
+==================================================
+12. RETRY STRATEGY
+==================================================
+
+Attempt generation.
+
+If the product is incorrect:
+
+Retry with stronger reference weighting and stricter identity instructions.
+
+If the human model is missing:
+
+Retry with explicit mandatory human interaction instructions.
+
+If hands are broken:
+
+Retry with a new composition or hand position.
+
+If the product is floating or clipping:
+
+Retry with a physically simpler pose.
+
+Maximum retry attempts should be configurable.
+
+Track:
+
+- Generation attempt
+- Model used
+- Cost
+- Validation score
+- Failure reason
+
+==================================================
+13. OUTPUT
+==================================================
+
+For each product, generate 6 to 8 genuinely different images.
+
+Do not create 8 nearly identical images.
+
+Each image must have a clear purpose.
+
+Final output structure:
+
+Product ID
+├── 01_Product_Hero
+├── 02_Model_Hero
+├── 03_Model_Alternate_Angle
+├── 04_Product_Detail
+├── 05_Product_Alternate_Angle
+├── 06_Model_Lifestyle
+├── 07_Product_Closeup
+└── 08_Model_Editorial
+
+Provide:
+
+- Individual image download
+- Download all
+- Regenerate individual frame
+- View original references
+- View generation prompt
+- View validation results
+- Generation cost per frame
+- Product identity verification status
+
+==================================================
+14. IMPORTANT SYSTEM RULE
+==================================================
+
+NEVER fake verification.
+
+An image is VERIFIED only when:
+
+1. The FLUX.2 Pro API generation actually completed successfully.
+2. The uploaded product references were actually used.
+3. The generated image passed product identity validation.
+4. Human model requirements passed for model frames.
+
+If any requirement fails, show:
+
+NOT VERIFIED
+
+with the exact failure reason.
+
+Never display VERIFIED merely because an image was generated.
+
+==================================================
+FINAL GOAL
+==================================================
+
+The final system must feel like an automated luxury ecommerce photography studio.
+
+The workflow is:
+
+UPLOAD PRODUCT
+        ↓
+UPLOAD 1 TO 8 REFERENCES
+        ↓
+ANALYZE PRODUCT IDENTITY
+        ↓
+LOCK PRODUCT CHARACTERISTICS
+        ↓
+SELECT APPROPRIATE MODEL TYPE
+        ↓
+CREATE CONSISTENT MODEL IDENTITY
+        ↓
+GENERATE 6 TO 8 DIFFERENT CAMPAIGN FRAMES
+        ↓
+VALIDATE PRODUCT ACCURACY
+        ↓
+VALIDATE HUMAN ANATOMY
+        ↓
+REJECT BAD OUTPUTS
+        ↓
+REGENERATE FAILED FRAMES
+        ↓
+SAVE ONLY VERIFIED IMAGES
+
+The system must prioritize PRODUCT ACCURACY over creativity.
+
+A beautiful image with the wrong product is a failed generation.
+A model image without realistic product interaction is a failed generation.
+Eight similar images are a failed campaign.
+
+The result must be suitable for direct use on Shopify product pages, luxury ecommerce listings, social media, and advertising.

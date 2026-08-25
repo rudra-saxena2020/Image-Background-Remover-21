@@ -1,0 +1,1533 @@
+Yes. The previous prompt was still too conceptual. **Replit needs an implementation-level correction prompt that tells it exactly what to change, what to remove, what to test, and what counts as success.**
+
+Your audit confirms the current failure is not the validator. The current SDXL CPU path generated a person but transformed the actual handbag into a generic tote, losing the clasp, cord, eyelets, handle geometry and silhouette. 
+
+It also confirms Fooocus exists in the project but is **not actually usable yet**, because there is no non-interactive Atelier runner and no CUDA worker. 
+
+Use this **full replacement prompt** in Replit:
+
+---
+
+# MASTER FIX PROMPT FOR REPLIT: ATELIER PRODUCT IMAGE GENERATION
+
+```text
+You are modifying an existing application called ATELIER.
+
+IMPORTANT:
+Do NOT rebuild the application from scratch.
+Do NOT remove the existing validation system.
+Do NOT bypass failed verification.
+Do NOT lower validation thresholds.
+Do NOT fake successful generation.
+
+The current system correctly detects that the generated human + handbag image is not the real uploaded product.
+
+The problem is the GENERATION ARCHITECTURE.
+
+We need to fix the generation pipeline so that uploaded source products remain visually identical while AI generates realistic human models, poses, scenes and compositions around those products.
+
+===========================================================
+CURRENT FAILURE
+===========================================================
+
+The current pipeline is effectively doing:
+
+SOURCE HANDBAG
+        ↓
+SDXL IMAGE-TO-IMAGE
+        ↓
+"woman carrying handbag"
+        ↓
+AI RECREATES A SIMILAR BAG
+        ↓
+GENERIC BURGUNDY TOTE
+
+This is unacceptable.
+
+The supplied handbag has distinctive:
+
+- woven construction
+- burgundy/brown color
+- braided cord
+- gold center clasp
+- gold hardware
+- eyelets
+- handle geometry
+- silhouette
+- proportions
+- texture
+
+The generated image changes these characteristics.
+
+The existing audit correctly rejected this output.
+
+The current SDXL CPU test took 152.4 seconds at 512×512 and failed handbag detection, physical contact, scale and identity validation.
+
+DO NOT try to fix this simply by making the prompt longer.
+
+The system must change the generation strategy.
+
+===========================================================
+PRIMARY OBJECTIVE
+===========================================================
+
+The final result must be:
+
+REAL HUMAN MODEL
++
+EXACT UPLOADED PRODUCT
++
+REALISTIC PHYSICAL INTERACTION
++
+REALISTIC LIGHTING
++
+REALISTIC SHADOW
++
+CORRECT SCALE
++
+CORRECT ANATOMY
++
+HIGH RESOLUTION
+
+The AI must NOT freely redesign the product.
+
+The product is the immutable source of truth.
+
+===========================================================
+CORE ARCHITECTURE
+===========================================================
+
+Implement this architecture:
+
+                PRODUCT UPLOAD
+                      ↓
+             SOURCE IMAGE ANALYSIS
+                      ↓
+                  BiRefNet
+                      ↓
+             EXACT PRODUCT MASK
+                      ↓
+           PRODUCT IDENTITY PROFILE
+                      ↓
+              GENERATION PLANNER
+                      ↓
+        ┌─────────────┴─────────────┐
+        ↓                           ↓
+ HUMAN / SCENE GENERATION      PRODUCT SOURCE
+        ↓                           ↓
+        └─────────────┬─────────────┘
+                      ↓
+             CONTROLLED COMPOSITE
+                      ↓
+             OCCLUSION / CONTACT
+                      ↓
+              LIGHTING MATCH
+                      ↓
+             SHADOW GENERATION
+                      ↓
+             PRODUCT VALIDATION
+                      ↓
+             HUMAN VALIDATION
+                      ↓
+             ANATOMY VALIDATION
+                      ↓
+              QUALITY GATE
+                      ↓
+              FINAL IMAGE
+```
+
+The most important principle:
+
+THE MODEL GENERATES THE HUMAN.
+
+THE SOURCE IMAGE PROVIDES THE PRODUCT.
+
+Do not make the generative model redraw the product unless using a specialized image-editing operation that demonstrably preserves product identity.
+
+===========================================================
+
+1. SOURCE PRODUCT INGESTION
+   ===========================================================
+
+Allow the user to upload:
+
+1 to 6 product images.
+
+Example:
+
+01 front
+02 rear
+03 side
+04 detail
+05 interior
+06 additional angle
+
+Treat all uploaded images as references for ONE product.
+
+Do NOT treat each uploaded image as a different product.
+
+Create:
+
+ProductReferenceSet
+
+with:
+
+product_id
+source_images[]
+category
+subcategory
+material
+color
+texture
+shape
+dimensions
+hardware
+logo
+pattern
+construction
+
+===========================================================
+2. SOURCE IMAGE QUALITY CHECK
+=============================
+
+Before generation:
+
+Check every uploaded source.
+
+Detect:
+
+* product visibility
+* product boundaries
+* blur
+* cropping
+* duplicate views
+* background
+* product angle
+* image resolution
+
+Select the best source image for exact extraction.
+
+Use multiple sources for identity validation.
+
+Do NOT depend on only one source image.
+
+===========================================================
+3. PRODUCT EXTRACTION
+=====================
+
+Use BiRefNet to extract the actual product.
+
+Pipeline:
+
+SOURCE IMAGE
+↓
+BiRefNet
+↓
+Foreground mask
+↓
+Mask cleanup
+↓
+Edge refinement
+↓
+Transparent product PNG
+
+Preserve original pixels.
+
+Do not regenerate the product during this step.
+
+Output:
+
+RGBA PNG
+
+with:
+
+* exact product
+* transparent background
+* clean edges
+* preserved texture
+* preserved hardware
+* preserved geometry
+
+===========================================================
+4. PRODUCT IDENTITY LOCK
+========================
+
+Create:
+
+ProductIdentityProfile
+
+For each product calculate/store:
+
+* silhouette
+* width/height ratio
+* dominant colors
+* material
+* texture
+* pattern
+* hardware positions
+* handle positions
+* strap geometry
+* clasp geometry
+* stitching
+* distinctive visual features
+
+For the supplied handbag specifically track:
+
+GOLD CENTER CLASP
+BRAIDED CORD
+EYELETS
+WOVEN PATTERN
+HANDLE
+HANDLE ATTACHMENTS
+BAG SILHOUETTE
+BURGUNDY/BROWN COLOR
+TEXTURE
+PROPORTIONS
+
+These become mandatory identity features.
+
+===========================================================
+5. NEVER RECREATE THE PRODUCT FROM TEXT
+=======================================
+
+BAD:
+
+"Generate a luxury burgundy woven handbag."
+
+BAD:
+
+"Generate a woman carrying a designer-style brown tote."
+
+BAD:
+
+"Generate a handbag similar to the reference."
+
+GOOD:
+
+"Use the supplied extracted product as the exact physical product."
+
+The source product must be passed into the actual image pipeline.
+
+The system must not depend on text alone to reconstruct it.
+
+===========================================================
+6. HUMAN GENERATION
+===================
+
+Human generation is a separate operation.
+
+For handbag products:
+
+Generate:
+
+adult female fashion model
+
+Requirements:
+
+* realistic human
+* realistic skin
+* realistic face
+* realistic hair
+* realistic eyes
+* realistic hands
+* realistic fingers
+* natural body proportions
+* natural posture
+* professional fashion pose
+
+Do NOT generate:
+
+* mannequin
+* CGI person
+* doll-like face
+* plastic skin
+* malformed anatomy
+
+===========================================================
+7. MODEL TYPE BY PRODUCT CATEGORY
+=================================
+
+Automatically determine the correct human interaction.
+
+HANDBAG:
+
+Adult female model for women's handbag.
+
+WATCH:
+
+Adult male wrist for men's watch.
+
+Adult female wrist for women's watch.
+
+SHOES:
+
+Adult model actually wearing the exact shoes.
+
+RING:
+
+Realistic human hand/finger.
+
+BRACELET:
+
+Realistic human wrist.
+
+NECKLACE:
+
+Adult model upper body/neck.
+
+EARRINGS:
+
+Realistic human ear/face.
+
+CLOTHING:
+
+Adult model wearing the exact supplied garment.
+
+SUNGLASSES:
+
+Adult model wearing the exact sunglasses.
+
+BELT:
+
+Adult model wearing the exact belt.
+
+Do not use one generic human workflow for every category.
+
+===========================================================
+8. HANDBAG INTERACTION
+======================
+
+For handbag campaigns, the model must actually interact with the exact product.
+
+Valid interactions:
+
+* holding by handles
+* carrying by hand
+* shoulder carry
+* forearm carry
+* crossbody carry
+* walking with bag
+* bag resting naturally against body
+* hand touching handle
+* hand gripping strap
+
+The bag must physically exist in the scene.
+
+No floating bag.
+
+No pasted-looking bag.
+
+No impossible strap geometry.
+
+No clipping through the body.
+
+No impossible hand position.
+
+===========================================================
+9. EXACT PRODUCT COMPOSITING
+============================
+
+Whenever possible:
+
+Generate the model and environment first.
+
+Then place the extracted exact product into the generated scene.
+
+Use controlled compositing.
+
+Then create:
+
+* realistic contact shadow
+* ambient shadow
+* occlusion
+* hand overlap
+* arm overlap
+* clothing overlap
+* perspective scaling
+* lighting/color matching
+
+The result must look like one photograph.
+
+The product must NOT look pasted on.
+
+===========================================================
+10. OCCLUSION SYSTEM
+====================
+
+This is critical for model + product images.
+
+Create an occlusion layer.
+
+Example:
+
+MODEL ARM
+↓
+OCCLUSION MASK
+↓
+PRODUCT
+↓
+BODY / CLOTHING
+
+Depending on pose, the system must determine which parts appear in front.
+
+For a woman holding a handbag:
+
+Hand may appear in front of handle.
+
+Arm may appear in front of bag.
+
+Bag may appear behind forearm.
+
+Strap may pass naturally over shoulder.
+
+Do not simply place the entire product over the model.
+
+===========================================================
+11. CONTACT VALIDATION
+======================
+
+The system must verify that:
+
+hand touches handle
+
+OR
+
+shoulder strap touches shoulder
+
+OR
+
+bag contacts body
+
+OR
+
+model physically holds the product.
+
+If there is no physical interaction:
+
+FAIL FRAME.
+
+===========================================================
+12. PRODUCT SCALE VALIDATION
+============================
+
+The bag must have believable size relative to the model.
+
+Do not allow:
+
+tiny handbag
+giant handbag
+floating oversized bag
+incorrect perspective
+
+Calculate:
+
+bag/person area ratio
+
+and compare against reference geometry.
+
+===========================================================
+13. MODEL CONSISTENCY
+=====================
+
+For ONE product campaign:
+
+Generate ONE model identity.
+
+Example:
+
+PRODUCT_001
+MODEL_001
+
+Frame 02:
+
+MODEL_001
+
+Frame 03:
+
+MODEL_001
+
+Frame 06:
+
+MODEL_001
+
+Frame 08:
+
+MODEL_001
+
+Same:
+
+* face
+* hair
+* skin
+* body
+* age appearance
+
+Different:
+
+* pose
+* camera
+* scene
+* expression
+* composition
+
+Do NOT create a different random woman in every frame.
+
+===========================================================
+14. DIFFERENT PRODUCT = DIFFERENT MODEL
+=======================================
+
+Do NOT use the same model for every product.
+
+Example:
+
+Product A:
+
+MODEL_001
+
+Product B:
+
+MODEL_002
+
+Product C:
+
+MODEL_003
+
+But all frames inside Product A campaign use MODEL_001.
+
+===========================================================
+15. GENERATION BACKENDS
+=======================
+
+Create a provider architecture.
+
+Interface:
+
+ImageGenerationProvider
+
+Methods:
+
+generate()
+edit()
+inpaint()
+variation()
+healthCheck()
+getCapabilities()
+
+Providers:
+
+FooocusProvider
+QwenImageEditProvider
+
+Potential future providers:
+
+FluxProvider
+OtherImageProvider
+
+Do NOT hardcode Fooocus throughout the application.
+
+===========================================================
+16. FOOOCUS
+===========
+
+Use the official Fooocus repository:
+
+[https://github.com/lllyasviel/Fooocus](https://github.com/lllyasviel/Fooocus)
+
+Integrate Fooocus as an optional generation provider.
+
+Fooocus should be used for:
+
+* human generation
+* lifestyle scenes
+* fast previews
+* image variation
+* inpainting
+* background generation
+* controlled image generation
+
+Do NOT assume Fooocus automatically preserves exact product identity.
+
+Fooocus must pass the same product validation system.
+
+Fooocus status should remain:
+
+UNVERIFIED
+
+until it passes the actual smoke test.
+
+===========================================================
+17. FOOOCUS NON-INTERACTIVE RUNNER
+==================================
+
+Implement a real backend runner.
+
+The current problem is that Fooocus source/runtime exists but Atelier cannot actually invoke it as a reliable non-interactive generation service.
+
+Create:
+
+backend/providers/fooocus/
+
+with:
+
+fooocus_runner
+fooocus_client
+fooocus_health
+fooocus_config
+fooocus_queue
+
+The runner must accept:
+
+source image
+prompt
+negative prompt
+seed
+resolution
+generation mode
+reference images
+output path
+
+and return:
+
+generated image
+metadata
+generation time
+seed
+model
+resolution
+provider status
+
+===========================================================
+18. GPU WORKER
+==============
+
+Do NOT run heavy production inference on the Replit CPU server.
+
+Architecture:
+
+REPLIT
+↓
+Atelier API
+↓
+Job Queue
+↓
+GPU Worker
+↓
+Fooocus / Qwen
+↓
+Result
+↓
+Replit
+
+GPU worker must report:
+
+CUDA_AVAILABLE
+GPU_NAME
+VRAM
+TORCH_CUDA
+MODEL_LOADED
+WORKER_STATUS
+
+If no CUDA:
+
+do not pretend generation is available.
+
+===========================================================
+19. QWEN IMAGE EDIT
+===================
+
+Use Qwen Image Edit as the high-quality product editing provider when GPU infrastructure is available.
+
+Use it for:
+
+* exact product editing
+* human + product composition
+* product-preserving edits
+* viewpoint changes
+* controlled scene generation
+* difficult interactions
+
+But the system must verify actual output.
+
+Repository/model presence is NOT verification.
+
+Successful inference is NOT verification.
+
+Only product-preserving smoke test = verification.
+
+===========================================================
+20. FAST MODE
+=============
+
+FAST mode:
+
+Use Fooocus where appropriate.
+
+But FAST must NEVER mean:
+
+"ignore product identity."
+
+Fast generation still requires:
+
+product validation
+human validation
+contact validation
+
+===========================================================
+21. QUALITY MODE
+================
+
+QUALITY mode:
+
+Prefer the strongest available product-preserving editing provider.
+
+Priorities:
+
+1. exact product
+2. human realism
+3. interaction
+4. anatomy
+5. lighting
+6. resolution
+7. speed
+
+Never sacrifice product identity for speed.
+
+===========================================================
+22. AUTO MODE
+=============
+
+AUTO mode decides provider based on task.
+
+Example:
+
+Product-only:
+
+BiRefNet
++
+source product
++
+optional enhancement
+
+Human + exact handbag:
+
+Qwen/Image Edit preferred
++
+source product
++
+human generation
++
+controlled composition
+
+Fast preview:
+
+Fooocus
+
+If no suitable provider is available:
+
+BLOCK.
+
+Do not generate an obviously invalid fallback.
+
+===========================================================
+23. EIGHT-FRAME CAMPAIGN
+========================
+
+Default output = 8 images.
+
+FRAME 01
+NORMAL PRODUCT IMAGE
+
+Exact product.
+
+Luxury studio.
+
+Clean composition.
+
+No model.
+
+Transparent background if requested.
+
+---
+
+FRAME 02
+MODEL HOLDING PRODUCT
+
+Adult female fashion model.
+
+Exact handbag.
+
+Natural hand grip.
+
+Luxury fashion photography.
+
+---
+
+FRAME 03
+SAME MODEL / DIFFERENT ANGLE
+
+Same exact woman.
+
+Different pose.
+
+Different camera angle.
+
+Exact same handbag.
+
+---
+
+FRAME 04
+PRODUCT DETAIL
+
+Close-up.
+
+Focus on:
+
+* woven texture
+* gold clasp
+* braided cord
+* eyelets
+* handle
+* stitching
+
+---
+
+FRAME 05
+PRODUCT ALTERNATIVE ANGLE
+
+Different perspective.
+
+Show product geometry.
+
+Do not redesign product.
+
+---
+
+FRAME 06
+MODEL LIFESTYLE
+
+Same model.
+
+Walking or natural fashion pose.
+
+Exact handbag.
+
+Realistic interaction.
+
+---
+
+FRAME 07
+MACRO DETAIL
+
+Extreme product detail.
+
+Texture and craftsmanship.
+
+Exact source product.
+
+---
+
+FRAME 08
+EDITORIAL HERO
+
+Same model.
+
+Different pose.
+
+Luxury fashion campaign composition.
+
+Exact product.
+
+===========================================================
+24. NO DUPLICATE FRAMES
+=======================
+
+Every frame must meaningfully differ in:
+
+* camera angle
+* pose
+* crop
+* composition
+* environment
+* distance
+* interaction
+
+Do not produce eight nearly identical images.
+
+Before accepting the campaign, calculate image similarity.
+
+If:
+
+Frame 02 ≈ Frame 03
+
+or
+
+Frame 06 ≈ Frame 08
+
+regenerate.
+
+===========================================================
+25. HUMAN ANATOMY VALIDATOR
+===========================
+
+Reject:
+
+* extra fingers
+* missing fingers
+* fused fingers
+* malformed hands
+* broken wrists
+* distorted arms
+* malformed face
+* crossed eyes
+* asymmetric eyes
+* distorted mouth
+* unnatural joints
+* duplicated limbs
+* floating hands
+
+Human detection alone is NOT enough.
+
+A person can be detected successfully while still being unusable.
+
+===========================================================
+26. PRODUCT VALIDATOR
+=====================
+
+Product validation must check:
+
+category
+shape
+silhouette
+color
+material
+texture
+hardware
+handle
+strap
+clasp
+pattern
+proportions
+
+For this handbag specifically:
+
+gold clasp MUST EXIST
+
+braided cord MUST EXIST
+
+eyelets MUST EXIST
+
+woven texture MUST EXIST
+
+handle geometry MUST MATCH
+
+overall silhouette MUST MATCH
+
+If these fail:
+
+FRAME = FAILED
+
+===========================================================
+27. VISUAL IDENTITY SCORE
+=========================
+
+Create:
+
+product_identity_score
+
+0.00 to 1.00
+
+Compare generated product against ALL source references.
+
+Use:
+
+* CLIP/image embedding similarity
+* shape comparison
+* color similarity
+* feature matching
+* hardware feature matching
+
+Do not rely exclusively on COCO object detection.
+
+COCO can tell you:
+
+"this looks like a handbag"
+
+It cannot reliably tell you:
+
+"this is the exact handbag uploaded by the customer."
+
+===========================================================
+28. VERIFICATION
+================
+
+Engine states:
+
+VERIFIED
+FAILED
+UNVERIFIED
+UNAVAILABLE
+
+VERIFIED means:
+
+* model generated
+* correct product detected
+* physical interaction detected
+* scale valid
+* product identity valid
+* visual review passed
+
+UNVERIFIED means:
+
+engine exists but has not passed smoke test.
+
+FAILED means:
+
+engine was tested and failed.
+
+UNAVAILABLE means:
+
+required runtime/GPU/model is missing.
+
+===========================================================
+29. NEVER FAKE VERIFICATION
+===========================
+
+Do NOT modify the UI to say:
+
+READY
+
+if generation failed.
+
+Do NOT mark:
+
+VERIFIED
+
+because:
+
+* model generated
+* image exists
+* image looks realistic
+* Fooocus is installed
+* Qwen repository exists
+
+Verification must represent actual tested capability.
+
+===========================================================
+30. FAILED OUTPUT HANDLING
+==========================
+
+If frame fails:
+
+Do NOT display it as final.
+
+Show:
+
+FAILED
+
+Reason:
+
+"Product identity was not preserved."
+
+Allow:
+
+[Regenerate]
+
+Do not silently replace the source product.
+
+===========================================================
+31. TRANSPARENT BACKGROUND
+==========================
+
+For product-only output:
+
+Exact source product
+↓
+BiRefNet
+↓
+Mask refinement
+↓
+RGBA PNG
+
+Verify:
+
+alpha channel exists
+
+background pixels are transparent
+
+product edges are clean
+
+No fake white background.
+
+===========================================================
+32. UPSCALING
+=============
+
+After validation:
+
+Real-ESRGAN
+
+Upscale to target resolution.
+
+Do not upscale before validation.
+
+This avoids wasting processing time on bad images.
+
+===========================================================
+33. GENERATION ORDER
+====================
+
+Correct order:
+
+1. Upload source images
+2. Analyze product
+3. Extract product
+4. Create identity profile
+5. Analyze category
+6. Select human type
+7. Generate model/scene
+8. Preserve exact product
+9. Compose interaction
+10. Create occlusion
+11. Match lighting
+12. Generate contact shadow
+13. Validate human
+14. Validate product
+15. Validate interaction
+16. Validate scale
+17. Validate identity
+18. Upscale
+19. Final transparency processing where applicable
+20. Mark READY
+
+===========================================================
+34. DO NOT UPSCALE BAD IMAGES
+=============================
+
+Current failure:
+
+SDXL
+↓
+bad product
+↓
+Real-ESRGAN
+↓
+high-resolution bad product
+
+This is pointless.
+
+Validation comes BEFORE upscaling.
+
+===========================================================
+35. UI IMPROVEMENT
+==================
+
+For every generation engine display:
+
+ENGINE
+STATUS
+GPU
+VRAM
+MODEL
+VERSION
+LAST VERIFIED
+VERIFICATION RESULT
+
+Example:
+
+FOOOCUS
+
+Status:
+UNVERIFIED
+
+Reason:
+"No CUDA worker / non-interactive runner not verified."
+
+SDXL CPU
+
+Status:
+FAILED
+
+Reason:
+"Product identity failed."
+
+QWEN IMAGE EDIT
+
+Status:
+UNAVAILABLE
+
+Reason:
+"CUDA worker unavailable."
+
+===========================================================
+36. DO NOT BLOCK PRODUCT-ONLY GENERATION
+========================================
+
+Even if no human-product engine is available:
+
+Product-only generation should still work.
+
+Use:
+
+source image
++
+BiRefNet
++
+optional enhancement
++
+Real-ESRGAN
+
+Human-product generation should be separately gated.
+
+===========================================================
+37. DO NOT USE GENERIC PRODUCT FALLBACK
+=======================================
+
+If human generation fails:
+
+DO NOT create:
+
+generic handbag
+generic tote
+generic watch
+generic shoe
+
+Do not substitute a similar product.
+
+Instead:
+
+FAILED
+
+"Exact product could not be preserved."
+
+===========================================================
+38. TEST WITH THE PROVIDED HANDBAG
+==================================
+
+Use the supplied handbag reference set.
+
+The test must prove:
+
+FRAME 01:
+Exact handbag.
+
+FRAME 02:
+Woman holding EXACT handbag.
+
+FRAME 03:
+Same woman, different angle, EXACT handbag.
+
+FRAME 04:
+Exact product detail.
+
+FRAME 05:
+Exact product alternative angle.
+
+FRAME 06:
+Same woman carrying EXACT handbag.
+
+FRAME 07:
+Exact product macro.
+
+FRAME 08:
+Same woman editorial image with EXACT handbag.
+
+===========================================================
+39. SUCCESS CRITERIA
+====================
+
+The current bad output:
+
+woman + generic burgundy tote
+
+MUST NOT PASS.
+
+The following features must remain identifiable:
+
+* woven pattern
+* burgundy/brown color
+* gold clasp
+* braided cord
+* eyelets
+* handle
+* silhouette
+* proportions
+
+The model must:
+
+* look human
+* have correct anatomy
+* have realistic hands
+* physically interact with the bag
+
+===========================================================
+40. DO NOT SOLVE THIS WITH PROMPT CHANGES ONLY
+==============================================
+
+Do not respond to this failure by simply modifying the prompt.
+
+The failure is architectural.
+
+Current problem:
+
+AI is generating both human AND product.
+
+Required solution:
+
+AI generates human/scene.
+
+SOURCE PRODUCT supplies exact product.
+
+Controlled editing/compositing preserves product identity.
+
+===========================================================
+41. IMPLEMENTATION TASKS
+========================
+
+Now inspect the existing codebase.
+
+Identify:
+
+* generation endpoint
+* generation service
+* SDXL implementation
+* Fooocus implementation
+* model router
+* BiRefNet pipeline
+* Real-ESRGAN pipeline
+* validation pipeline
+* verification state
+* generation queue
+* frontend engine selector
+
+Then implement the changes above.
+
+Do not delete working validation.
+
+Do not create fake implementations.
+
+Do not create placeholder "verified" states.
+
+===========================================================
+42. AFTER IMPLEMENTATION
+========================
+
+Run:
+
+python scripts/audit_human_product_generation.py 
+--engine all 
+--references <2-6 references>
+
+Use the same backend Python environment used by the API.
+
+Do NOT run the audit in a different environment.
+
+Then test:
+
+Fooocus
+Qwen
+SDXL
+
+individually.
+
+===========================================================
+43. FINAL REPORT
+================
+
+After implementation report:
+
+1. What was changed
+2. Which backend is actually usable
+3. GPU detected
+4. VRAM detected
+5. Fooocus status
+6. Qwen status
+7. SDXL status
+8. BiRefNet status
+9. Real-ESRGAN status
+10. Human-product smoke-test result
+11. Product identity score
+12. Number of successful frames
+13. Number of failed frames
+14. Generation time
+15. Exact reason for any remaining failure
+
+Do not claim success unless the actual generated image passes validation.
+
+===========================================================
+FINAL RULE
+==========
+
+The product is more important than the generated scene.
+
+A beautiful image containing the WRONG BAG is a failure.
+
+An average image containing the EXACT BAG is a better intermediate result.
+
+The system must optimize toward:
+
+EXACT PRODUCT
++
+REAL HUMAN
++
+REAL INTERACTION
++
+REALISTIC PHOTOGRAPHY
+
+not:
+
+"pretty AI image."
+
+Implement the architecture first.
+Then test it.
+Then verify it.
+Only then expose it as READY.
+
+````
+
+## One critical correction
+
+There is an even bigger issue in the current audit: **your validator currently uses COCO Faster R-CNN for product detection.** The audit itself says it checks person, handbag/backpack/suitcase, proximity, scale and a conservative identity proxy. :contentReference[oaicite:2]{index=2}
+
+That is not enough for your actual goal.
+
+It can answer:
+
+> "Is there a handbag in this image?"
+
+It cannot reliably answer:
+
+> "Is this the exact handbag the customer uploaded?"
+
+That's why the next implementation needs **two separate gates**:
+
+```text
+GATE 1
+Is there a human carrying a handbag?
+        ↓
+COCO / object detection
+
+GATE 2
+Is it the SAME PRODUCT?
+        ↓
+Multi-reference product identity matching
+````
+
+And only:
+
+```text
+GATE 1 PASS
++
+GATE 2 PASS
++
+ANATOMY PASS
++
+CONTACT PASS
++
+SCALE PASS
+        ↓
+VERIFIED
+```
+
+Your audit explicitly recommends strengthening the identity verifier with multi-reference matching for the clasp, handle, eyelet, cord, silhouette and material. 
+
+**That is the part I would prioritize.** Without it, Replit can keep producing beautiful AI photos that are technically "a handbag" but commercially useless because it isn't *your* handbag.

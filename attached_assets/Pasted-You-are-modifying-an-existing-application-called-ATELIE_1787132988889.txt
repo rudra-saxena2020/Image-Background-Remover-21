@@ -1,0 +1,123 @@
+You are modifying an existing application called ATELIER.
+
+IMPORTANT:
+Do NOT rebuild the application from scratch.
+Do NOT remove the existing validation system.
+Do NOT bypass failed verification.
+Do NOT lower validation thresholds.
+Do NOT fake successful generation.
+
+The current system correctly detects that the generated human + handbag image is not the real uploaded product.
+
+The problem is the GENERATION ARCHITECTURE.
+
+We need to fix the generation pipeline so that uploaded source products remain visually identical while AI generates realistic human models, poses, scenes and compositions around those products.
+
+===========================================================
+CURRENT FAILURE
+===========================================================
+
+The current pipeline is effectively doing:
+
+SOURCE HANDBAG
+        ↓
+SDXL IMAGE-TO-IMAGE
+        ↓
+"woman carrying handbag"
+        ↓
+AI RECREATES A SIMILAR BAG
+        ↓
+GENERIC BURGUNDY TOTE
+
+This is unacceptable.
+
+The supplied handbag has distinctive:
+
+- woven construction
+- burgundy/brown color
+- braided cord
+- gold center clasp
+- gold hardware
+- eyelets
+- handle geometry
+- silhouette
+- proportions
+- texture
+
+The generated image changes these characteristics.
+
+The existing audit correctly rejected this output.
+
+The current SDXL CPU test took 152.4 seconds at 512×512 and failed handbag detection, physical contact, scale and identity validation.
+
+DO NOT try to fix this simply by making the prompt longer.
+
+The system must change the generation strategy.
+
+===========================================================
+PRIMARY OBJECTIVE
+===========================================================
+
+The final result must be:
+
+REAL HUMAN MODEL
++
+EXACT UPLOADED PRODUCT
++
+REALISTIC PHYSICAL INTERACTION
++
+REALISTIC LIGHTING
++
+REALISTIC SHADOW
++
+CORRECT SCALE
++
+CORRECT ANATOMY
++
+HIGH RESOLUTION
+
+The AI must NOT freely redesign the product.
+
+The product is the immutable source of truth.
+
+===========================================================
+CORE ARCHITECTURE
+===========================================================
+
+Implement this architecture:
+
+                PRODUCT UPLOAD
+                      ↓
+             SOURCE IMAGE ANALYSIS
+                      ↓
+                  BiRefNet
+                      ↓
+             EXACT PRODUCT MASK
+                      ↓
+           PRODUCT IDENTITY PROFILE
+                      ↓
+              GENERATION PLANNER
+                      ↓
+        ┌─────────────┴─────────────┐
+        ↓                           ↓
+ HUMAN / SCENE GENERATION      PRODUCT SOURCE
+        ↓                           ↓
+        └─────────────┬─────────────┘
+                      ↓
+             CONTROLLED COMPOSITE
+                      ↓
+             OCCLUSION / CONTACT
+                      ↓
+              LIGHTING MATCH
+                      ↓
+             SHADOW GENERATION
+                      ↓
+             PRODUCT VALIDATION
+                      ↓
+             HUMAN VALIDATION
+                      ↓
+             ANATOMY VALIDATION
+                      ↓
+              QUALITY GATE
+                      ↓
+              FINAL IMAGE

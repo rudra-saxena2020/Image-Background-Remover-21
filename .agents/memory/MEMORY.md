@@ -1,0 +1,11 @@
+- [BiRefNet Python backend setup](birefnet-backend.md) — extra packages (einops, kornia, timm) required beyond transformers; must be pip-installed separately
+- [OpenAPI binary format in Node lib](openapi-binary-dom.md) — format:binary in request body schemas causes TS2304 (File/Blob not in es2022 lib); fix: add "dom" to api-zod tsconfig lib or omit format:binary
+- [Local HiDream runtime](local-hidream-runtime.md) — generation is local-only; official weights plus CUDA are required and there is no hosted fallback
+- [Campaign generation policy](campaign-generation-policy.md) — keep product-aware prompts, identity locks, frame diversity, and automatic validation/regeneration
+- [FLUX.2 Klein NVFP4 runtime](flux2-klein-nvfp4.md) — lightweight checkpoint is installed but needs a compatible CUDA/NVFP4 runner before it can be marked ready
+- [Fooocus runtime](fooocus-runtime.md) — official checkout is present, but dependency/model installation and routing must wait for a CUDA worker
+- [CPU SDXL fast path](cpu-sdxl-fast-path.md) — model files are not enough; gate requests on the persistent worker-ready signal and keep the validated preview tier lightweight
+- [Deployed Colab worker contract](colab-worker-contract.md) — inspect OpenAPI and translate legacy product_id/source_images payloads without weakening verification
+- [fal.ai connector bridge](fal-ai-connector-bridge.md) — connector runtime uses the `falai` slug and the CommonJS `ReplitConnectors` proxy API
+- [BFL generation constraints](bfl-generation-constraints.md) — keep FLUX.2 Pro references plus output under 9MP; neutralize branded prompts when protected-content moderation blocks a request
+- [Single-view image-edit prompting](single-view-image-edit.md) — strip campaign language and treat collage references as identity-only input before each angle request

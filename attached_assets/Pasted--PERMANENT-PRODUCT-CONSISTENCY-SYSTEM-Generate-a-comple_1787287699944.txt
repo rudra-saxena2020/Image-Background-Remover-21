@@ -1,0 +1,592 @@
+# PERMANENT PRODUCT CONSISTENCY SYSTEM
+
+Generate a complete professional e-commerce product image set from the supplied product reference images.
+
+The reference product is the **single source of truth**.
+
+The same physical product must exist across EVERY generated image.
+
+This is not a creative redesign task. It is a **multi-angle product photography reconstruction task**.
+
+## CORE RULE
+
+**ONE PRODUCT = ONE FIXED 3D OBJECT**
+
+Before generating any angle, internally establish a consistent understanding of the product's:
+
+* Exact dimensions and proportions
+* 3D shape
+* Front and back construction
+* Side profile
+* Bottom structure
+* Handle geometry
+* Strap geometry
+* Flap construction
+* Closure mechanism
+* Zipper path
+* Hardware
+* Stitching
+* Material
+* Texture
+* Color
+* Logo
+* Embossing
+* Interior structure
+* Pocket placement
+* Attachment points
+* Folding mechanism
+* Opening mechanism
+
+Once these properties are established, they are **LOCKED**.
+
+Every subsequent image must depict the same physical object from a different camera position.
+
+---
+
+# PRODUCT IDENTITY LOCK
+
+Treat the supplied reference images as a multi-view reconstruction of ONE exact product.
+
+Do not create a new interpretation for each image.
+
+The following properties must NEVER change between images:
+
+### GEOMETRY
+
+Lock:
+
+* Width
+* Height
+* Depth
+* Overall silhouette
+* Corner shape
+* Side curvature
+* Bottom shape
+* Top opening
+* Flap dimensions
+* Handle thickness
+* Handle length
+* Handle curvature
+* Handle attachment points
+* Strap dimensions
+* Strap attachment points
+
+The product must have the same physical dimensions from every angle.
+
+### MATERIAL
+
+Lock the exact material appearance.
+
+Do not change:
+
+* Leather grain
+* Canvas texture
+* Fabric weave
+* Surface roughness
+* Gloss level
+* Matte level
+* Material thickness
+* Edge finishing
+* Stitching appearance
+
+Do not make the material smoother, shinier, softer, darker, or more luxurious in another angle.
+
+**The material must remain physically identical across every image.**
+
+---
+
+# COLOR LOCK
+
+This is critical.
+
+Establish the product's true base color from the reference images before generating the gallery.
+
+Then lock that color.
+
+Every image must use the SAME:
+
+* Base color
+* Undertone
+* Saturation
+* Brightness
+* Contrast
+* Material color
+* Leather color
+* Fabric color
+* Hardware color
+
+### ABSOLUTELY NO COLOR DRIFT
+
+Do not allow:
+
+* Warm orange tint
+* Yellow tint
+* Red tint
+* Green tint
+* Blue tint
+* Pink tint
+* Brown tint
+* Grey tint
+* Different white balance
+* Different exposure that changes perceived product color
+
+Lighting may change naturally with perspective, but the **actual product color must not change**.
+
+The bag in image 1 and image 5 must be recognizably the exact same color.
+
+---
+
+# HARDWARE LOCK
+
+Every hardware component is fixed.
+
+Maintain exactly:
+
+* Hardware shape
+* Hardware size
+* Hardware position
+* Hardware thickness
+* Hardware color
+* Hardware finish
+* Rings
+* Clasps
+* Buckles
+* Zippers
+* Buttons
+* Logos
+* Decorative hardware
+
+Never add hardware simply because another angle appears to need it.
+
+Never remove hardware because it is partially hidden.
+
+---
+
+# LOGO AND BRANDING LOCK
+
+The product branding must remain identical.
+
+Preserve:
+
+* Logo shape
+* Logo position
+* Logo size
+* Embossing
+* Engraving
+* Hardware branding
+* Monograms
+* Decorative marks
+
+Never reinterpret unclear branding.
+
+Never generate a different logo in another angle.
+
+If the logo is not visible from a particular angle, leave it naturally hidden.
+
+---
+
+# CLOSURE AND OPENING LOGIC
+
+This is a major requirement.
+
+Before generating an open, top-down, side, or interior image, determine **how the real physical product actually opens**.
+
+Understand the mechanical relationship between:
+
+* Zipper
+* Flap
+* Handle
+* Side tabs
+* Snap/button
+* Magnetic closure
+* Interior compartment
+* Straps
+* Hardware
+
+Then reproduce that mechanism realistically.
+
+### NEVER CREATE PHYSICALLY IMPOSSIBLE OPENINGS
+
+Do not:
+
+* Open a zipper through the wrong path
+* Make a flap pass through a handle
+* Make straps disappear
+* Move hardware to impossible locations
+* Create duplicate zippers
+* Change the zipper direction
+* Open a compartment that does not exist
+* Make the bag structurally collapse incorrectly
+* Make the interior disconnected from the exterior
+* Place handles through the wrong part of the bag
+* Invent pockets
+* Invent compartments
+
+Every open image must be physically compatible with the closed product.
+
+---
+
+# INTERIOR CONSISTENCY
+
+The interior is part of the same product.
+
+If the product has:
+
+* Specific lining
+* Interior pocket
+* Zip pocket
+* Compartment
+* Logo tag
+* Interior seam
+* Specific closure
+
+those details must remain consistent.
+
+Do not invent an interior based on generic handbag patterns.
+
+**Never generate a generic handbag interior.**
+
+The interior must be derived from the supplied references and known construction.
+
+---
+
+# ANGLE SYSTEM
+
+Generate different camera angles, NOT different products.
+
+Recommended gallery sequence:
+
+### 01. FRONT HERO
+
+Straight-on front view.
+
+* Product centered
+* Natural proportions
+* Complete product visible
+* Handles fully visible
+* Clean studio presentation
+
+### 02. FRONT THREE-QUARTER
+
+Approximately 30 to 45 degree rotation.
+
+Reveal real depth and side construction.
+
+Do not alter the product to create the perspective.
+
+### 03. OPPOSITE THREE-QUARTER
+
+Show the opposite side when useful.
+
+Maintain exactly the same geometry and construction.
+
+### 04. BACK
+
+Show the actual back of the same product.
+
+Do not invent back details.
+
+### 05. SIDE / PROFILE
+
+Show actual product depth and side construction.
+
+### 06. TOP / OPEN VIEW
+
+Show the real opening mechanism and interior.
+
+Only open the product in a way that is physically possible.
+
+### 07. DETAIL VIEW
+
+Show important construction details only when they actually exist.
+
+---
+
+# CAMERA CONSISTENCY
+
+Use professional luxury e-commerce photography.
+
+Camera perspective must remain controlled.
+
+Avoid:
+
+* Fisheye
+* Extreme wide angle
+* Strong perspective distortion
+* Warped edges
+* Artificial stretching
+* Exaggerated depth
+* Oversized foreground areas
+
+Different angles should look like they were photographed in the **same professional studio on the same day with the same camera system**.
+
+---
+
+# PRODUCT SCALE CONSISTENCY
+
+This is mandatory.
+
+Every gallery image must use the same:
+
+* Canvas dimensions
+* Aspect ratio
+* Product framing logic
+* Visual scale
+* Margins
+* Centering
+* Camera distance
+
+Do not make the product huge in one image and tiny in another.
+
+Do not crop handles.
+
+Do not crop the bottom.
+
+Do not crop side attachments.
+
+Do not change the product's visual size simply because the angle changes.
+
+The e-commerce gallery must look like one professionally photographed product set.
+
+---
+
+# BACKGROUND CONSISTENCY
+
+Use a clean premium studio background inspired by the supplied Coach-style examples.
+
+Maintain consistent:
+
+* Background tone
+* Brightness
+* White balance
+* Studio lighting
+* Shadow softness
+* Grounding
+
+No random background color changes between images.
+
+No colored tint.
+
+No environmental backgrounds.
+
+No props.
+
+No people.
+
+No hands.
+
+No decorative objects.
+
+---
+
+# LIGHTING CONSISTENCY
+
+Use soft professional studio lighting.
+
+Lighting should remain neutral and controlled across the gallery.
+
+Do not use dramatic cinematic lighting.
+
+Do not use different color temperatures between images.
+
+Do not allow one image to become warm beige while another becomes cool grey.
+
+The product's true appearance always takes priority over lighting aesthetics.
+
+---
+
+# SHADOW CONSISTENCY
+
+Use a subtle realistic grounding shadow when appropriate.
+
+The shadow must correspond to the product's physical position.
+
+Do not create:
+
+* Floating products
+* Heavy artificial shadows
+* Multiple shadows
+* Directionally impossible shadows
+
+---
+
+# REFERENCE RECONCILIATION PROTOCOL
+
+When multiple reference images are supplied:
+
+### STEP 1
+
+Compare all references.
+
+### STEP 2
+
+Identify which details are common across references.
+
+### STEP 3
+
+Determine the fixed physical properties of the product.
+
+### STEP 4
+
+Resolve apparent differences using the most reliable reference evidence.
+
+### STEP 5
+
+Build one consistent internal product model.
+
+### STEP 6
+
+Generate every new angle from that same model.
+
+**Never treat each reference image as an independent product design.**
+
+If two references appear slightly different because of:
+
+* Lighting
+* Perspective
+* Lens distortion
+* Camera height
+* Product positioning
+* Open/closed state
+
+do NOT interpret those differences as changes to the product itself.
+
+---
+
+# ERROR PREVENTION
+
+Before producing each image, perform an internal consistency check against ALL supplied references.
+
+Check:
+
+### SHAPE
+
+Is the silhouette identical to the established product model?
+
+### PROPORTIONS
+
+Are width, height and depth consistent?
+
+### HANDLE
+
+Is the handle exactly the same construction?
+
+### FLAP
+
+Is the flap the same size, shape, material and attachment?
+
+### HARDWARE
+
+Are all components in their correct physical locations?
+
+### ZIPPER
+
+Does the zipper follow the actual physical path?
+
+### OPENING
+
+Could the product realistically be opened into this position?
+
+### INTERIOR
+
+Does the interior correspond to the actual product?
+
+### COLOR
+
+Is the product exactly the same color?
+
+### MATERIAL
+
+Is the texture exactly consistent?
+
+### BRANDING
+
+Is the logo identical?
+
+### STITCHING
+
+Is stitching consistent?
+
+### CAMERA
+
+Is this genuinely a different view of the same object?
+
+If any answer is NO, correct the inconsistency before generating the final image.
+
+---
+
+# ABSOLUTE PROHIBITIONS
+
+NEVER:
+
+* Change product color
+* Change product tint
+* Change material
+* Change texture
+* Change proportions
+* Change dimensions
+* Change handle design
+* Change flap design
+* Change zipper design
+* Change hardware
+* Change logo
+* Add hardware
+* Remove hardware
+* Invent pockets
+* Invent compartments
+* Invent straps
+* Invent stitching
+* Invent interior details
+* Change how the product opens
+* Create physically impossible geometry
+* Make different images depict different versions of the product
+* Smooth away important texture
+* Beautify the product into a different design
+* Use random lighting
+* Use random color grading
+* Use random backgrounds
+* Use inconsistent framing
+* Crop the product
+* Stretch the product
+* Warp the product
+* Add props
+* Add people
+* Add hands
+* Add text
+* Add watermarks
+
+---
+
+# FINAL VALIDATION GATE
+
+Do NOT consider an image finished merely because it looks attractive.
+
+It must pass this test:
+
+**Could these images realistically have been photographed during the same product photoshoot of the exact same physical item?**
+
+If the answer is no, regenerate.
+
+The generated gallery must have:
+
+**ONE PRODUCT
+ONE COLOR
+ONE MATERIAL
+ONE CONSTRUCTION
+ONE DIMENSION SET
+ONE HARDWARE SET
+ONE CLOSURE SYSTEM
+ONE INTERIOR
+MULTIPLE CAMERA ANGLES**
+
+Only the **camera viewpoint and physically valid product state** should change.
+
+Everything else remains locked.
+
+## FINAL PRIORITY
+
+**PRODUCT CONSISTENCY > PRODUCT ACCURACY > PHYSICAL REALISM > COLOR ACCURACY > MATERIAL ACCURACY > CONSTRUCTION ACCURACY > CAMERA ANGLE > LIGHTING > AESTHETICS**
+
+Never sacrifice product consistency for visual creativity.
+
+The system must behave like a professional product photographer photographing the **same physical product repeatedly**, not like an image generator creating a new product for every prompt.

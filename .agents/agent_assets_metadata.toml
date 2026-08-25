@@ -1,0 +1,660 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "tF_jCKWComCR0c9aI3lmd"
+uri = "file://artifacts/bgremover/reports/atelier_quality_audit_P01187465.docx"
+type = "word_document"
+title = "Atelier Product Generation Quality Audit — P01187465"
+description = "Detailed DOCX report with the inspected reference, rejected SDXL output, local validator results, all-engine status matrix, root causes, current safeguards, and the CUDA/runtime repair plan."
+logical_id = "3a9a9d30-4480-4190-ae66-78b4173fdc67"
+content_hash = "sha256:cdebbd7a72475f5d3b8822f1d41536cfd0040fd6f69a27c91ed51e3b847da8f6"
+size = 1306937
+mtime_ms = 1787132598689
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/3a9a9d30-4480-4190-ae66-78b4173fdc67/b62b7360-385f-4d4f-a5c6-4dd1b04717c2"
+storage_version_token = "1787132618760781"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "KYZq0EayCnv09rmt81hrf"
+uri = "file://.local/generation-validation/outputs/sdxl-human-with-bag.png"
+type = "image"
+title = "Inspected SDXL Output — Rejected"
+description = "The latest local CPU SDXL human-with-bag attempt. It contains a person but failed handbag detection, contact, scale, and identity quality checks, so it is not publishable."
+logical_id = "6be0e930-90e9-43fd-88ea-31871c5db88d"
+content_hash = "sha256:734168138f21ecc9e06aeb53182f2b5953c42c9c858c92ebdb0d87601e3aa38b"
+size = 333658
+mtime_ms = 1787120141514
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/6be0e930-90e9-43fd-88ea-31871c5db88d/1c8f3d67-d985-463d-8e24-f7d0fa1bcfcf"
+storage_version_token = "1787132620162032"
+content_type = "image/png"
+
+[[outputs]]
+id = "cCHKkftoyeqsMx6qMPxXO"
+uri = "file://attached_assets/generated_images/alternate-campaign-01.jpg"
+type = "image"
+title = "Alternate campaign frame 1"
+description = "Best-effort alternate generated frame 1 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "5667c486-f09a-4566-9422-4c5959976f1c"
+content_hash = "sha256:282d6d47cc36ac984f77ec9065532873173e880c711cc403e278c01d5bbc4350"
+size = 104483
+mtime_ms = 1787221945722
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/5667c486-f09a-4566-9422-4c5959976f1c/66d954c1-ad61-43a2-962d-c2c678fa8e53"
+storage_version_token = "1787221960541101"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "wJY0NivpNl4BYcc0kTtmT"
+uri = "file://attached_assets/generated_images/alternate-campaign-02.jpg"
+type = "image"
+title = "Alternate campaign frame 2"
+description = "Best-effort alternate generated frame 2 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "95ff46f8-6cc3-4181-849c-beacc667c6b0"
+content_hash = "sha256:4e0b180fa3e1370c974e7bdb0ba4706284b7cbec2c2ab75771f5800d88006912"
+size = 108535
+mtime_ms = 1787221949678
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/95ff46f8-6cc3-4181-849c-beacc667c6b0/45a9140b-e7dd-4e5e-94fd-9f56ab7d6e50"
+storage_version_token = "1787221961871864"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "IdMGtY-meiq0nOQejxklx"
+uri = "file://attached_assets/generated_images/alternate-campaign-03.jpg"
+type = "image"
+title = "Alternate campaign frame 3"
+description = "Best-effort alternate generated frame 3 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "a25316f2-5d16-4508-b525-75f68568c610"
+content_hash = "sha256:6d4de1e53dfb5253b2ff06a8932267c230658416feab09e3b36521accaf44761"
+size = 104152
+mtime_ms = 1787221948542
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/a25316f2-5d16-4508-b525-75f68568c610/3428aaa1-ef36-48e5-98b9-bc019811cae0"
+storage_version_token = "1787221963182246"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "p8WlXosbrhjBLl2ez9gBG"
+uri = "file://attached_assets/generated_images/alternate-campaign-04.jpg"
+type = "image"
+title = "Alternate campaign frame 4"
+description = "Best-effort alternate generated frame 4 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "84deedcd-b7d9-4137-a94b-dc081e256f53"
+content_hash = "sha256:48543902da157b791737ea9b241ac1f8d70e07e5c85f0a21f84116e36aae8319"
+size = 158667
+mtime_ms = 1787221945714
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/84deedcd-b7d9-4137-a94b-dc081e256f53/f6f4c5e4-f075-4980-85a6-3a98f7fef348"
+storage_version_token = "1787221964519818"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "3YOCXIuTHCE9klStrPOcQ"
+uri = "file://attached_assets/generated_images/alternate-campaign-05.jpg"
+type = "image"
+title = "Alternate campaign frame 5"
+description = "Best-effort alternate generated frame 5 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "925ca527-4591-4889-a99f-b70fa73d82c1"
+content_hash = "sha256:1e84999f9fe1d94a273e242fe9cf9150bf8be66e10f0473db7478822a7e66ddc"
+size = 87383
+mtime_ms = 1787221945022
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/925ca527-4591-4889-a99f-b70fa73d82c1/90be834f-8e42-4c76-85d1-fb7f49962431"
+storage_version_token = "1787221965827451"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "RMIrIJoQxk9pXEWzULPaV"
+uri = "file://attached_assets/generated_images/alternate-campaign-06.jpg"
+type = "image"
+title = "Alternate campaign frame 6"
+description = "Best-effort alternate generated frame 6 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "987f4396-c6e9-4a1b-8eab-60289b8815bb"
+content_hash = "sha256:a49b9f08aceaa82079e0a3e27ed4adbf02acd240a39bca4ba1dbaab1c425ecb4"
+size = 115574
+mtime_ms = 1787221947642
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/987f4396-c6e9-4a1b-8eab-60289b8815bb/3eb20eab-c59c-4efe-bae0-e84b0af8f860"
+storage_version_token = "1787221967289257"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "VdB6VuSL9Ozycq8gKFTVR"
+uri = "file://attached_assets/generated_images/alternate-campaign-07.jpg"
+type = "image"
+title = "Alternate campaign frame 7"
+description = "Best-effort alternate generated frame 7 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "574a9c26-e1e6-4001-a78a-c6fa27a4ed16"
+content_hash = "sha256:a7973eb2747872217973c6cb832bc75d2f44334fe0b09bbdc0d01c045936b7e2"
+size = 105439
+mtime_ms = 1787221946318
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/574a9c26-e1e6-4001-a78a-c6fa27a4ed16/35679707-b0f0-4b69-b4d9-a0d738d5254a"
+storage_version_token = "1787221968582227"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "73KuZCblCKwcXAQ8BXQYl"
+uri = "file://attached_assets/generated_images/alternate-campaign-08.jpg"
+type = "image"
+title = "Alternate campaign frame 8"
+description = "Best-effort alternate generated frame 8 for the navy-and-brown pouch campaign. Not identity-verified by Atelier."
+logical_id = "b5c461c3-619c-4b68-8eb0-c1221549fdad"
+content_hash = "sha256:8f2bd815b159cd37449b3f39a1708e0b26a4c2ae0b5afb2393b6a4b63c797d8b"
+size = 77442
+mtime_ms = 1787221946506
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/b5c461c3-619c-4b68-8eb0-c1221549fdad/6b4db5fb-3a17-46ac-bf1f-bc6b28463945"
+storage_version_token = "1787221969903755"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "WJDCd1BYiRy9XwWbByzEF"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-01.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 1"
+description = "Official Black Forest Labs FLUX.2 Pro frame 1 generated from the three uploaded product references."
+logical_id = "29ebbf15-ad5e-490d-813f-d68f86a64f97"
+content_hash = "sha256:1884cf0ebc2ec8138bf36f8cf12ff0c1e6d13c526961ff98368e6b4f2f660acb"
+size = 92340
+mtime_ms = 1787222470391
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/29ebbf15-ad5e-490d-813f-d68f86a64f97/aa044253-e27d-4e9c-8803-1a5653c34361"
+storage_version_token = "1787222486513959"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "aJeZSqaAt3atc0r5urKWk"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-02.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 2"
+description = "Official Black Forest Labs FLUX.2 Pro frame 2 generated from the three uploaded product references."
+logical_id = "449284c6-7b8d-4f25-9150-6985e859042a"
+content_hash = "sha256:4eafd7ca4d3364e1cd7a626823d0a9b2d1498d60619d23daf0842b8d9d2ea3e7"
+size = 79502
+mtime_ms = 1787222471263
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/449284c6-7b8d-4f25-9150-6985e859042a/be71581b-544f-4759-affe-a05e4699bc30"
+storage_version_token = "1787222487888596"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "lCJRwmlds98c2SMcYDqkk"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-03.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 3"
+description = "Official Black Forest Labs FLUX.2 Pro frame 3 generated from the three uploaded product references."
+logical_id = "3e386c03-9b99-421b-a608-2e9905556e46"
+content_hash = "sha256:4c7e1d47115052d460e2a7a1e87988136aa513c0f18ed2c5f0d9aa8e7b4a59c4"
+size = 87433
+mtime_ms = 1787222472167
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/3e386c03-9b99-421b-a608-2e9905556e46/2f6f25be-3384-4b54-92aa-7ecbedb40cfe"
+storage_version_token = "1787222489283129"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "8eO55mRnHh_TVMek8_V_-"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-04.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 4"
+description = "Official Black Forest Labs FLUX.2 Pro frame 4 generated from the three uploaded product references."
+logical_id = "814126ab-23b7-405b-9a7b-c1c47b3421e7"
+content_hash = "sha256:acca9803d035f5b0d26f59fdbb542f33b369f3accb286383a18786e57eb07e08"
+size = 181254
+mtime_ms = 1787222473055
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/814126ab-23b7-405b-9a7b-c1c47b3421e7/0b9a0a6a-3a96-4bfb-bf58-83e6ea45d035"
+storage_version_token = "1787222490624375"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "SOGvfjXwicb-ODEjB7VaK"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-05.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 5"
+description = "Official Black Forest Labs FLUX.2 Pro frame 5 generated from the three uploaded product references."
+logical_id = "873410f3-f2f3-41d4-bad9-0f57c1241909"
+content_hash = "sha256:36d545c8a469892f039cda080dd73ed1992f51da3fc7eeae591de1efbbd416fa"
+size = 58966
+mtime_ms = 1787222473999
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/873410f3-f2f3-41d4-bad9-0f57c1241909/f0e45451-6709-4880-842e-e50274dd404d"
+storage_version_token = "1787222491966736"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "nLAExiXNX9EW_c5pOVR_s"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-06.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 6"
+description = "Official Black Forest Labs FLUX.2 Pro frame 6 generated from the three uploaded product references."
+logical_id = "ffac29c0-9949-4932-99c1-9132f73cc767"
+content_hash = "sha256:ce2942444f1c56681f6b67f32ed5ff393ac404b62803102e4598e7c12df55543"
+size = 68652
+mtime_ms = 1787222474819
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/ffac29c0-9949-4932-99c1-9132f73cc767/1434cd0f-a447-4fb9-b81a-2fa884bc3433"
+storage_version_token = "1787222493324783"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "lu_YsMkQo1kMprfNY95Ac"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-07.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 7"
+description = "Official Black Forest Labs FLUX.2 Pro frame 7 generated from the three uploaded product references."
+logical_id = "8a11008a-15b5-4857-a1d5-8044cab0b9ec"
+content_hash = "sha256:957c23c7aa3011d0ee88a089e66d96036d2ee6c56813ceb23846e8407552eed9"
+size = 110078
+mtime_ms = 1787222475847
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/8a11008a-15b5-4857-a1d5-8044cab0b9ec/606e4df9-0222-4c60-91b7-c9bc5600304f"
+storage_version_token = "1787222494660437"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "-dFl41_QYab0WxRmJpeRf"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-frame-08.jpg"
+type = "image"
+title = "FLUX.2 Pro campaign frame 8"
+description = "Official Black Forest Labs FLUX.2 Pro frame 8 generated from the three uploaded product references."
+logical_id = "ebded7a1-09c8-4acc-a0ab-42849e489d1a"
+content_hash = "sha256:cdcbf7f015ad5272d8431f17a685f7249b730bd8e8bc5097ca2165d43ebca4d1"
+size = 74673
+mtime_ms = 1787222476759
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/ebded7a1-09c8-4acc-a0ab-42849e489d1a/ceeed09b-7b18-4d2b-9f4c-12ea0ad4bd77"
+storage_version_token = "1787222495990886"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "rVKu0_GV2fYqWuDNDNK3f"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-hero.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro product hero"
+description = "FLUX.2 Pro hero generated from the three uploaded product references with corrected compact-pouch proportions and human interaction instructions."
+logical_id = "df1b8776-976c-4f26-98a5-7a4ca932827e"
+content_hash = "sha256:48bea4b5e754f4aca69dc2557d1db3e5bb4478afae6f54bf0d75220f24b6d09d"
+size = 388087
+mtime_ms = 1787223421042
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/df1b8776-976c-4f26-98a5-7a4ca932827e/492f9e0b-ce0b-4246-ad7c-969b032095de"
+storage_version_token = "1787223422683199"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "JFivC_ZH5Sc3z-L5AOXwS"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-02.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 2"
+description = "Corrected FLUX.2 Pro campaign frame 2, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "6c6e250d-6519-4a48-ac39-404edd5c727a"
+content_hash = "sha256:fdea6c44dcd2966a8e054d7bd2deaecdaec2a20cf428e32a467a78bdd40751c6"
+size = 400744
+mtime_ms = 1787223516614
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/6c6e250d-6519-4a48-ac39-404edd5c727a/c5d4e7d9-9f4d-4170-ab55-6c2c7a868f25"
+storage_version_token = "1787223523781123"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "aXEYApULRQhOMDIq4j0nz"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-03.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 3"
+description = "Corrected FLUX.2 Pro campaign frame 3, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "1efea9b1-8350-4a7d-ae02-f01773e6d40d"
+content_hash = "sha256:08dfdc718acb5d512b15b3aa8e397cd218e6e7af605c1e0b59ae723be3fff85a"
+size = 412102
+mtime_ms = 1787223517538
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/1efea9b1-8350-4a7d-ae02-f01773e6d40d/5a3c9fa8-c2dd-4821-a080-fe4e123461ff"
+storage_version_token = "1787223525118148"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "8-HK8UepYdAWW3PLOINSO"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-04.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 4"
+description = "Corrected FLUX.2 Pro campaign frame 4, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "455f0f81-4eaa-4c04-a98d-73f7b3a4b4ca"
+content_hash = "sha256:863a66042571f459277bbe4c962a56e5568d240cd86c27583a6cce0ecaba83d2"
+size = 402837
+mtime_ms = 1787223518694
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/455f0f81-4eaa-4c04-a98d-73f7b3a4b4ca/9c36209d-4b68-46f6-8c98-75d5a589868a"
+storage_version_token = "1787223526464492"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "NqdP8HZXZm8_S99FlNR2N"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-05.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 5"
+description = "Corrected FLUX.2 Pro campaign frame 5, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "6987b157-d5a6-46d0-a614-89686e410de7"
+content_hash = "sha256:dcba25146666b1d8780ee1820ad037c408b0d42a9b2354dc94d29d40f54ea2ef"
+size = 395262
+mtime_ms = 1787223519530
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/6987b157-d5a6-46d0-a614-89686e410de7/20d1e661-baac-4098-b834-8e761269e3ea"
+storage_version_token = "1787223527763558"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "6GRRHjeViDc-Qyg6dBCDa"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-06.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 6"
+description = "Corrected FLUX.2 Pro campaign frame 6, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "9e139b08-46a1-456c-afef-c16700b75efd"
+content_hash = "sha256:ec2da0cb070aa61684a4cb7fc3925229a2e65a1ec8a72582b616b47a251cc365"
+size = 383331
+mtime_ms = 1787223520718
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/9e139b08-46a1-456c-afef-c16700b75efd/3e4eac06-c5b4-450a-bb3b-1ec13e0aca29"
+storage_version_token = "1787223529379036"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "YnyctS4req16VT1QZIHIE"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-07.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 7"
+description = "Corrected FLUX.2 Pro campaign frame 7, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "c8c5b4d8-19fb-4ce8-9daf-5745b409e048"
+content_hash = "sha256:2d52c10a6b0b5164f891e5be7cda982745569e0fbaca249b5232515dfbbe6dfe"
+size = 427342
+mtime_ms = 1787223521926
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/c8c5b4d8-19fb-4ce8-9daf-5745b409e048/ad8c144b-b1cf-41f9-ba24-6b2b004cc28f"
+storage_version_token = "1787223530742770"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "fEGjjAkK1tPSk-mHn0_aY"
+uri = "file://attached_assets/generated_images/bfl-flux2-pro-corrected-frame-08.jpg"
+type = "image"
+title = "Corrected FLUX.2 Pro campaign frame 8"
+description = "Corrected FLUX.2 Pro campaign frame 8, using the approved hero as the consistent model identity anchor and the uploaded pouch references."
+logical_id = "e162c321-5fe7-4dad-b9f6-8e0b0a3c5759"
+content_hash = "sha256:d09533f183bf966d56f00b53235a605ffdb1cbc231924b77277307f38dcb3ba8"
+size = 396372
+mtime_ms = 1787223523050
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/e162c321-5fe7-4dad-b9f6-8e0b0a3c5759/a70397fd-5117-4079-b622-8bc5a4972582"
+storage_version_token = "1787223532102892"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "Q2P7pNQFz7QU8VViw5KG9"
+uri = "file://generated/le-pliage-product-only-preview.png"
+type = "image"
+title = "Le Pliage product-only preview"
+description = "Validated source-preserved product-only preview generated from the three attached Le Pliage references."
+logical_id = "417fa38f-5c70-4e2e-9e10-bebd5550e945"
+content_hash = "sha256:214e826da010933403b4d52dce947dd905df4d88a50501b05528a8b950d3f990"
+size = 481337
+mtime_ms = 1787227710130
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/417fa38f-5c70-4e2e-9e10-bebd5550e945/2d0240e3-5a59-4193-bffd-cef96c146b6b"
+storage_version_token = "1787227720624735"
+content_type = "image/png"
+
+[[outputs]]
+id = "tLH_FjigD0qIiZ8HtAcAi"
+uri = "file://generated/le-pliage-master-prompt-preview.png"
+type = "image"
+title = "Le Pliage master-prompt product cutout"
+description = "Validated product-only luxury e-commerce cutout generated from the attached master prompt and three Le Pliage references, with transparent alpha background."
+logical_id = "dacc57c7-4cc1-4aae-b8d2-7cf09f9c1b41"
+content_hash = "sha256:b160f42ad9122792ad5b2ddf686320cec4c8c22ee484b929b1184f370e7858d0"
+size = 481663
+mtime_ms = 1787227801009
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/dacc57c7-4cc1-4aae-b8d2-7cf09f9c1b41/fe322487-6faf-4b35-809c-275f894bc545"
+storage_version_token = "1787227811853267"
+content_type = "image/png"
+
+[[outputs]]
+id = "yO_GPbE-CcWqqcspxvW3d"
+uri = "file://generated/le-pliage-flux-pro.png"
+type = "image"
+title = "Le Pliage FLUX Pro generation"
+description = "FLUX Pro multi-reference generation using the three attached Le Pliage product images and the product-only luxury e-commerce brief."
+logical_id = "59889bdd-15b2-4f70-b773-4501391bcc0d"
+content_hash = "sha256:92b33cfffcbd1d87a3d6530afb1eb928dfd28eaeda501f2679e12a17a051739e"
+size = 368431
+mtime_ms = 1787229828057
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/59889bdd-15b2-4f70-b773-4501391bcc0d/490de113-0856-4ae6-810c-f3e98cf636ad"
+storage_version_token = "1787229829747067"
+content_type = "image/png"
+
+[[outputs]]
+id = "4Oil0NTEAuH3GTI2HS-qi"
+uri = "file://generated/le-pliage-flux-pro-01.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 01"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "e3747ffa-0d9d-4ba8-8915-48f695c7f2d1"
+content_hash = "sha256:cf9f16d405dc728f73b81a5c987eb255d5a9a752a200cb3a7497a4f0c8f020e0"
+size = 322097
+mtime_ms = 1787231981006
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/e3747ffa-0d9d-4ba8-8915-48f695c7f2d1/30c7d744-f04b-41bb-b190-80aeef1b2263"
+storage_version_token = "1787235135553736"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "Nl9ZbRTd9VZcG1u-fCGTS"
+uri = "file://generated/le-pliage-flux-pro-02.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 02"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "5335ec6b-02ee-46bb-a63d-7ca201fe1a99"
+content_hash = "sha256:b193476d39f5d1c70061acb02d6b3ec9abf1e242aecfc9ee76cc2e6a9a77ea62"
+size = 298758
+mtime_ms = 1787231980758
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/5335ec6b-02ee-46bb-a63d-7ca201fe1a99/94c74f57-405f-46d1-ac80-9802d082dbfa"
+storage_version_token = "1787235137118956"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "eDzKdvDT7CLHBCVLl1Nxc"
+uri = "file://generated/le-pliage-flux-pro-03.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 03"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "de980226-da69-430d-ac31-3a6f98b22a68"
+content_hash = "sha256:462ecbf79bdf96545db734310c39e5a28c8a71dc1121db9c927f7c500ffc460d"
+size = 331181
+mtime_ms = 1787231981002
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/de980226-da69-430d-ac31-3a6f98b22a68/604b29be-6296-4002-8c25-68606d46bb4a"
+storage_version_token = "1787235138510709"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "o27EKSk6GuoG0shVpWvFg"
+uri = "file://generated/le-pliage-flux-pro-04.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 04"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "3e00ea4b-ba8d-4516-8eb2-1b43826411f0"
+content_hash = "sha256:8cdfce23680812a5dfef6014d1637066d6a44f8fc9bd68ed82c310dd2f93f9ac"
+size = 375204
+mtime_ms = 1787231981054
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/3e00ea4b-ba8d-4516-8eb2-1b43826411f0/91f17b1e-e864-44b7-8e6c-d46622205a22"
+storage_version_token = "1787235139875181"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "QF_AyhGIwBbiUnDPmBHjY"
+uri = "file://generated/le-pliage-flux-pro-05.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 05"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "9cbbc1f9-62d3-4f08-9800-deb40e6d0ead"
+content_hash = "sha256:7b932f7074e49868edb351b9f9f8f085569b3307848cec78d740a055d23033d9"
+size = 379674
+mtime_ms = 1787231980998
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/9cbbc1f9-62d3-4f08-9800-deb40e6d0ead/b208d74e-cacc-4ebd-9a06-fd89ed997c34"
+storage_version_token = "1787235141305482"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "WMfCmrf1U2SKNsBvoQOXn"
+uri = "file://generated/le-pliage-flux-pro-06.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 06"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "bf124086-5b08-4616-9c70-2c6b90c6d334"
+content_hash = "sha256:6026e47cda50bc7409e58f6605a00d182ce55696805dab2875cc3fef47d79282"
+size = 434294
+mtime_ms = 1787231981074
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/bf124086-5b08-4616-9c70-2c6b90c6d334/d8688fc1-d821-4c34-aa27-7e8b17056164"
+storage_version_token = "1787235142673689"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "9d_-Vph2q_ibnCT5WVxAJ"
+uri = "file://generated/le-pliage-flux-pro-07.jpg"
+type = "image"
+title = "Le Pliage FLUX Pro catalog frame 07"
+description = "Previously completed neutral product-only ecommerce catalog frame generated from the Le Pliage references."
+logical_id = "36f21799-dec5-4dc6-9048-82dc23c1faa1"
+content_hash = "sha256:bea9d39c24efedd2eecee3805e63ac49c8100cf54c8fba2c7435c056f010ef6f"
+size = 659163
+mtime_ms = 1787231981154
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/36f21799-dec5-4dc6-9048-82dc23c1faa1/0823f02e-c68d-4f32-9e86-b537f16ec813"
+storage_version_token = "1787235144148386"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "lair4-hYXSLI2f4pSZzUs"
+uri = "file://generated/le-pliage-flux-pro-retry-hero.jpg"
+type = "image"
+title = "Le Pliage regenerated FLUX Pro hero"
+description = "Freshly regenerated product-only ecommerce hero using refreshed Le Pliage reference uploads and the attached gallery brief."
+logical_id = "d128cf0c-0313-4559-8971-493a79a08c81"
+content_hash = "sha256:2b196e32e044ad1ca561e8c40fcbacf1d43f1e15e62d3e72dc9dbf3f4a7dd850"
+size = 289787
+mtime_ms = 1787286232588
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/d128cf0c-0313-4559-8971-493a79a08c81/8cda555d-2ede-4c66-805c-caaa899045b3"
+storage_version_token = "1787286234728878"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "dPVO-GjREWN2kJWzkbIfZ"
+uri = "file://generated/le-pliage-new-gallery-01.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 01"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "77f730a1-1ced-4ba7-9307-326922521c95"
+content_hash = "sha256:f0954061c8583dfb28b0c41ea892f0a8457d03ebb9b2b9c92a59b7afebf2ed3e"
+size = 198422
+mtime_ms = 1787286606425
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/77f730a1-1ced-4ba7-9307-326922521c95/8ab7605d-5ef9-490a-961d-648ff02bcc5f"
+storage_version_token = "1787286608086106"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "oS8sppFDtTUZh1yBmmHQR"
+uri = "file://generated/le-pliage-new-gallery-02.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 02"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "5b8473c5-857b-4da6-85f3-014fdc808324"
+content_hash = "sha256:9634b15638971f8ff5e4ddd361d03a573b34b3693ad4a219866060880755e109"
+size = 260797
+mtime_ms = 1787286609917
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/5b8473c5-857b-4da6-85f3-014fdc808324/2423c56b-16cf-494f-a661-8a30189328ae"
+storage_version_token = "1787286610672386"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "zfemocD87OinxpKs8ZLl5"
+uri = "file://generated/le-pliage-new-gallery-03.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 03"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "168e27b8-8f9a-4da6-9a9c-6ade23a4902b"
+content_hash = "sha256:c82b03a563c4525f8a2a71d933ce1b67e5597b537404bfa4c8769d236990bafc"
+size = 232837
+mtime_ms = 1787286612361
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/168e27b8-8f9a-4da6-9a9c-6ade23a4902b/af749e22-aeac-4b56-8a9f-3ce2e6f475b3"
+storage_version_token = "1787286613078454"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "KKHLmhoyfEZXNaaRDqy_v"
+uri = "file://generated/le-pliage-new-gallery-04.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 04"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "882d6231-8b61-4e0a-bfd5-31f3c26611b7"
+content_hash = "sha256:7bb9b33ec8505dd9ff90d79a81c6613d37743eda38daea0474a20c4a65633e77"
+size = 244907
+mtime_ms = 1787286614857
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/882d6231-8b61-4e0a-bfd5-31f3c26611b7/c0c42efe-67ed-44eb-b7b8-a7e49508f6cd"
+storage_version_token = "1787286615570371"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "MGI0T-rdg6UPmPRpimDDM"
+uri = "file://generated/le-pliage-new-gallery-05.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 05"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "27c0295a-91ea-43fd-a890-cac17687d5ed"
+content_hash = "sha256:746718f9bfc9a47c64df089706d5d26c1c6a890c65cc759e27f142a4f002ca79"
+size = 184870
+mtime_ms = 1787286617209
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/27c0295a-91ea-43fd-a890-cac17687d5ed/0b777c79-59aa-43b6-829c-421f1ae313c5"
+storage_version_token = "1787286617957009"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "PwFBspYU_hxPIcDCOUDxW"
+uri = "file://generated/le-pliage-new-gallery-06.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 06"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "aece0203-4679-4808-857a-da339f6be255"
+content_hash = "sha256:d24f6c8f386e97441b8fc08564affa4e51249d836a94da2ab8c1bb973644c65c"
+size = 228449
+mtime_ms = 1787286619769
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/aece0203-4679-4808-857a-da339f6be255/eadbfdcb-bacf-41b0-8943-875067b58d34"
+storage_version_token = "1787286620536935"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "wKNOCCmvdsOTec9pUTFwe"
+uri = "file://generated/le-pliage-new-gallery-07.jpg"
+type = "image"
+title = "Le Pliage regenerated gallery frame 07"
+description = "Generated from the three newly supplied product reference images using the premium ecommerce gallery brief."
+logical_id = "b7dcb238-49b4-4527-a22f-608a889976a8"
+content_hash = "sha256:18cdcb03b52ca1f1c31b3275cffe7b303eca26c7098da25ab34a2da947515537"
+size = 210248
+mtime_ms = 1787286622301
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/b7dcb238-49b4-4527-a22f-608a889976a8/d5e32601-8baa-4086-88a2-94d7948192d2"
+storage_version_token = "1787286623033510"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "ZUg6XXtobPqGt8tfWgFm0"
+uri = "file://generated/le-pliage-new-gallery-opening.jpg"
+type = "image"
+title = "Le Pliage opening view"
+description = "Supplementary product-only ecommerce frame generated from the newly supplied product references."
+logical_id = "23f7cc85-fcbb-4cd1-a488-bab5c3904dd6"
+content_hash = "sha256:93167dd724ec2bca63ecb31763b89679150d8661d24a1c632c9f69fb20a7540b"
+size = 301898
+mtime_ms = 1787286838468
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/23f7cc85-fcbb-4cd1-a488-bab5c3904dd6/1eab7a59-a91e-45c5-80dc-512f0a18787c"
+storage_version_token = "1787286840594284"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "NYoCZTYIZasm0qdy4rU2F"
+uri = "file://generated/le-pliage-new-gallery-closeup.jpg"
+type = "image"
+title = "Le Pliage closeup detail"
+description = "Supplementary product-only ecommerce frame generated from the newly supplied product references."
+logical_id = "22ef419b-2d1f-4d76-a7c6-4aefd8525331"
+content_hash = "sha256:aabaae948ea9cdf573dbea7f7eab404feb0e5c31bd338bc7bde58f406b685eae"
+size = 192364
+mtime_ms = 1787286842320
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/22ef419b-2d1f-4d76-a7c6-4aefd8525331/bb4d9684-272b-407e-8356-a29f579a8a51"
+storage_version_token = "1787286843035975"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "DlntAcs_fOoYyNpck3J64"
+uri = "file://generated/flux2-klein-9b-mint-bag-test.jpg"
+type = "image"
+title = "FLUX.2 Klein 9B mint-green bag test"
+description = "Single product-only test generated from the four refreshed mint-green handbag references."
+logical_id = "7508e2dd-355f-4a7e-8be1-1722ca56779d"
+content_hash = "sha256:10e327f39f8ec08b7b816b5a00c11fc8abd03d0f43ee00b6a3b6c4e6f9e8edf7"
+size = 188538
+mtime_ms = 1787290659772
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a941182f-9403-4456-9f6f-4c09e9185c84/7508e2dd-355f-4a7e-8be1-1722ca56779d/71fa4d74-6a46-4b8a-a44c-f7890e99b437"
+storage_version_token = "1787290661423824"
+content_type = "image/jpeg"

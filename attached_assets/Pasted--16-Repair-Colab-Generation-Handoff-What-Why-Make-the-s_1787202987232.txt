@@ -1,0 +1,40 @@
+#16 - Repair Colab Generation Handoff
+What & Why
+Make the shipped Atelier Colab worker deployment reproducible and make the application report its true state. The current live session can reach a GPU but has no active provider/model, so it correctly cannot generate; the notebook and health/UI contract must lead an operator through installing the exact worker bundle, loading FLUX Schnell, completing a real provider audit and human-product verification, and then showing the resulting state without ambiguity.
+
+Done looks like
+A fresh CUDA Colab session can follow the notebook in order—dependencies, GPU and token setup, all required worker files, one consistent model location, model download, provider-compatible sequential audit, worker startup, and real verification—without an empty-provider health response.
+The worker reports a provider model only after its startup probe has produced a valid image; failed configuration, missing weights, failed inference, and missing fresh verification each have distinct, actionable reasons.
+After a successful provider probe, worker health reports the selected FLUX Schnell model and successful inference; after an authenticated real-reference verification it additionally reports fresh human/product verification and can accept campaign jobs.
+Atelier reads the remote worker from the same typed health contract used by the API, shows it in Rudras and the navigation readiness state, and clearly distinguishes reachable-but-empty, inference-ready-but-unverified, and fully verified states.
+Operators see the exact next action to take after a Colab restart, including that verification is ephemeral and must be rerun; the UI never suggests a CPU or hosted fallback can replace a verified human campaign engine.
+Automated tests and type/API generation checks cover the empty-worker, provider-failure, unverified, and verified worker states.
+Out of scope
+Directly updating, restarting, tunneling, or installing models in the already-running external Colab session.
+Adding a hosted or paid generation fallback, weakening product identity checks, or treating a sequential model audit as human-product verification.
+Persisting Colab jobs or verification across a Colab runtime restart.
+Steps
+Make Colab bootstrap deterministic — Rework the notebook into a strict, visible deployment sequence that validates the six required uploaded scripts, configures a non-empty selected provider command before importing the worker, uses one shared model root, downloads the selected model before auditing it, and starts only after an authenticated health check succeeds.
+Audit the actual provider path — Align the sequential audit with the installed provider and its JSON adapter contract so a passing FLUX Schnell audit proves both a real readable output and the command the worker will invoke; keep unsupported or unconfigured engines explicitly skipped rather than downloading or implying readiness.
+Complete and document the verification handoff — Add a notebook/operator verification step using real uploaded product references that calls the authenticated worker after startup, waits for completion within the GPU timeout, prints the final health evidence, and documents the external URL/token configuration and restart requirements without exposing secrets.
+Harden worker and bridge diagnostics — Separate GPU availability, provider configuration, provider model load, successful inference, and fresh human-product verification in worker health and normalized Replit bridge status. Preserve fail-closed readiness and legacy request-schema compatibility while ensuring an empty model list or failed inference can never be reported as available.
+Unify health API and client consumption — Put the remote worker in the typed generation-health contract (with a compatibility-safe response shape where needed), regenerate API client types, and update the studio and navigation to consume the same canonical status instead of dropping the top-level worker response.
+Give operators actionable status — Enhance the generation status and backend audit panel with a refresh control and a Colab-specific progression for connectivity, authentication, GPU, provider/model, inference, and ephemeral verification. Surface provider, GPU, model, timestamps, failure reason, and the next manual action while leaving generation disabled until verified.
+Validate the recovery paths — Add focused tests for bridge normalization and all readiness boundaries, plus notebook/static contract coverage where practical; run backend tests, API client generation/type checks, and frontend type checks.
+Relevant files
+backend/colab_worker.ipynb
+backend/scripts/colab_worker.py
+backend/scripts/colab_flux_schnell_provider.py
+backend/scripts/colab_sequential_audit.py
+backend/scripts/flux_schnell_runner.py
+backend/scripts/sdxl_runner.py
+backend/scripts/qwen_image_edit_runner.py
+backend/app/services/remote_worker_service.py
+backend/app/api/health.py
+backend/app/api/shoots.py
+backend/app/config.py
+backend/tests/test_remote_worker_service.py
+lib/api-spec/openapi.yaml
+artifacts/bgremover/src/pages/home.tsx
+artifacts/bgremover/src/components/layout/Navbar.tsx
+replit.md

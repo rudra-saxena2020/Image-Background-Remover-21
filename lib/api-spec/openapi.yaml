@@ -1,0 +1,702 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Product Background Remover API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: background
+    description: Background removal operations
+  - name: shoots
+    description: AI luxury product photography shoots
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /health:
+    get:
+      operationId: getModelHealth
+      tags: [health]
+      summary: Model health and status
+      description: Returns BiRefNet model status, device info, and capabilities
+      responses:
+        "200":
+          description: Model health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelHealth"
+  /history:
+    get:
+      operationId: getHistory
+      tags: [background]
+      summary: Get session history
+      description: Returns list of processed images in current session
+      responses:
+        "200":
+          description: List of history items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HistoryItem"
+  /remove-background:
+    post:
+      operationId: removeBackground
+      tags: [background]
+      summary: Remove background from product image
+      description: >
+        Processes a product image through BiRefNet and returns a transparent PNG.
+        Response is binary image/png. This endpoint should be called with native fetch
+        for binary download; the generated hook is for typing only.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/RemoveBackgroundInput"
+      responses:
+        "200":
+          description: Transparent PNG with background removed
+          headers:
+            X-Inference-Time:
+              schema: { type: string }
+              description: Inference time in milliseconds
+            X-Total-Time:
+              schema: { type: string }
+              description: Total processing time in milliseconds
+            X-Input-Width:
+              schema: { type: string }
+            X-Input-Height:
+              schema: { type: string }
+            X-Inference-Width:
+              schema: { type: string }
+            X-Inference-Height:
+              schema: { type: string }
+            X-Device:
+              schema: { type: string }
+            X-Mode:
+              schema: { type: string }
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "422":
+          description: Validation error or unsupported image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: Processing error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /remove-background/batch:
+    post:
+      operationId: batchRemoveBackground
+      tags: [background]
+      summary: Queue batch background removal
+      description: Initiates batch processing of multiple product images
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchRequest"
+      responses:
+        "202":
+          description: Batch accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchStatus"
+  /remove-background/batch/{batchId}:
+    get:
+      operationId: getBatchStatus
+      tags: [background]
+      summary: Get batch processing status
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Batch status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchStatus"
+  /shoots:
+    post:
+      operationId: createShoot
+      tags: [shoots]
+      summary: Queue a selectable luxury product campaign
+      description: >
+        The flexible format accepts one to six product references and queues an
+        eight-frame campaign. The strict front/back format requires exactly two
+        references and queues seven final images.
+          Open-source AI model requests are routed to the authenticated Colab
+          GPU worker. FLUX.2 Pro is available through separate fal.ai and
+          Black Forest Labs server-side image-editing routes. CPU preview is
+          explicitly a source-preserved product compositor, not AI generation.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CreateShootInput"
+      responses:
+        "200":
+          description: Shoot queued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shoot"
+        "422":
+          description: Invalid shoot request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Queue full
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: The authenticated Colab generation worker is not ready
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /shoots/history:
+    get:
+      operationId: getShootHistory
+      tags: [shoots]
+      summary: Get durable paid-generation history
+      description: Returns persisted RunPod and other shoot metadata with generated frame URLs and costs.
+      responses:
+        "200":
+          description: Shoot history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Shoot"
+  /shoots/{shootId}:
+    get:
+      operationId: getShoot
+      tags: [shoots]
+      summary: Get shoot progress and generated frames
+      parameters:
+        - name: shootId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Shoot state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shoot"
+        "404":
+          description: Shoot not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /shoots/{shootId}/cancel:
+    post:
+      operationId: cancelShoot
+      tags: [shoots]
+      summary: Cancel a queued or running shoot
+      parameters:
+        - name: shootId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Shoot cancellation requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Shoot"
+  /shoots/{shootId}/export:
+    get:
+      operationId: exportShoot
+      tags: [shoots]
+      summary: Download locally generated validated frames and Shopify manifest
+      parameters:
+        - name: shootId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: ZIP export
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        "409":
+          description: Shoot is not ready for export
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /shoots/{shootId}/frames/{frameId}:
+    get:
+      operationId: getLocalShootFrame
+      tags: [shoots]
+      summary: Serve a locally generated shoot frame
+      parameters:
+        - name: shootId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: frameId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Local image frame
+          content:
+            image/png:
+              schema: { type: string, format: binary }
+            image/jpeg:
+              schema: { type: string, format: binary }
+            image/webp:
+              schema: { type: string, format: binary }
+        "404":
+          description: Frame not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /shopify/products:
+    get:
+      operationId: listShopifyProducts
+      tags: [shoots]
+      summary: List Shopify products available for studio import
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Shopify product summaries with usable image URLs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ShopifyProduct"
+        "502":
+          description: Shopify connector unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/metrics:
+    get:
+      operationId: getAdminMetrics
+      tags: [shoots]
+      summary: Get current shoot queue and quality metrics
+      responses:
+        "200":
+          description: Operational metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminMetrics"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ModelHealth:
+      type: object
+      required: [status, model_loaded, device, cuda_available, fp16_enabled, generation, human_product_validator]
+      properties:
+        status:
+          type: string
+        model_loaded:
+          type: boolean
+        device:
+          type: string
+        cuda_available:
+          type: boolean
+        model:
+          type: ["string", "null"]
+        fp16_enabled:
+          type: boolean
+        warmup_done:
+          type: boolean
+        queue_size:
+          type: integer
+        generation:
+          $ref: "#/components/schemas/GenerationOptions"
+        human_product_validator:
+          $ref: "#/components/schemas/HumanProductValidatorStatus"
+    GenerationOptions:
+      type: object
+      required: [qwen, qwen_runpod, flux1_dev_runpod, gemini_image, flux_schnell, fooocus, hidream, flux2, flux2_pro, black_forest_flux2, flux2_klein, sdxl, remote_worker]
+      properties:
+        qwen:
+          $ref: "#/components/schemas/GenerationStatus"
+        qwen_runpod:
+          $ref: "#/components/schemas/GenerationStatus"
+        flux1_dev_runpod:
+          $ref: "#/components/schemas/GenerationStatus"
+        gemini_image:
+          $ref: "#/components/schemas/GenerationStatus"
+        flux_schnell:
+          $ref: "#/components/schemas/GenerationStatus"
+        fooocus:
+          $ref: "#/components/schemas/GenerationStatus"
+        hidream:
+          $ref: "#/components/schemas/GenerationStatus"
+        flux2:
+          $ref: "#/components/schemas/GenerationStatus"
+        flux2_pro:
+          $ref: "#/components/schemas/GenerationStatus"
+        black_forest_flux2:
+          $ref: "#/components/schemas/GenerationStatus"
+        flux2_klein:
+          $ref: "#/components/schemas/GenerationStatus"
+        sdxl:
+          $ref: "#/components/schemas/GenerationStatus"
+        remote_worker:
+          $ref: "#/components/schemas/GenerationStatus"
+    GenerationStatus:
+      type: object
+      required: [id, name, mode, configured, repository_present, runner_present, model_present, cuda_available, device, active_processes, runtime_ready, ready, human_product_verified, verification_state, verification]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        mode: { type: string }
+        configured: { type: boolean }
+        repository_present: { type: boolean }
+        runner_present: { type: boolean }
+        model_present: { type: boolean }
+        ae_present: { type: boolean }
+        checkpoint_present: { type: boolean }
+        quantized: { type: boolean }
+        runtime_importable: { type: boolean }
+        runtime_supported: { type: boolean }
+        python_present: { type: boolean }
+        reason: { type: ["string", "null"] }
+        cuda_available: { type: boolean }
+        device: { type: string }
+        model_type: { type: string }
+        model_path: { type: ["string", "null"] }
+        license: { type: ["string", "null"] }
+        supports_source_images: { type: boolean }
+        supports_multi_reference: { type: boolean }
+        active_processes: { type: integer }
+        cpu_available: { type: boolean }
+        worker_ready: { type: boolean }
+        runtime_ready: { type: boolean }
+        ready: { type: boolean }
+        human_product_verified: { type: boolean }
+        verification_state:
+          type: string
+          enum: [unavailable, unverified, failed, verified]
+        verification:
+          $ref: "#/components/schemas/GenerationVerification"
+        worker_state: { type: string }
+        next_action: { type: string }
+        provider: { type: ["string", "null"] }
+        provider_billing: { type: ["string", "null"] }
+        pricing:
+          type: ["object", "null"]
+          additionalProperties: true
+        provider_configured: { type: boolean }
+        gpu_available: { type: boolean }
+        model_loaded: { type: boolean }
+        inference_passed: { type: boolean }
+        runtime_reachable: { type: boolean }
+    GenerationVerification:
+      type: object
+      required: [status, passed, current, reason, checked_at, expires_at, latency_ms, output_path, validations]
+      properties:
+        status:
+          type: string
+          enum: [not-run, blocked, failed, passed, stale]
+        passed: { type: boolean }
+        current: { type: boolean }
+        reason: { type: string }
+        checked_at: { type: ["string", "null"] }
+        expires_at: { type: ["string", "null"] }
+        latency_ms: { type: ["integer", "null"] }
+        output_path: { type: ["string", "null"] }
+        validations:
+          type: object
+          additionalProperties: true
+    HumanProductValidatorStatus:
+      type: object
+      required: [id, name, model_path, model_present, ready, reason]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        model_path: { type: string }
+        model_present: { type: boolean }
+        ready: { type: boolean }
+        reason: { type: ["string", "null"] }
+    ShopifyProduct:
+      type: object
+      required: [id, title, handle, product_type, vendor, images]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        handle: { type: string }
+        product_type: { type: string }
+        vendor: { type: string }
+        images:
+          type: array
+          items:
+            type: object
+            required: [url, alt]
+            properties:
+              url: { type: string }
+              alt: { type: string }
+    HistoryItem:
+      type: object
+      required: [id, filename, width, height, mode, processing_time_ms, created_at]
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        file_size:
+          type: integer
+        mode:
+          type: string
+        processing_time_ms:
+          type: number
+        result_url:
+          type: ["string", "null"]
+        created_at:
+          type: string
+    RemoveBackgroundInput:
+      type: object
+      required: [quality]
+      properties:
+        quality:
+          type: string
+          enum: [fast, high]
+          default: fast
+    BatchRequest:
+      type: object
+      required: [image_ids, quality]
+      properties:
+        image_ids:
+          type: array
+          items:
+            type: string
+        quality:
+          type: string
+          enum: [fast, high]
+    BatchStatus:
+      type: object
+      required: [batch_id, total, completed, failed, status, items]
+      properties:
+        batch_id:
+          type: string
+        total:
+          type: integer
+        completed:
+          type: integer
+        failed:
+          type: integer
+        status:
+          type: string
+          enum: [pending, processing, done, partial_failure]
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchItem"
+    BatchItem:
+      type: object
+      required: [id, filename, status]
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        status:
+          type: string
+          enum: [waiting, processing, completed, failed]
+        processing_time_ms:
+          type: ["number", "null"]
+        error:
+          type: ["string", "null"]
+    CreateShootInput:
+      type: object
+      required: [references]
+      properties:
+        product_name:
+          type: string
+          default: Untitled product
+        category:
+          type: string
+          default: Luxury handbag
+        atmosphere:
+          type: string
+          default: Quiet, architectural luxury
+        background:
+          type: string
+          default: Luxury white studio
+        output_format:
+          type: string
+          enum: [png, jpeg, webp]
+          default: png
+        engine:
+          type: string
+          enum: [rudras, auto, colab, qwen, qwen-runpod, flux1-runpod, gemini-image, flux-schnell, fooocus, hidream, flux2, flux2-pro, bfl-flux2, flux2-klein, sdxl, cpu]
+          default: auto
+        speed_mode:
+          type: string
+          enum: [fast, campaign]
+          default: fast
+        campaign_format:
+          type: string
+          enum: [compact-6, flexible-8, front-back-7]
+          default: flexible-8
+          description: Compact six-image model lookbook, flexible eight-frame campaign, or strict two-reference seven-image campaign
+        generation_mode:
+          type: string
+          enum: [product-only, human-model]
+          default: product-only
+          description: Product-only catalog generation or category-aware human-model generation
+        references:
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            type: string
+            format: binary
+    Shoot:
+      type: object
+      required: [id, product_name, category, atmosphere, background, output_format, engine, remote_model, provider, provider_metadata, estimated_provider_cost_usd, provider_cost_usd, provider_request_count, speed_mode, campaign_format, generation_mode, frame_count, reference_count, created_at, status, progress, stage, shots, identity_profile]
+      properties:
+        id: { type: string }
+        product_name: { type: string }
+        category: { type: string }
+        atmosphere: { type: string }
+        background: { type: string }
+        output_format: { type: string }
+        engine: { type: string, enum: [colab, fal, bfl, qwen-runpod, flux1-runpod, gemini-image, cpu] }
+        remote_model: { type: ["string", "null"] }
+        provider: { type: ["string", "null"] }
+        provider_metadata:
+          type: ["object", "null"]
+          additionalProperties: true
+        estimated_provider_cost_usd: { type: ["number", "null"] }
+        provider_cost_usd: { type: number }
+        provider_request_count: { type: integer }
+        speed_mode: { type: string, enum: [fast, campaign] }
+        campaign_format: { type: string, enum: [compact-6, flexible-8, front-back-7] }
+        generation_mode: { type: string, enum: [product-only, human-model] }
+        frame_count: { type: integer }
+        reference_count: { type: integer }
+        created_at: { type: string }
+        status: { type: string }
+        progress: { type: integer }
+        stage: { type: string }
+        error: { type: ["string", "null"] }
+        identity_profile:
+          type: ["object", "null"]
+          additionalProperties: true
+        shots:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShootShot"
+    ShootShot:
+      type: object
+      required: [id, number, kind, title, purpose, status, progress, verification]
+      properties:
+        id: { type: string }
+        number: { type: integer }
+        kind: { type: string }
+        title: { type: string }
+        purpose: { type: string }
+        status: { type: string }
+        progress: { type: integer, minimum: 0, maximum: 100 }
+        request_id: { type: ["string", "null"] }
+        image_url: { type: ["string", "null"] }
+        error: { type: ["string", "null"] }
+        verification: { type: string }
+        cost_usd: { type: ["number", "null"] }
+    AdminMetrics:
+      type: object
+      required: [total_shoots, active_shoots, completed_shoots, failed_shoots, cancelled_shoots, frames_generated, frames_failed, provider, preprocessor, provider_cost_usd, provider_usage]
+      properties:
+        total_shoots: { type: integer }
+        active_shoots: { type: integer }
+        completed_shoots: { type: integer }
+        failed_shoots: { type: integer }
+        cancelled_shoots: { type: integer }
+        frames_generated: { type: integer }
+        frames_failed: { type: integer }
+        provider: { type: string }
+        preprocessor: { type: string }
+        provider_cost_usd: { type: number }
+        provider_usage:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderUsage"
+    ProviderUsage:
+      type: object
+      required: [provider, model, price, requests, cost_usd]
+      properties:
+        provider: { type: string }
+        model: { type: string }
+        price: { type: string }
+        requests: { type: integer }
+        cost_usd: { type: number }
+        estimated_cost_per_image_usd: { type: ["number", "null"] }
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        detail:
+          type: ["string", "null"]

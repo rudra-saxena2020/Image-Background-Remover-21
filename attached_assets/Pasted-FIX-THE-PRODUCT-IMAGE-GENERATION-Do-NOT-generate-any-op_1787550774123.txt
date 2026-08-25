@@ -1,0 +1,74 @@
+FIX THE PRODUCT IMAGE GENERATION.
+
+Do NOT generate any opening, open-product, unfolded, unzipped, cutaway, exploded, or interior-view images unless explicitly requested.
+
+The product must remain in its normal, complete, closed state in every image.
+
+GENERATE ONLY PROPER, USABLE PRODUCT IMAGES.
+
+Each output must show the exact same product from a genuinely different and useful angle. Do not generate random variations, duplicate products, different colors, or altered designs.
+
+STRICT PRODUCT CONSISTENCY:
+
+Preserve the exact:
+- Product design and shape
+- Proportions and dimensions
+- Color and material
+- Texture and stitching
+- Handles, straps, hardware, and attachments
+- Logo, branding, text, and graphics
+- All unique product details
+
+Do not add, remove, replace, redesign, or modify any part of the product.
+
+IMAGE RULES:
+
+ONE OUTPUT = ONE COMPLETE IMAGE = ONE PRODUCT = ONE UNIQUE VIEW.
+
+No:
+- Opening or open-product images
+- Unzipped or unfolded product views
+- Interior views
+- Exploded views
+- Cutaway views
+- Duplicate products
+- Multiple color variants
+- Collages
+- Grids
+- Split screens
+- Decorative borders
+- Random props
+- Cropped or incomplete products
+
+Generate a clean and structured set of distinct views:
+
+1. Straight front view
+2. Front-left 45-degree view
+3. Front-right 45-degree view
+4. Full left-side view
+5. Full right-side view
+6. Straight back view
+7. Back-left 45-degree view
+8. Back-right 45-degree view
+9. Close-up of an important exterior detail
+
+Every image must show the product properly, completely, and clearly. The full product should be visible unless it is specifically a detail close-up.
+
+DO NOT repeat similar front-facing images. Moving the camera only slightly does not count as a new angle. Every new image must have a clearly different perspective from the previous ones.
+
+REALISM:
+
+Create highly photorealistic premium e-commerce product photography. The product must look like a real manufactured physical product, not AI-generated, CGI, or a 3D render.
+
+Use realistic materials, accurate geometry, natural texture, correct lighting, realistic shadows, physically correct reflections, sharp details, and proper perspective.
+
+FINAL QUALITY CHECK:
+
+Before generating each image, verify:
+1. Is this the exact same product?
+2. Is the product fully closed and in its normal state?
+3. Is this angle genuinely different from previous images?
+4. Is the product complete and properly visible?
+5. Are there any duplicate products, duplicate parts, or unwanted variations?
+
+If any answer fails, regenerate that image correctly.

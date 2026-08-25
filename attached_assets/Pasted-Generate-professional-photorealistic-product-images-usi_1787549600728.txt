@@ -1,0 +1,60 @@
+Generate professional, photorealistic product images using the provided reference product as the absolute source of truth.
+
+PRODUCT CONSISTENCY IS CRITICAL:
+Reproduce the exact same product from the reference in every generated image. Preserve its exact design, shape, proportions, dimensions, materials, colors, textures, patterns, branding, logos, text, graphics, components, hardware, stitching, edges, finishes, and all unique product details.
+
+Do not redesign, reinterpret, simplify, replace, add, remove, or alter any part of the product.
+
+NO DUPLICATES:
+Each generated output must show the same product from a genuinely different and useful camera angle or composition. Do not generate near-identical images with only small camera shifts.
+
+IMPORTANT:
+ONE OUTPUT = ONE IMAGE = ONE PRODUCT = ONE DISTINCT VIEW.
+
+Never create:
+- Collages
+- Grids
+- Contact sheets
+- Split screens
+- Multiple angles in one image
+- Duplicate products
+- Multiple copies of the same product
+
+Generate each requested angle as a completely separate individual image.
+
+ANGLE VARIATION:
+Ensure every image has a clearly different viewpoint, such as:
+- Front view
+- Back view
+- Left side
+- Right side
+- Front three-quarter view
+- Rear three-quarter view
+- Top view
+- Bottom view
+- Close-up detail view
+- Macro material/detail shot
+- Product in use
+- Lifestyle shot
+
+Only generate angles that make sense for the specific product. Do not force impossible or irrelevant views.
+
+REALISM AND QUALITY:
+The result must look like a real physical product professionally photographed in the real world, not AI-generated, CGI, 3D-rendered, illustrated, or artificially smooth.
+
+Use physically accurate geometry, realistic materials, natural textures, correct reflections, believable lighting, realistic shadows, accurate perspective, proper scale, sharp product details, and authentic imperfections where appropriate.
+
+STRICTLY AVOID:
+AI artifacts, duplicate objects, duplicate components, warped shapes, melted details, distorted logos, incorrect text, altered branding, floating parts, impossible geometry, inconsistent colors, changed proportions, extra accessories, missing details, blurry textures, plastic-looking materials, oversmoothing, CGI appearance, and repeated camera angles.
+
+Maintain perfect visual consistency of the product across all generated images while changing only the camera angle, composition, environment, or usage scenario.
+
+The final result must look like premium commercial product photography suitable for an e-commerce website, catalog, advertising campaign, or brand presentation.
+
+ABSOLUTE PRIORITY:
+1. Exact product consistency
+2. No duplicate or near-duplicate outputs
+3. One product per image
+4. One distinct angle per image
+5. Maximum photorealism
+6. No AI-generated appearance

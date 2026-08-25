@@ -1,0 +1,446 @@
+This is the missing piece. Right now your generator is treating every product the same. Instead, it should **understand the product category first**, then choose the appropriate shoot style automatically.
+
+Add this section to your prompt:
+
+---
+
+# Intelligent Product Category Detection
+
+Before generating any images, analyze the uploaded product and automatically classify it into the correct product category.
+
+Possible categories include:
+
+* Handbags
+* Tote Bags
+* Shoulder Bags
+* Crossbody Bags
+* Clutches
+* Wallets
+* Backpacks
+* Watches
+* Rings
+* Bracelets
+* Necklaces
+* Earrings
+* Shoes
+* Sneakers
+* Boots
+* Sandals
+* Jackets
+* Hoodies
+* Shirts
+* Dresses
+* Jeans
+* Sunglasses
+* Hats
+* Belts
+* Perfumes
+* Beauty Products
+* Furniture
+* Home Decor
+* Electronics
+* Luggage
+* Accessories
+
+The detected category determines the entire photoshoot style automatically.
+
+---
+
+# Smart Fashion Shoot Rules
+
+## Luxury Bags
+
+Generate:
+
+1. Studio product image
+
+2. Female model carrying bag naturally
+
+3. Same female model wearing bag from another angle
+
+4. Close-up of leather, stitching and hardware
+
+5. Different product angle
+
+6. Same female model walking with bag
+
+7. Luxury detail shot
+
+8. Editorial campaign image with same female model
+
+Model should naturally hold or wear the bag.
+
+Never float the bag.
+
+Never place the bag unnaturally.
+
+Bag should sit naturally on
+
+* Shoulder
+* Hand
+* Forearm
+* Crossbody position
+
+depending on product style.
+
+---
+
+## Wallets
+
+Use
+
+Female hand model
+
+or
+
+Male hand model
+
+depending on wallet style.
+
+Show
+
+Holding wallet
+
+Opening wallet
+
+Using wallet
+
+Pocket placement
+
+Close-up
+
+Lifestyle image
+
+---
+
+## Watches
+
+Never generate a full human model unless specifically requested.
+
+Instead generate
+
+Luxury wrist model.
+
+Use
+
+Male wrist for men's watches.
+
+Female wrist for women's watches.
+
+Lifestyle shots include
+
+Checking time
+
+Resting hand
+
+Driving
+
+Business meeting
+
+Coffee table
+
+Luxury office
+
+Close-up wrist photography.
+
+Hands must be anatomically perfect.
+
+Watch size must remain accurate.
+
+---
+
+## Rings
+
+Generate
+
+Luxury hand model.
+
+Correct finger placement.
+
+Natural pose.
+
+Close-up macro.
+
+Jewelry campaign style.
+
+Never distort fingers.
+
+---
+
+## Bracelets
+
+Luxury wrist photography.
+
+Natural wrist pose.
+
+Correct anatomy.
+
+Luxury lighting.
+
+---
+
+## Necklaces
+
+Luxury upper-body model.
+
+Focus on neck.
+
+Minimal styling.
+
+Luxury editorial.
+
+---
+
+## Earrings
+
+Close-up portrait.
+
+Hair positioned naturally.
+
+Focus on ears.
+
+Luxury beauty campaign.
+
+---
+
+## Sunglasses
+
+Luxury fashion portrait.
+
+Face visible.
+
+Natural sunlight.
+
+Luxury editorial.
+
+---
+
+## Shoes
+
+Generate
+
+Standing model
+
+Walking model
+
+Side profile
+
+Back view
+
+Close-up
+
+Sole detail
+
+Street editorial
+
+Luxury studio
+
+Never crop shoes.
+
+---
+
+## Clothing
+
+Generate
+
+Full-body model.
+
+Front
+
+Side
+
+Back
+
+Walking
+
+Standing
+
+Close-up fabric
+
+Editorial campaign
+
+Studio image
+
+Always preserve garment fit.
+
+---
+
+## Perfumes
+
+No model required.
+
+Generate
+
+Luxury studio
+
+Marble
+
+Stone
+
+Water
+
+Glass
+
+Luxury reflections
+
+Lifestyle table
+
+Close-up bottle
+
+Campaign hero
+
+---
+
+## Beauty Products
+
+Generate
+
+Luxury countertop
+
+Bathroom
+
+Vanity
+
+Hand holding product
+
+Luxury skincare campaign
+
+---
+
+## Furniture
+
+Never use fashion models.
+
+Generate
+
+Luxury interior.
+
+Living room.
+
+Bedroom.
+
+Office.
+
+Different camera angles.
+
+Lifestyle environment.
+
+---
+
+# Automatic Gender Selection
+
+The AI should intelligently determine the correct model.
+
+Examples
+
+Luxury handbag
+
+→ Female fashion model
+
+Luxury men's briefcase
+
+→ Male business model
+
+Women's shoes
+
+→ Female model
+
+Men's shoes
+
+→ Male model
+
+Women's watch
+
+→ Female wrist model
+
+Men's watch
+
+→ Male wrist model
+
+Luxury ring
+
+→ Hand model only
+
+Bracelet
+
+→ Wrist model only
+
+Necklace
+
+→ Upper body model
+
+Perfume
+
+→ Product only unless requested
+
+Furniture
+
+→ Interior scene
+
+Never ask the user.
+
+Automatically determine the correct model.
+
+---
+
+# Smart Pose Engine
+
+Generate realistic poses based on the product.
+
+Examples
+
+Bag
+
+* Holding naturally
+* Walking
+* Over shoulder
+* Crossbody
+* Carrying by handles
+* Sitting beside model
+
+Watch
+
+* Checking time
+* Hands folded
+* Resting wrist
+* Steering wheel
+* Coffee cup
+* Laptop working
+
+Shoes
+
+* Walking
+* Sitting
+* Climbing stairs
+* Standing
+* Crossed legs
+
+Wallet
+
+* Opening wallet
+* Holding cash
+* Pocket insertion
+* Card payment
+
+Ring
+
+* Resting hand
+* Holding flowers
+* Holding coffee
+* Luxury close-up
+
+Each pose must be unique.
+
+Never repeat poses.
+
+---
+
+# Product-Aware Composition Engine
+
+The AI must understand how each product is normally photographed by luxury brands.
+
+Do not use one composition template for every category.
+
+Every category should have its own photography style, framing, model type, camera angles, lighting, and storytelling.
+
+The final result should resemble campaigns from brands like **Bottega Veneta, Rolex, Cartier, Nike, Dior, Prada, Hermès, and MyTheresa**, where the photography is tailored to the product rather than using a generic template for everything.

@@ -1,0 +1,32 @@
+{
+  "generated_sdxl": {
+    "bag_area_ratio": 0.0,
+    "bag_detected": false,
+    "bag_score": 0.0,
+    "bag_to_person_ratio": 0.0,
+    "believable_scale": false,
+    "identity_proxy_passed": false,
+    "identity_score": 0.0,
+    "passed": false,
+    "person_area_ratio": 0.0,
+    "person_detected": true,
+    "person_score": 0.9923,
+    "physical_contact": false,
+    "reason": "No handbag, backpack, or suitcase was detected with the person."
+  },
+  "reference_b2": {
+    "bag_area_ratio": 0.3666,
+    "bag_detected": true,
+    "bag_score": 0.9914,
+    "bag_to_person_ratio": 0.7331,
+    "believable_scale": true,
+    "identity_proxy_passed": true,
+    "identity_score": 0.8228,
+    "passed": true,
+    "person_area_ratio": 0.5,
+    "person_detected": true,
+    "person_score": 0.865,
+    "physical_contact": true,
+    "reason": "Person, bag, physical contact, scale, and reference identity proxy passed."
+  }
+}

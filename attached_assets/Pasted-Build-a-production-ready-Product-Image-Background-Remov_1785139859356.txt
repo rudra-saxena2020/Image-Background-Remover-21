@@ -1,0 +1,744 @@
+Build a **production-ready Product Image Background Remover Dashboard** powered by **BiRefNet**.
+
+Official BiRefNet repository:
+
+https://github.com/ZhengPeng7/BiRefNet.git
+
+This tool is specifically designed for **e-commerce product images**, including:
+
+Clothing
+Shoes
+Bags
+Accessories
+Furniture
+Electronics
+Beauty products
+Home products
+Packaged goods
+General catalogue products
+
+The priority order is:
+
+**1. Fast processing**
+**2. Clean product edges**
+**3. Accurate product preservation**
+**4. Original-resolution output**
+**5. Ability to process many product images efficiently**
+
+The application must actually run BiRefNet inference. Do not build a fake/demo background remover.
+
+# Core Workflow
+
+User opens dashboard
+
+→ Upload product image
+→ Show product preview
+→ Click Remove Background
+→ Send image to backend
+→ BiRefNet processes product
+→ Generate foreground mask
+→ Remove background
+→ Return transparent product PNG
+→ Show result immediately
+→ Download PNG
+
+Target the shortest possible time from upload to visible result.
+
+# 1. Install BiRefNet
+
+Clone and configure the official repository:
+
+git clone https://github.com/ZhengPeng7/BiRefNet.git
+
+Install all required dependencies.
+
+Use:
+
+Python
+FastAPI
+PyTorch
+CUDA when available
+Pillow
+BiRefNet
+
+Do not substitute BiRefNet with remove.bg, Cloudinary, CSS tricks, Canvas processing, colour detection, or another external background-removal API.
+
+# 2. Product-Specific Processing
+
+Optimise the pipeline specifically for isolated product photography.
+
+The model should preserve:
+
+Product shape
+Thin edges
+Shoe laces
+Bag straps
+Handles
+Jewellery
+Clothing edges
+Hair-like fibres/fur on products
+Transparent-looking product boundaries where possible
+Small product details
+
+Do NOT crop parts of the product.
+
+Do NOT remove white parts of a product simply because the original background is white.
+
+Do NOT confuse shadows with product edges.
+
+Avoid:
+
+White halos
+Black halos
+Jagged edges
+Over-smoothed boundaries
+Missing product sections
+Background fragments
+
+The output must contain the complete product on a transparent background.
+
+# 3. SPEED IS CRITICAL
+
+Design the backend for extremely fast repeated processing.
+
+BiRefNet MUST load once when the backend starts.
+
+Never reload the model for each request.
+
+Keep:
+
+Model loaded in memory
+Model loaded on GPU when available
+CUDA context warm
+Required inference resources ready
+
+Use:
+
+torch.inference_mode()
+
+Use FP16 on supported CUDA GPUs.
+
+Use modern PyTorch optimisations supported by the BiRefNet implementation.
+
+Consider torch.compile only when benchmarking proves that it improves the actual deployment environment without causing instability or excessive startup cost.
+
+Warm up the model during application startup with a dummy inference so the first real product does not pay the full cold-start penalty.
+
+Never call:
+
+torch.cuda.empty_cache()
+
+after every image unless there is an actual memory-pressure reason. Constantly clearing the CUDA cache can hurt throughput.
+
+Reuse GPU memory efficiently.
+
+Avoid unnecessary:
+
+Disk writes
+Image copies
+PNG encode/decode cycles
+CPU ↔ GPU transfers
+Model initialisation
+Temporary files
+
+Where possible:
+
+Upload
+→ decode in memory
+→ preprocess
+→ GPU
+→ inference
+→ mask
+→ composite
+→ encode PNG
+→ response
+
+Keep the hot path in memory.
+
+# 4. Fast Mode vs Quality Mode
+
+Provide two processing modes.
+
+## Fast
+
+Default mode for normal product catalogue images.
+
+Prioritise speed while maintaining strong product segmentation.
+
+Use an appropriate lower inference resolution while preserving the original image for final compositing.
+
+The generated mask can be resized back to the original image dimensions.
+
+## High Quality
+
+Designed for:
+
+Jewellery
+Complex clothing
+Thin straps
+Hair/fur
+Complex edges
+High-resolution catalogue images
+
+Use a higher-quality BiRefNet configuration/model.
+
+High Quality can be slower.
+
+The default must be:
+
+**Fast**
+
+# 5. Dynamic Resolution
+
+Do not process every product at maximum resolution.
+
+That wastes GPU time.
+
+Determine an appropriate inference resolution based on:
+
+Image dimensions
+Selected quality mode
+Available GPU memory
+Model requirements
+
+Preserve the original uploaded image separately.
+
+Run segmentation at the selected inference resolution.
+
+Then resize/refine the resulting mask and apply it to the original-resolution product image.
+
+Final output:
+
+Original width × Original height
+
+Transparent PNG.
+
+Do not upscale the source image.
+
+# 6. Backend API
+
+Build with FastAPI.
+
+Endpoint:
+
+POST /api/remove-background
+
+Input:
+
+multipart/form-data
+
+Parameters:
+
+image
+quality=fast|high
+
+Default:
+
+quality=fast
+
+Response:
+
+Transparent PNG
+
+Also return processing metadata through headers or a JSON/result endpoint where appropriate:
+
+Inference time
+Total processing time
+Input dimensions
+Inference dimensions
+Device
+Mode
+
+Create:
+
+GET /api/health
+
+Return:
+
+status
+model_loaded
+device
+cuda_available
+model
+fp16_enabled
+
+# 7. Fast API Behaviour
+
+Optimise FastAPI for binary image handling.
+
+Do not convert uploaded images to Base64.
+
+Use multipart binary uploads.
+
+Return binary PNG or WebP responses directly.
+
+Avoid saving images to disk unless required.
+
+Use BytesIO or equivalent in-memory processing.
+
+Configure sensible upload limits.
+
+Handle:
+
+Invalid images
+Unsupported formats
+Corrupted uploads
+GPU OOM
+Inference errors
+
+Do not expose internal stack traces.
+
+# 8. GPU Concurrency
+
+Do NOT blindly process unlimited simultaneous GPU requests.
+
+Implement an inference queue or semaphore.
+
+Example concept:
+
+Upload requests
+↓
+FastAPI
+↓
+Inference Queue
+↓
+BiRefNet GPU Worker
+↓
+Results
+
+Configure concurrency based on available VRAM.
+
+For a single GPU, start conservatively and benchmark.
+
+The goal is maximum throughput without causing CUDA OOM.
+
+CPU preprocessing can happen concurrently where appropriate.
+
+# 9. Dashboard
+
+Create a modern product-focused dashboard.
+
+Name:
+
+**Product Background Remover**
+
+Subtitle:
+
+**Create clean, transparent product images with AI**
+
+Main screen should prioritise the upload experience.
+
+Large upload box:
+
+**Upload Product Image**
+
+Drag & drop your product image
+
+or
+
+**Browse Image**
+
+Supported:
+
+JPG
+JPEG
+PNG
+WEBP
+
+Maximum upload size should be configurable.
+
+# 10. Product Preview
+
+Immediately after upload show:
+
+Image
+Filename
+Resolution
+File size
+
+Then show:
+
+Processing Mode
+
+[ Fast ] [ High Quality ]
+
+Fast should already be selected.
+
+Primary CTA:
+
+**Remove Background**
+
+# 11. Processing UI
+
+As soon as processing begins show:
+
+**Removing background...**
+
+Use a clean loading animation.
+
+Do not fake percentages.
+
+Display:
+
+Processing product with BiRefNet
+
+Disable duplicate submissions while processing.
+
+The UI should feel instant and responsive even while inference is running.
+
+# 12. Result
+
+After processing, immediately replace the processing state with the result.
+
+Layout:
+
+Original | Background Removed
+
+The transparent version must use a checkerboard background.
+
+Add:
+
+Before / After Slider
+
+Allow zoom for checking edges.
+
+Show:
+
+Processing Time
+
+Example:
+
+Completed in 1.4s
+
+Use the real server processing time.
+
+# 13. Download
+
+Primary button:
+
+**Download Transparent PNG**
+
+The downloaded image must:
+
+Maintain original resolution
+Contain transparency
+Preserve product quality
+Not contain the checkerboard preview background
+
+Secondary action:
+
+**Remove Another Background**
+
+# 14. Background Preview
+
+Allow previewing the product on:
+
+Transparent
+White
+Black
+Light Grey
+Custom Colour
+
+These are previews only.
+
+The actual output remains transparent unless a separate export-with-background option is explicitly selected.
+
+# 15. Batch Product Processing
+
+Architect the backend so batch processing can be added easily.
+
+Also implement a basic batch mode:
+
+**Batch Remove Backgrounds**
+
+Allow multiple product images to be uploaded.
+
+Example:
+
+20 product images
+
+Process them through the same already-loaded BiRefNet instance.
+
+Show each product:
+
+Thumbnail
+Filename
+Status
+
+Statuses:
+
+Waiting
+Processing
+Completed
+Failed
+
+Allow:
+
+**Download All**
+
+Generate a ZIP containing transparent PNG outputs.
+
+Do NOT reload BiRefNet between images.
+
+# 16. Session History
+
+Add:
+
+History
+
+Show recently processed products during the current session.
+
+Each item:
+
+Thumbnail
+Product filename
+Resolution
+Mode
+Processing time
+Download
+
+Do not permanently store customer product images by default.
+
+# 17. Architecture
+
+Frontend:
+
+React
+Vite
+Tailwind CSS
+
+Backend:
+
+Python
+FastAPI
+PyTorch
+BiRefNet
+Pillow
+
+Architecture:
+
+frontend/
+src/
+components/
+pages/
+services/
+hooks/
+
+backend/
+app/
+main.py
+
+```
+    api/
+        background.py
+
+    services/
+        birefnet_service.py
+        image_service.py
+        inference_queue.py
+
+    utils/
+
+    config.py
+```
+
+The important component is:
+
+birefnet_service.py
+
+It owns the model lifecycle.
+
+It should:
+
+Load model once
+Move model to GPU
+Enable FP16 when appropriate
+Warm up model
+Run inference
+Return mask
+Expose model status
+
+Do NOT initialise the model inside the API request function.
+
+# 18. Performance Monitoring
+
+Record timing separately for:
+
+Upload/decode
+Preprocessing
+GPU inference
+Mask post-processing
+PNG encoding
+Total request
+
+In development mode, log something like:
+
+Decode: 22ms
+Preprocess: 31ms
+Inference: 410ms
+Postprocess: 48ms
+PNG encode: 73ms
+Total: 584ms
+
+This is critical.
+
+Do not guess where performance problems are.
+
+Measure each stage.
+
+# 19. Product Image Caching
+
+Generate a hash of the uploaded image plus processing settings.
+
+Example:
+
+SHA256(image + quality + model_version)
+
+If the exact same product image was already processed with the same configuration during the cache lifetime, return the cached result instead of running BiRefNet again.
+
+Make caching configurable.
+
+# 20. Performance Goal
+
+On a suitable CUDA GPU, optimise toward:
+
+Upload → Result
+
+in roughly **1 to 3 seconds for normal product images**, where achievable.
+
+Do not guarantee a fixed processing time because performance depends on:
+
+GPU
+Image resolution
+Model variant
+Concurrency
+PNG encoding
+Server load
+
+The dashboard should display actual processing time.
+
+CPU is fallback only and will generally be much slower.
+
+# 21. Deployment
+
+This application requires GPU infrastructure for fast production inference.
+
+Support:
+
+CUDA GPU server
+Docker
+NVIDIA Container Toolkit
+
+Create:
+
+Dockerfile
+
+and optionally:
+
+docker-compose.yml
+
+Configure:
+
+GPU access
+Model cache
+Environment variables
+API port
+Frontend URL
+
+Do not download the model again every time the container restarts if persistent model caching is available.
+
+# 22. Environment
+
+Create:
+
+.env.example
+
+Include:
+
+DEVICE=auto
+QUALITY_DEFAULT=fast
+USE_FP16=true
+MODEL_WARMUP=true
+MAX_UPLOAD_MB=20
+MAX_GPU_CONCURRENCY=1
+ENABLE_RESULT_CACHE=true
+RESULT_CACHE_TTL=3600
+CORS_ORIGINS=
+BIREFNET_MODEL=
+
+# 23. Product Quality Rules
+
+Before considering the feature complete, test it against:
+
+White product on white background
+Black product on black background
+Shoes
+Sneakers with laces
+Handbags with thin straps
+Clothing
+Jewellery
+Electronics
+Furniture
+Cosmetics
+Products with shadows
+Products photographed outdoors
+Busy backgrounds
+
+The system must prioritise preserving the product itself.
+
+# 24. Benchmark
+
+Create:
+
+scripts/benchmark.py
+
+It should process a test directory of product images and report:
+
+Average inference time
+Average total time
+P50 latency
+P95 latency
+Images per second
+Peak GPU VRAM
+Failure count
+
+Benchmark:
+
+Fast mode
+High Quality mode
+
+Use benchmark results to choose the actual default inference resolution and optimisations instead of assuming that maximum resolution is best.
+
+# FINAL REQUIREMENT
+
+This is not a generic image editor.
+
+It is a **fast AI product background removal system** designed for e-commerce product catalogues.
+
+The core experience should be:
+
+**Upload Product → Remove Background → Download**
+
+Everything else is secondary.
+
+Prioritise:
+
+SPEED
+ACCURACY
+PRODUCT EDGE QUALITY
+GPU EFFICIENCY
+SIMPLE UX
+
+Use the official BiRefNet implementation:
+
+https://github.com/ZhengPeng7/BiRefNet.git
+
+Actually install, configure, and run the model.
+
+Do not mock inference.
+
+Do not build only the dashboard UI.
+
+Do not substitute another API.
+
+The final application must successfully take a real product image and return a real transparent PNG generated using BiRefNet.

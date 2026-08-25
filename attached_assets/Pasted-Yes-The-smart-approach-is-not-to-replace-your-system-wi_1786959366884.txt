@@ -1,0 +1,1246 @@
+Yes. The smart approach is **not to replace your system with Fooocus**. Integrate Fooocus as one generation backend, while keeping the application architecture model-agnostic.
+
+Fooocus is still useful because it supports **image prompts, image variation, inpainting, outpainting, face swap, and SDXL models**, and its official repository says it can run with as little as 4 GB NVIDIA VRAM. But it is now in limited long-term support with bug fixes only, so don't build your entire future architecture around it. ([GitHub][1])
+
+For your product-preservation requirement, keep a modern image-editing backend such as **Qwen-Image-Edit-2511** alongside it. Qwen's current model card specifically highlights image editing, reduced image drift, improved character consistency, and new viewpoints, and it is Apache 2.0 licensed. ([Hugging Face][2])
+
+Here is the prompt I would give Replit:
+
+---
+
+# REPLIT MASTER IMPLEMENTATION PROMPT
+
+## Project: AI Fashion Product Photography Engine
+
+Build a production-ready AI product photography platform that converts uploaded product photographs into professional e-commerce and luxury fashion photography.
+
+The application must be designed as a **multi-model generation platform**, not tied permanently to one AI model.
+
+The first supported generation backend must be:
+
+**Fooocus**
+
+Repository:
+
+`https://github.com/lllyasviel/Fooocus`
+
+Also design the architecture so that **Qwen-Image-Edit-2511** or another modern image-editing model can be added as a second provider without rewriting the application.
+
+---
+
+# 1. IMPORTANT ARCHITECTURE DECISION
+
+Do NOT build:
+
+```text
+Replit → Fooocus only
+```
+
+Build:
+
+```text
+                    REPLIT APP
+                        │
+                        ▼
+                  GENERATION API
+                        │
+                 MODEL ROUTER
+                        │
+          ┌─────────────┴─────────────┐
+          │                           │
+          ▼                           ▼
+     FOOOCUS / SDXL             QWEN IMAGE EDIT
+       FAST / LOCAL              HIGH QUALITY
+          │                           │
+          └─────────────┬─────────────┘
+                        ▼
+                 POST PROCESSING
+                        │
+              ┌─────────┴─────────┐
+              ▼                   ▼
+           BiRefNet           Real-ESRGAN
+              │                   │
+              └─────────┬─────────┘
+                        ▼
+                  QUALITY CHECK
+                        │
+                        ▼
+                  FINAL OUTPUT
+```
+
+The frontend and orchestration layer must not know which model generated an image.
+
+Create a provider interface.
+
+Example:
+
+```text
+ImageGenerationProvider
+```
+
+with methods:
+
+```text
+generate()
+edit()
+inpaint()
+variation()
+healthCheck()
+getCapabilities()
+```
+
+Implement:
+
+```text
+FooocusProvider
+QwenImageEditProvider
+```
+
+---
+
+# 2. FOOOCUS INTEGRATION
+
+Clone and integrate the official Fooocus repository.
+
+Use:
+
+```bash
+git clone https://github.com/lllyasviel/Fooocus.git
+```
+
+Do not fork random third-party versions.
+
+Fooocus officially supports image prompts, image variation, inpainting, outpainting and face swap. ([GitHub][1])
+
+The system should expose Fooocus functionality through your own backend API.
+
+Do not expose the raw Fooocus UI to customers.
+
+Your application UI should control Fooocus.
+
+---
+
+# 3. FOOOCUS ROLE
+
+Fooocus should primarily be used for:
+
+### FAST MODE
+
+* Fashion model generation
+* Lifestyle scenes
+* Product variations
+* Editorial backgrounds
+* Quick previews
+* Image prompting
+* Inpainting
+
+Do NOT claim Fooocus guarantees exact product preservation.
+
+For exact product preservation, use image-reference/editing workflows and quality validation.
+
+---
+
+# 4. MODEL ROUTER
+
+Create three modes.
+
+## AUTO
+
+Automatically select the best available backend.
+
+Priority:
+
+```text
+Qwen Image Edit
+      ↓
+Fooocus
+      ↓
+Other compatible provider
+```
+
+But only select a provider if it supports the required operation.
+
+Example:
+
+If the requested operation requires source-image editing and Fooocus cannot perform the required operation reliably:
+
+```text
+Do not use Fooocus.
+Use Qwen Image Edit.
+```
+
+---
+
+## FAST
+
+Use Fooocus.
+
+Optimize for:
+
+* Speed
+* Preview
+* Lower GPU cost
+* High-quality SDXL generation
+
+---
+
+## QUALITY
+
+Use Qwen Image Edit or another capable image-editing provider.
+
+Optimize for:
+
+* Product preservation
+* Human/product interaction
+* Character consistency
+* High-quality commercial images
+
+---
+
+# 5. GPU DETECTION
+
+Before starting generation, detect:
+
+```text
+CUDA
+GPU Name
+VRAM
+CUDA Version
+PyTorch CUDA availability
+```
+
+Return:
+
+```json
+{
+  "gpu_available": true,
+  "gpu_name": "...",
+  "vram_gb": 12,
+  "backend": "cuda"
+}
+```
+
+If no CUDA GPU is available:
+
+```text
+Do NOT attempt normal Fooocus generation on CPU.
+```
+
+The official Fooocus documentation states that CPU-only operation is dramatically slower, while NVIDIA GPUs are the preferred path. ([GitHub][1])
+
+Instead show:
+
+```text
+GPU unavailable
+
+Choose:
+[Connect GPU Worker]
+[Use Hosted GPU]
+```
+
+---
+
+# 6. EXTERNAL GPU WORKER
+
+The architecture must support a remote GPU worker.
+
+Example:
+
+```text
+Replit
+   ↓
+HTTPS API
+   ↓
+GPU Worker
+   ↓
+Fooocus
+```
+
+The GPU worker should run:
+
+```text
+Fooocus
+BiRefNet
+Real-ESRGAN
+Quality Validator
+```
+
+The Replit server should handle:
+
+* Authentication
+* Uploads
+* Job queue
+* Product records
+* Generation settings
+* Results
+* History
+* User interface
+
+The GPU worker handles:
+
+* AI inference
+* Image processing
+* Upscaling
+* Segmentation
+
+This prevents Replit's CPU environment from becoming the bottleneck.
+
+---
+
+# 7. PRODUCT UPLOAD
+
+Allow:
+
+```text
+1-6 source images per product
+```
+
+Supported:
+
+```text
+PNG
+JPG
+JPEG
+WEBP
+```
+
+Example:
+
+```text
+Front
+Back
+Side
+Interior
+Hardware
+Detail
+```
+
+---
+
+# 8. PRODUCT ANALYSIS
+
+Before generation, analyze all uploaded images.
+
+Create:
+
+```text
+Product Identity Profile
+```
+
+Include:
+
+```text
+category
+subcategory
+gender
+material
+color
+texture
+pattern
+dimensions
+shape
+logo
+hardware
+handles
+straps
+closures
+stitching
+construction
+```
+
+All uploaded images belong to **ONE product**.
+
+Never interpret them as separate products.
+
+---
+
+# 9. SOURCE IMAGE IS THE HIGHEST PRIORITY
+
+This is critical.
+
+The source product image must actually be passed into the generation/editing pipeline.
+
+Do NOT simply send:
+
+```text
+"Generate a luxury brown handbag"
+```
+
+Instead pass:
+
+```text
+SOURCE PRODUCT IMAGE
++
+SCENE INSTRUCTIONS
++
+PRODUCT PRESERVATION INSTRUCTIONS
+```
+
+The source image must be used as image conditioning/reference.
+
+If the selected backend cannot receive the source image for the requested operation, do not use that backend.
+
+---
+
+# 10. PRODUCT PRESERVATION
+
+The uploaded product is immutable.
+
+Preserve:
+
+* Shape
+* Color
+* Material
+* Texture
+* Pattern
+* Stitching
+* Logo
+* Hardware
+* Handles
+* Straps
+* Buckles
+* Zippers
+* Dimensions
+* Proportions
+
+Never:
+
+* redesign
+* recolor
+* reshape
+* simplify
+* add details
+* remove details
+* invent hardware
+
+The AI may change the environment around the product.
+
+It may NOT change the product.
+
+---
+
+# 11. CATEGORY DETECTION
+
+Automatically detect:
+
+```text
+handbag
+tote
+shoulder bag
+crossbody
+backpack
+wallet
+watch
+ring
+bracelet
+necklace
+earrings
+shoes
+sneakers
+clothing
+sunglasses
+belt
+perfume
+beauty
+furniture
+accessory
+```
+
+---
+
+# 12. HUMAN MODEL ENGINE
+
+The model must be **category-aware**.
+
+Do not use one generic human template.
+
+---
+
+## HANDBAG
+
+Use:
+
+**Adult female fashion model** for women's bags.
+
+The woman must actually hold or wear the uploaded bag.
+
+Possible interactions:
+
+```text
+holding by handle
+shoulder carry
+crossbody
+forearm carry
+walking with bag
+bag resting naturally against body
+```
+
+The product must physically interact with the model.
+
+No floating.
+
+No pasted appearance.
+
+No mannequin.
+
+---
+
+# 13. WATCH
+
+Detect gender.
+
+Men's watch:
+
+```text
+adult male wrist/hand
+```
+
+Women's watch:
+
+```text
+adult female wrist/hand
+```
+
+Generate realistic:
+
+* Wrist
+* Hand
+* Fingers
+* Skin
+* Watch placement
+
+The watch must actually be worn.
+
+---
+
+# 14. SHOES
+
+Generate an adult fashion model actually wearing the uploaded shoes.
+
+Possible shots:
+
+```text
+standing
+walking
+side profile
+full body
+lower body
+close-up
+```
+
+The shoe must be physically attached to the foot.
+
+---
+
+# 15. JEWELRY
+
+### Ring
+
+Use a realistic hand.
+
+### Bracelet
+
+Use realistic wrist.
+
+### Necklace
+
+Use upper-body model.
+
+### Earrings
+
+Use realistic face/ear.
+
+Never generate floating jewelry.
+
+---
+
+# 16. CLOTHING
+
+Generate an adult fashion model wearing the actual uploaded garment.
+
+Preserve:
+
+```text
+pattern
+fabric
+color
+fit
+buttons
+zipper
+stitching
+logo
+shape
+```
+
+Do not redesign the garment.
+
+---
+
+# 17. MODEL IDENTITY
+
+For every product:
+
+Generate one unique model identity.
+
+Store:
+
+```text
+model_identity_id
+```
+
+Example:
+
+```text
+PRODUCT_001
+MODEL_001
+```
+
+All model frames for PRODUCT_001 must use MODEL_001.
+
+A different product receives a different model.
+
+---
+
+# 18. MODEL CONSISTENCY
+
+For one product, maintain:
+
+* Face
+* Hair
+* Skin tone
+* Body
+* Age appearance
+* Styling
+
+Change only:
+
+* Pose
+* Camera
+* Expression
+* Environment
+* Lighting
+* Composition
+
+Do not generate a different person for every frame.
+
+---
+
+# 19. CAMPAIGN GENERATION
+
+Generate 6-8 frames.
+
+Default:
+
+```text
+01 Studio Product
+02 Model Interaction
+03 Model Different Angle
+04 Product Detail
+05 Product Alternative Angle
+06 Model Lifestyle
+07 Macro Detail
+08 Editorial Hero
+```
+
+---
+
+# 20. FRAME 1
+
+Product-only.
+
+Luxury studio.
+
+Clean composition.
+
+Exact source product.
+
+No human.
+
+---
+
+# 21. FRAME 2
+
+Human model.
+
+For handbag:
+
+Adult female fashion model.
+
+Actually holding/wearing the uploaded handbag.
+
+Professional fashion pose.
+
+Product clearly visible.
+
+---
+
+# 22. FRAME 3
+
+Same model.
+
+Different pose.
+
+Different camera angle.
+
+Different composition.
+
+Product still clearly visible.
+
+---
+
+# 23. FRAME 4
+
+Macro product photography.
+
+Focus on:
+
+* Leather
+* Stitching
+* Hardware
+* Texture
+* Logo
+* Construction
+
+---
+
+# 24. FRAME 5
+
+Alternative product angle.
+
+Use:
+
+```text
+45 degree
+side
+rear
+top
+perspective
+```
+
+Choose the angle that adds information missing from the source/reference set.
+
+---
+
+# 25. FRAME 6
+
+Same model.
+
+Lifestyle scene.
+
+Examples:
+
+* Walking
+* Entering luxury hotel
+* Fashion street
+* Boutique
+* Café
+* Modern architecture
+
+Product must remain clearly visible.
+
+---
+
+# 26. FRAME 7
+
+Extreme detail.
+
+Show:
+
+* Hardware
+* Handle
+* Stitching
+* Leather
+* Interior
+* Logo
+
+---
+
+# 27. FRAME 8
+
+Same model.
+
+Luxury editorial campaign.
+
+Wide composition.
+
+Premium fashion photography.
+
+---
+
+# 28. NEVER CREATE 8 SIMILAR IMAGES
+
+Every frame must differ.
+
+Compare:
+
+```text
+pose
+camera
+crop
+background
+lighting
+composition
+distance
+interaction
+```
+
+If two frames are visually too similar:
+
+```text
+REJECT
+REGENERATE
+```
+
+---
+
+# 29. HUMAN ANATOMY VALIDATION
+
+Reject images containing:
+
+```text
+extra fingers
+missing fingers
+fused fingers
+broken wrists
+deformed hands
+floating hands
+bad eyes
+crossed eyes
+deformed face
+bad teeth
+distorted ears
+broken limbs
+unnatural posture
+```
+
+---
+
+# 30. PRODUCT VALIDATION
+
+Reject if:
+
+```text
+wrong color
+wrong shape
+wrong logo
+wrong hardware
+wrong texture
+wrong stitching
+wrong proportions
+missing feature
+extra feature
+```
+
+---
+
+# 31. BACKGROUND REMOVAL
+
+After generation:
+
+```text
+Generated Image
+       ↓
+BiRefNet
+       ↓
+Mask Refinement
+       ↓
+Hair/Finger/Strap Refinement
+       ↓
+Transparent PNG
+```
+
+The final primary image must be:
+
+```text
+PNG
+RGBA
+Alpha Channel
+Transparent Background
+```
+
+Do not create a fake white background.
+
+---
+
+# 32. UPSCALING
+
+After successful validation:
+
+```text
+Real-ESRGAN
+```
+
+Upscale to the requested output resolution.
+
+Preserve product details.
+
+Do not oversharpen skin.
+
+---
+
+# 33. QUALITY GATE
+
+Only mark an image:
+
+```text
+READY
+```
+
+if:
+
+```text
+Product PASS
+Human PASS
+Face PASS
+Hands PASS
+Interaction PASS
+Transparency PASS
+Resolution PASS
+```
+
+Otherwise:
+
+```text
+FAILED
+```
+
+and regenerate.
+
+---
+
+# 34. RETRY SYSTEM
+
+Maximum:
+
+```text
+3 retries per frame
+```
+
+Each retry should modify:
+
+* Seed
+* Pose
+* Camera
+* Prompt
+* Scene
+* Model parameters
+
+Do not simply generate the exact same failed request again.
+
+---
+
+# 35. FOOOCUS CONFIGURATION
+
+Create a dedicated Fooocus service.
+
+Support:
+
+```text
+preset = realistic
+```
+
+Use Fooocus image prompt functionality for source-image conditioning.
+
+Use inpainting when the task requires local correction.
+
+Use variation for controlled variations.
+
+Use face consistency tools only when necessary.
+
+Do not expose unnecessary Fooocus settings to normal users.
+
+Fooocus already provides image prompt, variation, inpainting and face-swap functionality that can be wrapped behind this application layer. ([GitHub][1])
+
+---
+
+# 36. FOOOCUS IS NOT THE FINAL PRODUCT API
+
+Do not couple application logic to Fooocus internals.
+
+Create:
+
+```text
+/providers/fooocus/
+```
+
+and:
+
+```text
+/providers/qwen/
+```
+
+The application should call:
+
+```text
+generateImage()
+```
+
+rather than directly calling Fooocus functions throughout the codebase.
+
+This allows the model to be replaced later.
+
+---
+
+# 37. QWEN PROVIDER
+
+Add Qwen-Image-Edit-2511 as the high-quality editing provider.
+
+The current model supports image-to-image editing and is specifically documented as improving image consistency, reducing image drift and improving character consistency. It is Apache 2.0 licensed. ([Hugging Face][2])
+
+Use it for:
+
+```text
+source product preservation
+product + human composition
+new viewpoints
+high-quality edits
+consistent campaign images
+```
+
+---
+
+# 38. SMART MODEL SELECTION
+
+Implement:
+
+```text
+if mode == FAST:
+    Fooocus
+
+if mode == QUALITY:
+    Qwen Image Edit
+
+if mode == AUTO:
+    analyze task
+    select compatible provider
+```
+
+Example:
+
+```text
+Simple lifestyle background
+→ Fooocus
+
+Fast preview
+→ Fooocus
+
+Exact product + model interaction
+→ Qwen Image Edit
+
+Product viewpoint editing
+→ Qwen Image Edit
+
+Macro detail
+→ appropriate image/edit provider
+```
+
+Do not choose a model merely because it is available.
+
+Choose based on the operation required.
+
+---
+
+# 39. USER INTERFACE
+
+Dashboard:
+
+```text
+NEW SHOOT
+
+Upload 1-6 Product Images
+
+Product Category:
+[ Auto Detect ]
+
+Generation Mode:
+[ Auto ]
+
+Quality:
+[ High ]
+
+Frames:
+[ 8 ]
+
+Background:
+[ Transparent ]
+
+Model:
+[ Auto ]
+
+[ Generate Campaign ]
+```
+
+Advanced settings:
+
+```text
+Generation Provider
+GPU Worker
+Seed
+Aspect Ratio
+Resolution
+Model
+```
+
+Keep these hidden by default.
+
+---
+
+# 40. GENERATION STATUS
+
+Show real status:
+
+```text
+Analyzing product       ✓
+Detecting category      ✓
+Planning campaign       ✓
+Creating model          ✓
+Generating frame 1      ✓
+Generating frame 2      ⏳
+Generating frame 3      ⏳
+Quality validation      ⏳
+Background removal      ⏳
+Upscaling               ⏳
+```
+
+Do not fake progress.
+
+---
+
+# 41. IMPORTANT CURRENT ENVIRONMENT RULE
+
+Your current Replit environment may not have a CUDA GPU.
+
+Do not try to force Fooocus onto CPU for production generation.
+
+Fooocus's official requirements show that CPU-only operation is vastly slower, while NVIDIA GPU is the intended fast path. ([GitHub][1])
+
+Therefore:
+
+```text
+Replit = Control Plane
+
+GPU Server = AI Inference
+```
+
+Use an external GPU worker when necessary.
+
+---
+
+# 42. ACCEPTANCE TEST
+
+Use the provided handbag references.
+
+Run:
+
+```text
+8-frame campaign
+```
+
+Expected:
+
+```text
+01 Exact handbag, product-only
+02 Female model holding exact handbag
+03 SAME female model, different pose
+04 Exact handbag macro
+05 Exact handbag different angle
+06 SAME female model walking with handbag
+07 Exact handbag craftsmanship
+08 SAME female model editorial hero
+```
+
+Images 2, 3, 6 and 8 MUST contain the human model.
+
+The bag must be the uploaded bag.
+
+The model must look like a real adult fashion model.
+
+Hands must be anatomically correct.
+
+Face must be realistic.
+
+The bag must physically interact with the model.
+
+The final background must be transparent.
+
+---
+
+# 43. FAILURE CONDITIONS
+
+The implementation is FAILED if:
+
+* Eight product-only images are generated.
+* Generic mannequin is generated.
+* Model is missing from required scenes.
+* Product is redesigned.
+* Product changes color.
+* Product hardware changes.
+* Model changes identity between frames.
+* Hands are deformed.
+* Face is distorted.
+* Product floats.
+* Product is pasted unnaturally.
+* Background is white instead of transparent.
+* Alpha channel is missing.
+* Fooocus is hardcoded into the entire architecture.
+* CPU generation is presented as production-ready.
+
+---
+
+# FINAL PRINCIPLE
+
+The application is not an AI image generator.
+
+It is an:
+
+**AI PRODUCT PHOTOGRAPHY ORCHESTRATION ENGINE.**
+
+The system must intelligently decide:
+
+```text
+What is the product?
+        ↓
+Does it need a human?
+        ↓
+What type of human?
+        ↓
+How should the product interact with the human?
+        ↓
+What camera angle?
+        ↓
+What pose?
+        ↓
+What environment?
+        ↓
+Which AI model is best?
+        ↓
+Did the product remain identical?
+        ↓
+Is the human anatomically correct?
+        ↓
+Is the background genuinely transparent?
+        ↓
+Is the image commercially usable?
+```
+
+Only after every condition passes should the image be delivered to the user.
+
+---
+
+### One important reality check
+
+Don't ask Replit to make **Fooocus + Qwen + BiRefNet + Real-ESRGAN all run inside the Replit CPU environment**. That will become a dependency and VRAM disaster.
+
+Fooocus itself is SDXL-based and its official repository currently describes the project as limited long-term support with bug fixes only. ([GitHub][1]) Qwen-Image-Edit-2511 is much larger, with the current repository showing roughly **57.7 GB of model files**, so it absolutely belongs on a proper GPU worker rather than your normal Replit app server. ([Hugging Face][3])
+
+The smart architecture is therefore:
+
+**Replit = SaaS/dashboard/orchestration**
+
+**GPU worker = Fooocus + Qwen + BiRefNet + Real-ESRGAN**
+
+That gives you the ability to start with Fooocus cheaply, add Qwen for difficult product-preservation jobs, and swap models later without rebuilding your application.
+
+[1]: https://github.com/lllyasviel/Fooocus/blob/main/readme.md?utm_source=chatgpt.com "Fooocus/readme.md at main · lllyasviel/Fooocus · GitHub"
+[2]: https://huggingface.co/Qwen/Qwen-Image-Edit-2511?utm_source=chatgpt.com "Qwen/Qwen-Image-Edit-2511 · Hugging Face"
+[3]: https://huggingface.co/Qwen/Qwen-Image-Edit-2511/tree/main?utm_source=chatgpt.com "Qwen/Qwen-Image-Edit-2511 at main"

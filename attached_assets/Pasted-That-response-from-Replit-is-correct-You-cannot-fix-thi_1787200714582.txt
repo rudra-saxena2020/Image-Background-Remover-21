@@ -1,0 +1,833 @@
+That response from Replit is correct. **You cannot fix this by changing a prompt or forcing every model to VERIFIED.** The infrastructure is missing.
+
+What you need now is a proper implementation prompt that tells Replit to actually install, connect, test, and audit each engine.
+
+Copy this entire prompt into Replit:
+
+---
+
+# FIX THE AI MODEL BACKEND AND VERIFICATION SYSTEM
+
+The current AI generation system is incomplete. Do not fake verification statuses, hardcode `VERIFIED`, or mark an engine available unless it has successfully completed a real inference test.
+
+The goal is to make the following engines actually usable where technically possible:
+
+1. Qwen Image Edit
+2. FLUX Schnell
+3. FLUX Dev
+4. HiDream
+5. Fooocus
+6. SDXL
+7. Reference-Locked Preview
+
+## 1. FIRST: FIX THE ARCHITECTURE
+
+The current Replit runtime should **not be expected to run all heavy image models locally**.
+
+Use this architecture:
+
+```text
+ATELIER REPLIT APP
+        │
+        ▼
+GENERATION ORCHESTRATOR
+        │
+        ├── Local lightweight services
+        │
+        ├── Google Colab GPU Worker
+        │
+        └── External API-compatible worker
+                 │
+                 ▼
+          AI MODEL INFERENCE
+```
+
+Replit should act as:
+
+* Frontend
+* API backend
+* Job queue
+* Product upload storage
+* Generation orchestrator
+* Model health monitoring
+* Verification system
+* Result storage
+
+Heavy diffusion models must run on a GPU worker, not on the standard Replit CPU environment.
+
+---
+
+# 2. CREATE A REAL MODEL REGISTRY
+
+Create a central model registry.
+
+Example:
+
+```json
+{
+  "qwen_edit": {
+    "name": "Qwen Image Edit",
+    "type": "image_edit",
+    "endpoint": null,
+    "status": "UNKNOWN",
+    "available": false,
+    "verified": false,
+    "lastAudit": null,
+    "lastError": null
+  },
+  "flux_schnell": {
+    "name": "FLUX Schnell",
+    "type": "image_generation",
+    "endpoint": null,
+    "status": "UNKNOWN",
+    "available": false,
+    "verified": false
+  }
+}
+```
+
+Every engine must have independent fields:
+
+```text
+installed
+runtimeReachable
+modelLoaded
+inferencePassed
+productValidationPassed
+humanModelPassed
+verified
+lastTestTime
+lastError
+```
+
+Do not use one generic `AVAILABLE` status.
+
+---
+
+# 3. FIX GOOGLE COLAB GPU WORKER
+
+The current status says:
+
+```text
+GPU connected
+models: []
+```
+
+This means the worker exists but no usable model backend is registered.
+
+Fix this.
+
+Create a proper GPU worker setup process.
+
+The Colab worker must:
+
+1. Detect CUDA
+2. Detect GPU name
+3. Detect VRAM
+4. Install required Python dependencies
+5. Download/load selected model weights
+6. Start inference service
+7. Expose a secure API endpoint
+8. Register supported models with Atelier
+9. Run health checks
+10. Return actual inference results
+
+The worker should expose:
+
+```text
+GET /health
+
+GET /models
+
+POST /generate
+
+POST /edit
+
+POST /audit
+```
+
+Example `/models` response:
+
+```json
+{
+  "gpu": "Tesla T4",
+  "cuda": true,
+  "models": [
+    {
+      "id": "flux_schnell",
+      "loaded": true,
+      "available": true
+    },
+    {
+      "id": "sdxl",
+      "loaded": true,
+      "available": true
+    }
+  ]
+}
+```
+
+Do not report an empty `models: []` after successful installation.
+
+---
+
+# 4. IMPLEMENT MODEL INSTALLATION INDIVIDUALLY
+
+Do not attempt to install every huge model simultaneously on a T4.
+
+Install and verify models sequentially.
+
+Priority:
+
+### ENGINE 1: FLUX SCHNELL
+
+Install FLUX Schnell first because it is fast and useful for basic generation.
+
+Verify:
+
+```text
+CUDA available
+Model weights downloaded
+Pipeline loads successfully
+Simple image generation succeeds
+Output image saved
+Output returned to Atelier
+```
+
+Only then mark:
+
+```text
+installed = true
+runtimeReachable = true
+modelLoaded = true
+inferencePassed = true
+```
+
+---
+
+### ENGINE 2: SDXL
+
+Install a stable SDXL pipeline.
+
+Run:
+
+```text
+Prompt
+↓
+Generate image
+↓
+Save image
+↓
+Return image URL
+```
+
+Fix the current:
+
+```text
+SDXL = FAILED
+```
+
+Do not mark SDXL verified until a fresh generation succeeds.
+
+Store the actual error if it fails.
+
+---
+
+### ENGINE 3: QWEN IMAGE EDIT
+
+Qwen Image Edit is an image editing engine.
+
+Its workflow should be:
+
+```text
+SOURCE PRODUCT IMAGE
+        +
+EDIT INSTRUCTION
+        ↓
+QWEN IMAGE EDIT
+        ↓
+GENERATED RESULT
+```
+
+Before attempting generation:
+
+```text
+check endpoint
+check GPU
+check dependencies
+check model weights
+check VRAM
+check pipeline loading
+```
+
+If the Colab T4 cannot load the selected Qwen model due to VRAM, do not crash the whole system.
+
+Return:
+
+```text
+INSUFFICIENT_VRAM
+```
+
+Then fall back to another configured worker.
+
+---
+
+### ENGINE 4: FLUX DEV
+
+Install only if the GPU worker has sufficient VRAM.
+
+If T4 VRAM is insufficient, mark:
+
+```text
+status = REQUIRES_LARGER_GPU
+```
+
+Do not falsely show:
+
+```text
+NOT VERIFIED
+```
+
+when the actual problem is VRAM limitation.
+
+---
+
+### ENGINE 5: HIDREAM
+
+Treat HiDream as a separate worker capability.
+
+Do not install it automatically if the current worker cannot support it.
+
+Test:
+
+```text
+Model downloaded
+Pipeline loaded
+Test inference
+Image output valid
+```
+
+---
+
+### ENGINE 6: FOOOCUS
+
+Fooocus should be implemented as an optional generation backend.
+
+It can be deployed separately.
+
+The Atelier backend should communicate through an adapter:
+
+```text
+FooocusAdapter.generate()
+```
+
+Do not mix Fooocus installation logic with Qwen or FLUX.
+
+Each engine must have its own adapter.
+
+---
+
+# 5. CREATE A MODEL ADAPTER SYSTEM
+
+Use one common interface:
+
+```python
+class GenerationEngine:
+
+    async def health_check(self):
+        pass
+
+    async def generate(self, request):
+        pass
+
+    async def audit(self):
+        pass
+```
+
+Implement:
+
+```text
+QwenEditAdapter
+FluxSchnellAdapter
+FluxDevAdapter
+HiDreamAdapter
+FooocusAdapter
+SDXLAdapter
+ReferencePreviewAdapter
+```
+
+The application must be able to switch engines without changing frontend code.
+
+---
+
+# 6. FIX THE VERIFICATION SYSTEM
+
+The current interface shows:
+
+```text
+NOT VERIFIED
+UNAVAILABLE
+FAILED
+```
+
+This is acceptable only if the backend genuinely fails.
+
+Create a real verification process.
+
+Each model must pass:
+
+## Stage 1: Health Check
+
+```text
+Worker reachable?
+GPU available?
+Model endpoint responds?
+```
+
+## Stage 2: Model Check
+
+```text
+Model installed?
+Weights accessible?
+Pipeline loads?
+```
+
+## Stage 3: Inference Check
+
+Generate one test image.
+
+Check:
+
+```text
+HTTP success
+Valid image returned
+Image dimensions valid
+Image not blank
+```
+
+## Stage 4: Product Reference Test
+
+Upload a known handbag reference.
+
+Ask for:
+
+```text
+Create a professional ecommerce image using this exact handbag.
+Preserve the bag shape, color, woven texture,
+hardware, handles and proportions.
+```
+
+The output must be evaluated.
+
+## Stage 5: Human + Product Test
+
+Generate:
+
+```text
+A professional female fashion model naturally carrying
+the exact uploaded handbag.
+The handbag must remain faithful to the source reference.
+```
+
+Verification passes only when:
+
+```text
+human detected
+product detected
+product similarity above threshold
+image valid
+```
+
+Then:
+
+```text
+verified = true
+```
+
+---
+
+# 7. IMPORTANT: DO NOT REQUIRE HUMAN GENERATION FOR ALL ENGINES
+
+The current verification logic is too rigid.
+
+For example:
+
+BiRefNet is not a human generation model.
+
+Real-ESRGAN is not a human generation model.
+
+A reference preview engine is not necessarily a human generation model.
+
+Therefore use capability-based verification.
+
+Example:
+
+```json
+{
+  "id": "birefnet",
+  "capabilities": [
+    "background_removal"
+  ]
+}
+```
+
+Verify only what that engine is designed to do.
+
+For an image generation engine:
+
+```json
+{
+  "capabilities": [
+    "text_to_image"
+  ]
+}
+```
+
+For Qwen Edit:
+
+```json
+{
+  "capabilities": [
+    "image_edit",
+    "reference_edit"
+  ]
+}
+```
+
+For a human-capable generation engine:
+
+```json
+{
+  "capabilities": [
+    "text_to_image",
+    "human_generation",
+    "reference_guidance"
+  ]
+}
+```
+
+Do not fail every engine because it cannot pass a capability it does not support.
+
+---
+
+# 8. PRODUCT IDENTITY LOCK
+
+This is the critical part.
+
+Do not claim:
+
+```text
+PRODUCT IDENTITY LOCKED
+```
+
+unless validation actually occurs.
+
+Create a validation pipeline:
+
+```text
+SOURCE PRODUCT
+       │
+       ├── Background Removal
+       │
+       ├── Product Feature Extraction
+       │
+       ├── Shape Analysis
+       │
+       ├── Color Analysis
+       │
+       ├── Texture Analysis
+       │
+       ├── Hardware Analysis
+       │
+       ▼
+REFERENCE SIGNATURE
+```
+
+After generation:
+
+```text
+GENERATED IMAGE
+       │
+       ▼
+PRODUCT DETECTION
+       │
+       ▼
+COMPARE WITH SOURCE
+       │
+       ├── Shape similarity
+       ├── Color similarity
+       ├── Texture similarity
+       ├── Hardware similarity
+       └── Proportion similarity
+       │
+       ▼
+PRODUCT IDENTITY SCORE
+```
+
+Example:
+
+```text
+95-100 = VERIFIED EXCELLENT
+90-94  = VERIFIED
+80-89  = ACCEPTABLE
+Below 80 = REJECT / RETRY
+```
+
+Do not publish automatically below the configured threshold.
+
+---
+
+# 9. HUMAN MODEL VALIDATION
+
+For categories requiring a human:
+
+### BAG
+
+```text
+Woman or appropriate fashion model
+actually holding, carrying or wearing the bag
+```
+
+Reject:
+
+```text
+product floating beside model
+bag pasted onto body
+model without visible interaction
+wrong bag shape
+AI hands disconnected from bag
+```
+
+### WATCH
+
+Generate:
+
+```text
+Realistic wrist or hand
+wearing the exact watch
+```
+
+Validate:
+
+```text
+five-finger anatomy where visible
+correct wrist attachment
+watch physically wrapped around wrist
+correct dial
+correct strap
+```
+
+### CLOTHING
+
+Use a virtual try-on workflow when available.
+
+Validate:
+
+```text
+garment detected
+human detected
+correct clothing placement
+no duplicated limbs
+no broken anatomy
+```
+
+---
+
+# 10. ADD OUTPUT QUALITY GATES
+
+Before an image is marked READY:
+
+```text
+Image resolution check
+Blur detection
+Face quality check
+Hand anomaly check
+Extra limb detection
+Product detection
+Product identity score
+Watermark/text detection
+Background check
+```
+
+Reject automatically if:
+
+```text
+missing face when face is required
+distorted hands
+extra fingers
+extra arms
+deformed limbs
+product shape changed
+wrong hardware
+wrong color
+product missing
+blurred image
+low resolution
+```
+
+Retry generation automatically up to 3 times.
+
+Do not send failed images to the user as successful output.
+
+---
+
+# 11. FIX THE CURRENT UI STATUS
+
+Replace vague states with real diagnostics.
+
+Instead of only:
+
+```text
+NOT VERIFIED
+```
+
+show:
+
+```text
+MODEL: Qwen Image Edit
+
+STATUS: UNAVAILABLE
+
+REASON:
+No connected GPU worker with model weights installed.
+
+NEXT ACTION:
+Connect GPU worker and install model.
+```
+
+For SDXL:
+
+```text
+STATUS: FAILED
+
+LAST ERROR:
+<actual backend error>
+
+NEXT ACTION:
+Retry model audit.
+```
+
+For working engines:
+
+```text
+STATUS: ONLINE
+
+GPU:
+Tesla T4
+
+MODEL:
+Loaded
+
+INFERENCE:
+Passed
+
+PRODUCT TEST:
+Passed
+
+HUMAN TEST:
+Passed
+
+VERIFICATION:
+VERIFIED
+```
+
+---
+
+# 12. DO THIS NOW IN ORDER
+
+Do not change frontend labels first.
+
+Actually perform:
+
+### STEP 1
+
+Check Colab GPU.
+
+### STEP 2
+
+Install one lightweight working engine first:
+
+```text
+FLUX Schnell OR SDXL
+```
+
+### STEP 3
+
+Run a real generation.
+
+### STEP 4
+
+Return image to Replit.
+
+### STEP 5
+
+Update backend registry.
+
+### STEP 6
+
+Run audit.
+
+### STEP 7
+
+Only then show VERIFIED.
+
+### STEP 8
+
+Install Qwen Edit.
+
+### STEP 9
+
+Install additional engines sequentially.
+
+---
+
+# SUCCESS CRITERIA
+
+The system is only considered fixed when the backend audit shows something similar to:
+
+```text
+REFERENCE LOCKED PREVIEW
+AVAILABLE
+
+FLUX SCHNELL
+ONLINE
+INFERENCE PASSED
+
+SDXL
+ONLINE
+INFERENCE PASSED
+
+QWEN EDIT
+ONLINE
+REFERENCE EDIT PASSED
+
+HIDREAM
+ONLINE OR REQUIRES LARGER GPU
+
+FOOOCUS
+ONLINE OR SEPARATE WORKER REQUIRED
+```
+
+And at least one real engine must successfully complete:
+
+```text
+Upload handbag
+        ↓
+Remove background
+        ↓
+Send source reference to generation engine
+        ↓
+Generate woman carrying exact handbag
+        ↓
+Validate human
+        ↓
+Validate product identity
+        ↓
+Reject bad result automatically
+        ↓
+Return only passing result
+```
+
+**Do not fake verification. Do not hardcode statuses. Do not silently fall back to product-only images when a human-model frame is requested. Build the real GPU worker connection, model registry, adapter layer, health checks, inference tests, capability-specific verification, and product validation pipeline.**
+
+One important correction: **a T4 will not realistically run every model you listed at the same time**. Start with SDXL or FLUX Schnell, get one real end-to-end pipeline working, then add the heavier engines through separate GPU workers. That is the correct engineering path, not trying to make seven heavyweight models magically work inside one Replit runtime.

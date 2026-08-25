@@ -1,0 +1,246 @@
+## MASTER PROMPT
+
+Generate a **premium luxury e-commerce product image matching the professional product-photography standards, framing, camera angles, proportions, and presentation style commonly seen in Coach product listings.**
+
+### 1. ABSOLUTE PRODUCT ACCURACY
+
+The provided product reference image is the **single source of truth**.
+
+Reproduce the product with **maximum visual and structural accuracy**. The generated product must remain identical to the reference.
+
+Do NOT redesign, reinterpret, beautify, simplify, or creatively modify the product.
+
+Preserve exactly:
+
+* Product shape and silhouette
+* Width-to-height ratio
+* Exact proportions and dimensions
+* Construction and structure
+* Handle shape, thickness, height, curvature, and placement
+* Shoulder straps and detachable straps
+* Strap length, width, attachment points, and orientation
+* Pockets and compartments
+* Zippers and zipper tracks
+* Seams and stitching
+* Stitch spacing and placement
+* Edge finishing and piping
+* Panels and panel boundaries
+* Folds and natural construction details
+* Hardware shape, size, placement, and finish
+* Buckles, clasps, hooks, rings, chains, rivets, and fasteners
+* Logo position, scale, orientation, embossing, and appearance
+* Printed patterns, monograms, graphics, and branding
+* Product color and color distribution
+* Material appearance
+* Leather grain
+* Fabric weave
+* Suede texture
+* Canvas texture
+* Metallic surfaces
+* Gloss/matte characteristics
+* Surface imperfections that naturally belong to the real product
+
+**Do not hallucinate missing product details.**
+
+If a feature is visible in the reference, reproduce it accurately. If a detail cannot be confidently determined from the reference, do not invent decorative elements.
+
+### 2. MATERIAL AND TEXTURE FIDELITY
+
+Texture accuracy is critical.
+
+The output must preserve the authentic physical characteristics of the original material. Do not make leather look like plastic, fabric look artificially smooth, metal look painted, or textured surfaces look flat.
+
+Maintain realistic:
+
+* Micro-texture
+* Grain
+* Stitch definition
+* Material thickness
+* Edge thickness
+* Natural folds
+* Surface reflection
+* Hardware reflections
+* Embossing depth
+* Logo definition
+
+Do NOT apply aggressive AI smoothing, sharpening, denoising, artificial gloss, fake texture, or beauty enhancement.
+
+### 3. COACH-STYLE PRODUCT PHOTOGRAPHY
+
+Use a **clean luxury catalog photography approach comparable to Coach's e-commerce product presentation**, while keeping the actual product unchanged.
+
+Match the reference product's intended catalog angle accurately.
+
+When multiple product images are generated, use a consistent professional sequence where applicable:
+
+1. Front / primary hero view
+2. Three-quarter view
+3. Side profile
+4. Rear view
+5. Interior/open view, only when supported by reference images
+6. Detail view, only when supported by reference images
+
+Do not create impossible views or fabricate unseen product construction.
+
+Camera perspective must look like controlled professional studio product photography.
+
+Avoid:
+
+* Extreme perspective
+* Wide-angle distortion
+* Fisheye distortion
+* Incorrect lens compression
+* Tilted products
+* Artificially stretched products
+* Squashed products
+* Oversized handles
+* Incorrect bag depth
+
+Vertical and horizontal geometry must remain natural.
+
+### 4. CONSISTENT CANVAS, SCALE AND POSITION
+
+Every output must use the **same canvas dimensions and standardized product framing** so replacing images on an e-commerce website causes ZERO page-layout disruption.
+
+The product must:
+
+* Be perfectly centered
+* Maintain consistent visual scale across images
+* Maintain consistent top and bottom margins
+* Maintain consistent left and right margins
+* Never touch or cross canvas boundaries
+* Never be cropped
+* Never have handles, straps, chains, or accessories cut off
+* Fit completely inside the canvas
+* Use approximately **85% of the available image area at maximum**, adjusted only when necessary to preserve the full product
+* Preserve the product's natural aspect ratio
+
+**Never stretch the product to fill the canvas.**
+
+Different products should be normalized by framing and canvas placement, NOT by distorting their physical proportions.
+
+### 5. TRANSPARENT BACKGROUND
+
+Final output must have a **true transparent background with alpha transparency**.
+
+Requirements:
+
+* No white background
+* No grey background
+* No colored background
+* No gradient
+* No studio wall
+* No floor
+* No visible environment
+* No artificial background replacement
+* No rectangular white remnants around the product
+* No checkerboard pattern rendered into the image
+
+The checkerboard must NOT be part of the actual image.
+
+Edges must be professionally isolated.
+
+Preserve difficult areas accurately, including:
+
+* Fine straps
+* Chains
+* Handle openings
+* Holes
+* Buckles
+* Hardware gaps
+* Tassels
+* Fur/fibers where applicable
+* Transparent or semi-transparent product components
+
+Do not leave halos, white outlines, dark outlines, jagged masking, missing edge pixels, or background contamination.
+
+### 6. LIGHTING
+
+Use soft, controlled, premium studio product lighting.
+
+Lighting should reveal the product's real construction and material without changing its actual appearance.
+
+Maintain:
+
+* Balanced exposure
+* Natural highlights
+* Controlled reflections
+* Realistic metallic highlights
+* Visible texture
+* Accurate colors
+* Clear stitching
+* Natural dimensionality
+
+Do not introduce dramatic cinematic lighting, hard shadows, colored lighting, excessive contrast, excessive HDR, bloom, or artificial reflections.
+
+Because the final asset is transparent, avoid adding a large artificial cast shadow underneath the product.
+
+### 7. STRICT PROHIBITIONS
+
+**NEVER:**
+
+* Change the product design
+* Change product proportions
+* Change product height or width ratio
+* Change the color
+* Change material
+* Change texture
+* Change logo
+* Misspell branding
+* Replace branding
+* Add branding
+* Remove branding
+* Add hardware
+* Remove hardware
+* Change stitching
+* Change handles
+* Change straps
+* Change zipper placement
+* Change pocket placement
+* Invent hidden details
+* Make the product more symmetrical than the real item
+* Remove authentic construction details
+* Crop any part of the product
+* Generate a background
+* Add props
+* Add hands
+* Add a person or model
+* Add packaging
+* Add decorative objects
+* Add text
+* Add labels
+* Add watermarks
+
+### 8. FINAL QUALITY CONTROL
+
+Before accepting the generated image, compare it against the supplied reference and verify:
+
+**Identity:** Is this unmistakably the exact same product?
+
+**Geometry:** Are silhouette, dimensions, handles, straps, panels, pockets, and hardware structurally correct?
+
+**Branding:** Is every visible logo, monogram, symbol, and branded element accurate?
+
+**Material:** Does the texture match the original instead of looking AI-generated?
+
+**Color:** Is the product color faithful to the reference?
+
+**Angle:** Is the camera angle suitable for a premium Coach-style catalog listing without distorting the product?
+
+**Framing:** Is the complete product visible with standardized margins and no cropping?
+
+**Transparency:** Is the background genuinely transparent with clean alpha edges?
+
+If any important product feature differs from the reference, **reject the generation and regenerate rather than accepting an inaccurate result.**
+
+### OUTPUT REQUIREMENT
+
+Produce a **high-resolution, sharp, photorealistic luxury e-commerce product cutout** with:
+
+**Exact reference product + Coach-level catalog presentation + standardized framing + preserved texture/material + zero product redesign + true transparent background + clean alpha edges + no page-disrupting dimensional inconsistency.**
+
+**Priority order:**
+
+`PRODUCT ACCURACY > PRODUCT GEOMETRY > BRAND/LOGO ACCURACY > MATERIAL/TEXTURE ACCURACY > COLOR ACCURACY > COMPLETE PRODUCT VISIBILITY > CONSISTENT FRAMING > TRANSPARENT BACKGROUND > AESTHETIC ENHANCEMENT`
+
+Never sacrifice product accuracy to make the image look prettier.

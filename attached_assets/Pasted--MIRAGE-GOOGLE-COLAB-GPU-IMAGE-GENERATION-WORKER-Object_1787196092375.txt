@@ -1,0 +1,1461 @@
+# MIRAGE GOOGLE COLAB GPU IMAGE GENERATION WORKER
+
+## Objective
+
+Build a complete Google Colab notebook that acts as the GPU image-generation worker for the Mirage Store product photography system.
+
+The Colab notebook must be capable of taking real product reference images and generating high-quality e-commerce images with realistic human models while preserving the actual product.
+
+The notebook is NOT the Mirage frontend.
+
+The notebook is the GPU inference backend.
+
+Architecture:
+
+```text
+MIRAGE / REPLIT
+       |
+       | HTTPS API
+       v
+GOOGLE COLAB GPU WORKER
+       |
+       +-- Product preprocessing
+       +-- AI image generation
+       +-- BiRefNet
+       +-- Product validation
+       +-- Human/anatomy validation
+       +-- Real-ESRGAN
+       |
+       v
+FINAL IMAGES
+       |
+       v
+MIRAGE
+```
+
+==================================================
+
+1. PRIMARY PRODUCT REQUIREMENT
+   ==================================================
+
+The most important requirement is:
+
+THE PRODUCT MUST NOT BE REDESIGNED.
+
+If the user uploads a handbag, the generated image must contain the same handbag.
+
+Preserve:
+
+* exact shape
+* exact silhouette
+* exact proportions
+* exact color
+* exact texture
+* exact material
+* exact stitching
+* exact hardware
+* exact clasp
+* exact handles
+* exact straps
+* exact buckles
+* exact logo
+* exact pattern
+* exact construction
+
+Do NOT accept a visually similar product.
+
+A generic burgundy handbag is NOT the uploaded burgundy handbag.
+
+This distinction is critical.
+
+==================================================
+2. USE ALL PRODUCT REFERENCES
+=============================
+
+Allow:
+
+1-6 source product images.
+
+Example:
+
+product_01_front.jpg
+product_02_side.jpg
+product_03_back.jpg
+product_04_detail.jpg
+product_05_hardware.jpg
+product_06_interior.jpg
+
+Treat all images as ONE product.
+
+Create:
+
+ProductReferenceSet
+
+Do not interpret them as separate products.
+
+==================================================
+3. PRODUCT PREPROCESSING
+========================
+
+For every source image:
+
+1. Load image.
+2. Validate resolution.
+3. Detect product.
+4. Remove background using BiRefNet.
+5. Create transparent RGBA product image.
+6. Refine edges.
+7. Preserve thin straps, handles and hardware.
+8. Save product mask.
+9. Save product metadata.
+
+Directory:
+
+```text
+/data/products/<product_id>/
+    source/
+    masks/
+    extracted/
+    metadata/
+```
+
+==================================================
+4. PRODUCT IDENTITY PROFILE
+===========================
+
+Create:
+
+ProductIdentityProfile
+
+Store:
+
+```json
+{
+  "product_id": "",
+  "category": "",
+  "subcategory": "",
+  "dominant_colors": [],
+  "material": "",
+  "texture": "",
+  "shape": "",
+  "silhouette_features": [],
+  "hardware_features": [],
+  "dimensions_ratio": "",
+  "source_images": []
+}
+```
+
+For handbags specifically identify:
+
+* clasp
+* handle
+* strap
+* eyelets
+* cord
+* stitching
+* texture
+* silhouette
+* hardware
+* proportions
+
+==================================================
+5. CATEGORY DETECTION
+=====================
+
+Support:
+
+* handbag
+* tote
+* shoulder bag
+* crossbody
+* backpack
+* wallet
+* watch
+* ring
+* bracelet
+* necklace
+* earrings
+* shoes
+* sneakers
+* clothing
+* sunglasses
+* belt
+* perfume
+* accessories
+
+Create a category-specific generation strategy.
+
+==================================================
+6. HUMAN MODEL REQUIREMENT
+==========================
+
+If the category requires a human:
+
+GENERATE A REALISTIC ADULT HUMAN.
+
+Do not generate:
+
+* mannequin
+* plastic person
+* CGI-looking person
+* cartoon
+* distorted person
+
+Required:
+
+* realistic face
+* realistic skin
+* realistic hair
+* realistic eyes
+* natural proportions
+* realistic clothing
+* realistic pose
+
+==================================================
+7. CATEGORY-SPECIFIC HUMAN
+
+HANDBAG:
+
+Adult female fashion model for women's bags.
+
+WATCH:
+
+Male wrist for men's watch.
+
+Female wrist for women's watch.
+
+RING:
+
+Realistic human hand/finger.
+
+BRACELET:
+
+Realistic wrist.
+
+NECKLACE:
+
+Upper-body fashion model.
+
+EARRINGS:
+
+Realistic face and ear.
+
+SHOES:
+
+Adult fashion model actually wearing the shoes.
+
+CLOTHING:
+
+Adult model wearing the exact garment.
+
+==================================================
+8. MODEL CONSISTENCY
+====================
+
+For each product campaign create:
+
+model_identity_id
+
+Example:
+
+PRODUCT_001
+MODEL_001
+
+Frames 2, 3, 6 and 8 must use the same model identity.
+
+Do not generate a different person for each image.
+
+Different products may use different models.
+
+==================================================
+9. HANDBAG MODEL INTERACTION
+============================
+
+For handbags:
+
+The woman MUST actually hold or wear the handbag.
+
+Allowed:
+
+* holding handle
+* shoulder carry
+* crossbody
+* forearm carry
+* walking with bag
+* bag resting against body
+
+The bag must physically interact with the human.
+
+No floating.
+
+No impossible strap position.
+
+No clipping.
+
+No pasted-looking product.
+
+==================================================
+10. GENERATION STRATEGY
+=======================
+
+DO NOT use a simple text-to-image workflow:
+
+"text → woman + handbag"
+
+That causes product hallucination.
+
+Use an image-conditioned workflow.
+
+Preferred:
+
+SOURCE PRODUCT
++
+HUMAN / SCENE GENERATION
++
+CONTROLLED PRODUCT EDITING
++
+PRODUCT PRESERVATION
+
+The exact source product must be provided to the generation model.
+
+==================================================
+11. MODEL PROVIDER ARCHITECTURE
+===============================
+
+Do not hard-code one model.
+
+Create:
+
+```python
+class ImageGenerationProvider:
+    def generate(self, request):
+        raise NotImplementedError
+
+    def edit(self, request):
+        raise NotImplementedError
+
+    def health_check(self):
+        raise NotImplementedError
+```
+
+Implement providers where compatible:
+
+```text
+QwenImageEditProvider
+FooocusProvider
+FluxProvider
+```
+
+The notebook must automatically detect which models are actually available.
+
+==================================================
+12. GPU DETECTION
+=================
+
+At startup run:
+
+```python
+torch.cuda.is_available()
+torch.cuda.get_device_name(0)
+torch.cuda.get_device_properties(0).total_memory
+```
+
+Display:
+
+```text
+GPU:
+VRAM:
+CUDA:
+PyTorch:
+```
+
+If no CUDA is available:
+
+STOP production generation.
+
+Show:
+
+GPU unavailable.
+
+Do not silently run heavy models on CPU.
+
+==================================================
+13. COLAB GPU
+=============
+
+Optimize the notebook for available Colab GPU hardware.
+
+Detect:
+
+* T4
+* L4
+* A100
+* other CUDA GPU
+
+Automatically choose appropriate:
+
+* precision
+* resolution
+* batch size
+* model
+* memory optimization
+
+Never assume a particular GPU.
+
+==================================================
+14. MODEL SELECTION
+===================
+
+Preferred quality model:
+
+Qwen Image Edit
+
+Preferred fast model:
+
+FLUX/Klein-compatible provider if available.
+
+Fooocus:
+
+Optional provider.
+
+Do not mark any model as verified just because it installed successfully.
+
+==================================================
+15. FOOOCUS
+===========
+
+If Fooocus is used:
+
+Clone official repository:
+
+https://github.com/lllyasviel/Fooocus
+
+Do not rely on manually clicking the Fooocus UI.
+
+Create a programmatic runner.
+
+Required:
+
+```text
+fooocus_runner.py
+fooocus_provider.py
+fooocus_health.py
+```
+
+The runner must accept:
+
+* source images
+* prompt
+* negative prompt
+* seed
+* resolution
+* generation mode
+
+and return:
+
+* output image
+* seed
+* model
+* generation time
+* status
+
+==================================================
+16. QWEN IMAGE EDIT
+===================
+
+If GPU memory permits:
+
+Load Qwen Image Edit.
+
+Use it for:
+
+* product-preserving editing
+* product + model
+* controlled viewpoint
+* lifestyle scene
+* product reference editing
+
+Do not use text-only generation for exact product tasks.
+
+==================================================
+17. HUMAN + PRODUCT PIPELINE
+============================
+
+For handbag:
+
+```text
+SOURCE BAG
+    |
+    v
+BiRefNet
+    |
+    v
+EXACT BAG
+    |
+    +----------------+
+                     |
+                     v
+              SCENE PLANNER
+                     |
+                     v
+             FEMALE MODEL
+                     |
+                     v
+            PRODUCT COMPOSITION
+                     |
+                     v
+             OCCLUSION MASK
+                     |
+                     v
+            CONTACT SHADOW
+                     |
+                     v
+             LIGHTING MATCH
+                     |
+                     v
+               VALIDATION
+```
+
+==================================================
+18. PRODUCT PRESERVATION
+========================
+
+Whenever technically possible, use the extracted source product itself rather than asking the diffusion model to reconstruct it.
+
+The model may generate:
+
+* human
+* clothes
+* environment
+* lighting
+* shadows
+
+The original product should remain source-controlled.
+
+==================================================
+19. OCCLUSION
+=============
+
+Implement realistic occlusion.
+
+Example:
+
+Woman holding bag:
+
+```text
+Woman
+  |
+  +-- arm
+  |
+  +-- hand
+       |
+       v
+     HANDLE
+       |
+       v
+      BAG
+```
+
+The hand should appear naturally in front of the handle where appropriate.
+
+The bag should appear naturally behind the arm where appropriate.
+
+Do not simply overlay the bag on top of the entire human.
+
+==================================================
+20. LIGHTING MATCH
+==================
+
+When compositing the exact product:
+
+Match:
+
+* brightness
+* contrast
+* color temperature
+* highlights
+* shadows
+* ambient light
+* perspective
+
+The product must look photographed in the same scene.
+
+==================================================
+21. CONTACT SHADOW
+==================
+
+Generate or estimate:
+
+* hand contact shadow
+* body contact shadow
+* shoulder contact
+* strap shadow
+* ambient occlusion
+
+The bag must not look like a pasted PNG.
+
+==================================================
+22. GENERATION FRAMES
+=====================
+
+Generate 7 images per product.
+
+Frame 1:
+
+PRODUCT STUDIO
+
+Exact product.
+
+Frame 2:
+
+MODEL HOLDING PRODUCT
+
+Adult female fashion model.
+
+Exact handbag.
+
+Frame 3:
+
+SAME MODEL / DIFFERENT ANGLE
+
+Same woman.
+
+Different pose.
+
+Exact handbag.
+
+Frame 4:
+
+PRODUCT CLOSE-UP
+
+Texture and craftsmanship.
+
+Frame 5:
+
+PRODUCT DIFFERENT ANGLE
+
+Show geometry.
+
+Frame 6:
+
+SAME MODEL / LIFESTYLE
+
+Woman walking or naturally carrying the bag.
+
+Frame 7:
+
+SAME MODEL / EDITORIAL
+
+Luxury fashion campaign image.
+
+==================================================
+23. DO NOT GENERATE DUPLICATES
+==============================
+
+Each frame must differ in:
+
+* camera
+* pose
+* crop
+* distance
+* environment
+* composition
+
+Detect excessive similarity.
+
+Regenerate duplicate frames.
+
+==================================================
+24. HUMAN VALIDATION
+====================
+
+Validate:
+
+* face
+* eyes
+* hands
+* fingers
+* arms
+* legs
+* body proportions
+
+Reject:
+
+* extra fingers
+* missing fingers
+* fused fingers
+* malformed hands
+* broken wrists
+* distorted face
+* bad eyes
+* duplicated limbs
+
+==================================================
+25. PRODUCT VALIDATION
+======================
+
+Use object detection only as the first gate.
+
+Then perform product identity validation.
+
+Required:
+
+```text
+Product detection
++
+Shape similarity
++
+Color similarity
++
+Texture similarity
++
+Hardware similarity
++
+Feature similarity
+```
+
+For handbag:
+
+Check:
+
+* clasp
+* cord
+* eyelets
+* handles
+* woven texture
+* silhouette
+
+==================================================
+26. PRODUCT IDENTITY SCORE
+==========================
+
+Create:
+
+product_identity_score
+
+Range:
+
+0.0 - 1.0
+
+Do not mark PASS merely because a handbag exists.
+
+Suggested initial threshold:
+
+0.85
+
+Make threshold configurable.
+
+A production image must pass the product identity threshold.
+
+==================================================
+27. CONTACT SCORE
+=================
+
+Create:
+
+contact_score
+
+Check:
+
+person
++
+product
++
+physical interaction
+
+Suggested initial threshold:
+
+0.80
+
+Make configurable.
+
+==================================================
+28. SCALE SCORE
+===============
+
+Check:
+
+product/person ratio
+perspective
+physical scale
+
+Reject obviously incorrect scale.
+
+==================================================
+29. FINAL QUALITY SCORE
+=======================
+
+Create:
+
+```text
+human_score
+product_identity_score
+contact_score
+scale_score
+overall_score
+```
+
+Only accept when all mandatory gates pass.
+
+==================================================
+30. AUTOMATIC RETRY
+===================
+
+Maximum:
+
+3 attempts per frame.
+
+Each retry must change:
+
+* seed
+* pose
+* camera
+* scene
+* generation parameters
+
+Do not repeat the same failed generation.
+
+==================================================
+31. UPSCALING
+=============
+
+After validation:
+
+Use Real-ESRGAN or another suitable local upscaler.
+
+Do not upscale failed images.
+
+Recommended pipeline:
+
+generation
+→ validation
+→ upscale
+→ final validation
+
+==================================================
+32. TRANSPARENT PRODUCT OUTPUT
+==============================
+
+For product-only frames:
+
+Use:
+
+BiRefNet
+→ alpha refinement
+→ RGBA PNG
+
+Output:
+
+PNG
+RGBA
+transparent background
+
+Do not flatten to white.
+
+==================================================
+33. API SERVER
+==============
+
+Create a lightweight FastAPI server inside Colab.
+
+Endpoints:
+
+POST /health
+
+GET /gpu
+
+GET /models
+
+POST /generate
+
+POST /verify
+
+POST /batch
+
+GET /job/{job_id}
+
+POST /cancel/{job_id}
+
+==================================================
+34. /HEALTH
+===========
+
+Return:
+
+```json
+{
+  "status": "ok",
+  "gpu": true,
+  "gpu_name": "",
+  "vram_gb": 0,
+  "cuda": "",
+  "loaded_models": []
+}
+```
+
+==================================================
+35. /GENERATE
+=============
+
+Request:
+
+```json
+{
+  "product_id": "",
+  "source_images": [],
+  "category": "handbag",
+  "frames": 7,
+  "model": "auto",
+  "quality": "high",
+  "transparent": true
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "",
+  "status": "queued"
+}
+```
+
+==================================================
+36. JOB QUEUE
+=============
+
+Do not run multiple large models simultaneously if VRAM cannot handle it.
+
+Create:
+
+GPUJobQueue
+
+States:
+
+QUEUED
+LOADING
+GENERATING
+VALIDATING
+UPSCALING
+COMPLETED
+FAILED
+
+==================================================
+37. BATCH PROCESSING
+====================
+
+The system must eventually support:
+
+5,000 products/month.
+
+Do NOT attempt 5,000 products simultaneously.
+
+Use queue processing.
+
+Example:
+
+```text
+Product 001
+7 images
+        ↓
+validation
+        ↓
+Product 002
+7 images
+        ↓
+...
+```
+
+Persist job state so failed jobs can resume.
+
+==================================================
+38. COLAB DISCONNECTION
+=======================
+
+Colab sessions can terminate.
+
+Therefore:
+
+* save checkpoints
+* save generated images
+* save job state
+* save metadata
+* never keep important data only in RAM
+
+Use Google Drive or configured object storage.
+
+==================================================
+39. GOOGLE DRIVE
+================
+
+Mount Drive optionally:
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+Directory:
+
+```text
+/content/drive/MyDrive/Mirage/
+    products/
+    outputs/
+    jobs/
+    models/
+    logs/
+```
+
+==================================================
+40. REPLIT CONNECTION
+=====================
+
+Allow:
+
+```text
+MIRAGE_WORKER_TOKEN
+MIRAGE_CALLBACK_URL
+```
+
+Use authentication.
+
+Every request must contain a worker token.
+
+Never expose an unauthenticated public GPU endpoint.
+
+==================================================
+41. CALLBACK
+============
+
+When job finishes:
+
+POST to:
+
+MIRAGE_CALLBACK_URL
+
+Payload:
+
+```json
+{
+  "job_id": "",
+  "product_id": "",
+  "status": "completed",
+  "images": [],
+  "metadata": []
+}
+```
+
+==================================================
+42. COLAB PUBLIC URL
+====================
+
+For development, optionally expose FastAPI using a secure tunnel.
+
+Do not hard-code public URLs.
+
+The notebook must print:
+
+WORKER_URL
+
+and:
+
+WORKER_TOKEN
+
+Do not log tokens publicly.
+
+For production, recommend moving the same worker to a persistent GPU server.
+
+==================================================
+43. VERIFICATION SYSTEM
+=======================
+
+Create:
+
+verify_engine()
+
+It must actually run a fresh test.
+
+Test:
+
+real model
++
+exact uploaded product
+
+Then check:
+
+person
+product
+identity
+contact
+scale
+anatomy
+
+Only if all pass:
+
+VERIFIED
+
+Otherwise:
+
+FAILED
+
+==================================================
+44. NEVER FAKE VERIFICATION
+===========================
+
+Do not mark a model verified because:
+
+* weights exist
+* model loaded
+* API works
+* image generated
+* person detected
+
+The actual product must be preserved.
+
+==================================================
+45. ENGINE BENCHMARK
+====================
+
+Create:
+
+benchmark_engine()
+
+Test at least 10 real products.
+
+Measure:
+
+* generation time
+* VRAM
+* product identity score
+* contact score
+* human score
+* failure rate
+* average cost estimate
+* output resolution
+
+Save:
+
+benchmark_results.json
+
+==================================================
+46. FIRST DEVELOPMENT TEST
+==========================
+
+Before building the full batch system:
+
+Run ONE handbag through the complete pipeline.
+
+Input:
+
+1-6 actual product references.
+
+Output:
+
+7 images.
+
+Do not continue to 5,000 products until this passes.
+
+==================================================
+47. ACCEPTANCE TEST
+===================
+
+The first handbag must generate:
+
+1. Exact handbag product shot
+2. Real female model holding exact handbag
+3. Same female model, different angle
+4. Exact handbag detail
+5. Exact handbag alternative angle
+6. Same model carrying exact handbag
+7. Same model editorial image
+
+The generated handbag must preserve:
+
+* color
+* shape
+* woven construction
+* clasp
+* cord
+* eyelets
+* handles
+* proportions
+
+==================================================
+48. IMPORTANT CURRENT FAILURE
+=============================
+
+The previous local SDXL CPU pipeline generated a person but changed the supplied handbag into a generic tote.
+
+Do not repeat this.
+
+The existing audit confirmed:
+
+* person detection passed
+* handbag detection failed
+* contact failed
+* scale failed
+* product identity failed
+
+The local SDXL result is therefore NOT usable.
+
+Do not use it as the production backend.
+
+==================================================
+49. PERFORMANCE
+===============
+
+Use:
+
+* FP16/BF16 where supported
+* model caching
+* attention optimizations where compatible
+* memory efficient attention
+* CPU offloading only when useful
+* persistent model loading
+* sequential GPU jobs
+* batch operations only where VRAM permits
+
+Do not reload the model for every image.
+
+==================================================
+50. LOGGING
+===========
+
+For every generation record:
+
+product_id
+job_id
+frame
+provider
+model
+seed
+GPU
+VRAM
+generation_time
+resolution
+product_identity_score
+contact_score
+human_score
+scale_score
+final_status
+
+==================================================
+51. OUTPUT STRUCTURE
+====================
+
+Save:
+
+```text
+outputs/
+    <product_id>/
+        01_product.png
+        02_model.png
+        03_model_angle.png
+        04_detail.png
+        05_product_angle.png
+        06_lifestyle.png
+        07_editorial.png
+
+        metadata.json
+        validation.json
+```
+
+==================================================
+52. ERROR HANDLING
+==================
+
+Never hide errors.
+
+Return explicit:
+
+NO_GPU
+MODEL_LOAD_ERROR
+OUT_OF_MEMORY
+INVALID_SOURCE
+GENERATION_FAILED
+VALIDATION_FAILED
+PRODUCT_IDENTITY_FAILED
+CONTACT_FAILED
+ANATOMY_FAILED
+UPSCALE_FAILED
+TIMEOUT
+
+==================================================
+53. MEMORY MANAGEMENT
+=====================
+
+After each product:
+
+* release temporary tensors
+* clear CUDA cache where appropriate
+* delete unnecessary intermediate images
+* maintain model in memory
+* prevent memory leaks
+
+Use:
+
+torch.cuda.empty_cache()
+
+only where appropriate.
+
+Do not reload the model unnecessarily.
+
+==================================================
+54. FINAL NOTE ABOUT COLAB
+==========================
+
+This notebook is primarily for:
+
+* development
+* benchmarking
+* testing
+* controlled production experiments
+
+Do not claim Google Colab is a guaranteed 24/7 production server.
+
+If the Mirage workload reaches sustained production volume, move this exact worker to a persistent GPU service.
+
+==================================================
+55. REQUIRED NOTEBOOK STRUCTURE
+===============================
+
+Create clear notebook sections:
+
+01 Install dependencies
+02 Check GPU
+03 Mount storage
+04 Download/load models
+05 Install BiRefNet
+06 Install upscaler
+07 Product preprocessing
+08 Product identity analysis
+09 Human generation
+10 Product composition
+11 Validation
+12 Upscaling
+13 Single product test
+14 7-frame campaign
+15 Engine verification
+16 Benchmark
+17 FastAPI worker
+18 Queue
+19 Replit integration
+20 Production configuration
+
+==================================================
+56. DO NOT STOP AT CODE GENERATION
+==================================
+
+After writing the notebook:
+
+RUN IT.
+
+Actually:
+
+1. Detect GPU.
+2. Load model.
+3. Load a real handbag reference.
+4. Extract product.
+5. Generate model.
+6. Compose exact product.
+7. Validate.
+8. Generate all 7 frames.
+9. Save output.
+10. Start FastAPI.
+11. Test /health.
+12. Test /generate.
+13. Test /verify.
+
+Do not say "implemented" if the notebook has not executed successfully.
+
+==================================================
+57. FINAL REPORT
+================
+
+At the end print:
+
+GPU:
+VRAM:
+
+PRIMARY MODEL:
+STATUS:
+
+SECONDARY MODEL:
+STATUS:
+
+BIREFNET:
+STATUS:
+
+UPSCALER:
+STATUS:
+
+API:
+STATUS:
+
+VERIFICATION:
+PASS / FAIL
+
+PRODUCT IDENTITY SCORE:
+
+HUMAN SCORE:
+
+CONTACT SCORE:
+
+SCALE SCORE:
+
+7-FRAME CAMPAIGN:
+
+SUCCESSFUL:
+FAILED:
+
+AVERAGE GENERATION TIME:
+
+ESTIMATED GPU TIME PER PRODUCT:
+
+==================================================
+FINAL OBJECTIVE
+===============
+
+The final working system must do:
+
+UPLOAD PRODUCT
+↓
+PRODUCT EXTRACTION
+↓
+PRODUCT IDENTITY LOCK
+↓
+CATEGORY DETECTION
+↓
+MODEL SELECTION
+↓
+HUMAN + EXACT PRODUCT GENERATION
+↓
+7 DIFFERENT CAMPAIGN IMAGES
+↓
+PRODUCT VALIDATION
+↓
+HUMAN VALIDATION
+↓
+CONTACT VALIDATION
+↓
+UPSCALING
+↓
+FINAL IMAGES
+↓
+RETURN TO MIRAGE
+
+The system must optimize for:
+
+1. Exact product preservation
+2. Realistic human
+3. Realistic interaction
+4. Product identity
+5. High image quality
+6. Speed
+7. Low GPU cost
+
+A beautiful image containing the wrong handbag is a FAILED image.
+
+Do not sacrifice product identity for visual quality.
+
+Do not sacrifice verification for generation success.

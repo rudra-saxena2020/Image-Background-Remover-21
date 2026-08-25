@@ -1,0 +1,146 @@
+For your **AI product image platform**, here are **10 models/platforms with a free, open-source, trial, or freemium path**. I’m focusing on ones relevant to **product preservation, image editing, virtual try-on, models, bags, clothes, watches, and ecommerce photography**.
+
+## Top 10
+
+| #  | Model / Platform                               | Free / Freemium              | Best For                  | Product Lock       |
+| -- | ---------------------------------------------- | ---------------------------- | ------------------------- | ------------------ |
+| 1  | **Qwen-Image-Edit**                            | Open source                  | Product editing           | ⭐⭐⭐⭐⭐              |
+| 2  | **FLUX.1 Kontext [dev] / compatible variants** | Open weights where available | Reference image editing   | ⭐⭐⭐⭐⭐              |
+| 3  | **FLUX.1 Schnell**                             | Open source                  | Fast generation           | ⭐⭐⭐                |
+| 4  | **HiDream-I1 / edit variants**                 | Open source                  | High-quality images       | ⭐⭐⭐⭐               |
+| 5  | **Fooocus**                                    | Free/open source             | Easy product scenes       | ⭐⭐⭐                |
+| 6  | **Stable Diffusion XL**                        | Open model ecosystem         | Custom workflows          | ⭐⭐⭐                |
+| 7  | **Kolors**                                     | Open source                  | Photorealistic generation | ⭐⭐⭐⭐               |
+| 8  | **Hunyuan Image / HunyuanDiT ecosystem**       | Open source                  | High-quality generation   | ⭐⭐⭐                |
+| 9  | **InstantID + SDXL/FLUX workflows**            | Open source                  | Human/model consistency   | ⭐⭐⭐⭐               |
+| 10 | **IDM-VTON / virtual try-on models**           | Open source                  | Clothes on human models   | ⭐⭐⭐⭐⭐ for clothing |
+
+## My top choices for your use case
+
+### 🥇 Qwen-Image-Edit
+
+Best starting point for:
+
+```text
+Original Product Images
+        +
+Edit Instruction
+        ↓
+Same Product
++
+New Model / Scene
+```
+
+Good candidate for **bags, accessories, watches and product editing**.
+
+### 🥈 IDM-VTON
+
+For **clothes specifically**, this is more relevant than a generic image generator because virtual try-on is designed around putting a garment onto a person.
+
+### 🥉 HiDream
+
+Worth testing for **high-quality fashion/editorial scenes**, especially if you need better aesthetics than standard SDXL.
+
+### ⚡ FLUX.1 Schnell
+
+Use for:
+
+* Drafts
+* Cheap previews
+* Fast generation
+
+Do **not** make this your strict product-lock engine.
+
+---
+
+## Important: "Free model" does not mean free production
+
+The model may be open source, but inference still needs:
+
+* NVIDIA GPU
+* Cloud GPU
+* Your own GPU server
+
+For example:
+
+```text
+Your Replit App
+       ↓
+API / Job Queue
+       ↓
+RunPod / Vast.ai / Modal / Your GPU
+       ↓
+Qwen / FLUX / HiDream
+       ↓
+Generated Image
+```
+
+So your real freemium architecture should be:
+
+### FREE TIER
+
+Use a limited number of generations with open-source models:
+
+```text
+Qwen-Image-Edit
+BiRefNet
+Real-ESRGAN
+IDM-VTON for clothes
+```
+
+### PRO TIER
+
+Use stronger paid APIs when product accuracy matters:
+
+```text
+FLUX premium image editing
+Gemini image generation/editing
+GPT Image
+```
+
+## My recommended 10-engine stack for Atelier
+
+```text
+FREE / SELF-HOSTED
+
+1. Qwen-Image-Edit          → Product editing
+2. FLUX.1 Schnell           → Fast drafts
+3. HiDream                  → Premium visual quality
+4. Fooocus                  → Easy generation workflow
+5. SDXL                     → Custom ControlNet workflows
+6. Kolors                   → Photorealism
+7. Hunyuan                  → Alternative generation
+8. IDM-VTON                 → Clothing try-on
+9. InstantID                → Same human model consistency
+10. BiRefNet + Real-ESRGAN  → Product extraction + enhancement
+```
+
+### If I were building your system
+
+I would **not send every product to one model**.
+
+I would route based on category:
+
+```text
+BAG
+→ Qwen Image Edit
+→ Product identity validation
+
+CLOTHES
+→ IDM-VTON
+→ Model consistency
+
+WATCH
+→ Qwen Image Edit
+→ Exact dial/strap validation
+
+JEWELRY
+→ High-fidelity editing model
+→ Fine-detail validation
+
+PRODUCT ONLY
+→ BiRefNet
+→ Real-ESRGAN
+```
+
+The smartest next step is to benchmark these models using **the same handbag and clothing references**, then score each one on **shape, texture, hardware, color, logo, and product similarity**. The winner should become your default engine, rather than choosing based on marketing screenshots.

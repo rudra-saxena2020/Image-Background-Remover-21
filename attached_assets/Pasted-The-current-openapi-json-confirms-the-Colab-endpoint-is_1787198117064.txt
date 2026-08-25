@@ -1,0 +1,109 @@
+The current /openapi.json confirms the Colab endpoint is still NOT the Atelier worker.
+
+Current OpenAPI paths are only:
+
+GET /
+GET /health
+
+This is insufficient.
+
+DO NOT mark the worker verified.
+
+DO NOT weaken the verification system.
+
+DO NOT fabricate /verify or /generate routes.
+
+Update the actual Colab worker implementation so that its FastAPI application genuinely exposes:
+
+GET  /health
+POST /verify
+POST /generate
+GET  /job/{job_id}
+POST /batch
+POST /cancel/{job_id}
+
+The routes must perform real operations.
+
+Requirements:
+
+1. /health
+   - authenticated
+   - report worker identity as "atelier-colab"
+   - report CUDA availability
+   - report GPU name
+   - report VRAM
+   - report loaded generation model
+
+2. /verify
+   - accept real product reference images
+   - run a real generation test
+   - generate a real human + product image
+   - validate human anatomy
+   - validate product presence
+   - validate product identity
+   - validate product/model contact
+   - return VERIFIED only if the actual test passes
+
+3. /generate
+   - accept product references
+   - accept category
+   - accept requested frame count
+   - create a real GPU generation job
+   - return a real job_id
+   - never return fake completed results
+
+4. /job/{job_id}
+   - return actual job status
+   - queued
+   - running
+   - validating
+   - completed
+   - failed
+
+5. /batch
+   - queue multiple products
+   - process according to GPU VRAM
+   - do not overload GPU
+
+6. /cancel/{job_id}
+   - cancel an actual queued/running job
+
+7. Authentication
+   - use COLAB_WORKER_TOKEN
+   - accept X-Worker-Token
+   - optionally accept Authorization: Bearer <token>
+   - incorrect/missing token must return HTTP 401
+   - never expose the token in logs
+
+8. OpenAPI
+   After implementation, GET /openapi.json must visibly contain all six required endpoints.
+
+9. GPU
+   If CUDA is unavailable, report NO_CUDA_GPU and do not claim generation is available.
+
+10. Model
+   Only report a model as available after it actually loads and can perform inference.
+
+11. Product preservation
+   For handbag tests, use the uploaded handbag references as image conditioning/reference material.
+   Do not replace the actual handbag with a generic generated handbag.
+
+12. Do not use the existing simple test FastAPI application.
+   Replace it with the actual Atelier worker application.
+
+After implementing, restart FastAPI and verify:
+
+GET /openapi.json
+
+The resulting paths MUST include:
+
+/health
+/verify
+/generate
+/job/{job_id}
+/batch
+/cancel/{job_id}
+
+Then test /health externally with the real COLAB_WORKER_TOKEN.
+
+Do not ask me to submit the URL until the OpenAPI verification passes.

@@ -1,0 +1,71 @@
+Use this prompt. It is much stricter about **product scale, framing, consistency, and individual studio shots**, so it does not generate tiny products or multiple angles inside one image.
+
+### Prompt
+
+**Generate a complete premium e-commerce product image set from the provided reference product.**
+
+The product must remain **100% identical to the reference** in shape, proportions, dimensions, material, texture, stitching, hardware, logo placement, colors, patterns, and all physical details. Do not redesign, simplify, distort, or invent any part of the product.
+
+Create **separate, individual studio-quality images for each angle**, exactly like a professional luxury fashion or product e-commerce photoshoot.
+
+#### Product presentation and scale
+
+* The product must be the clear hero of every image.
+* Product should occupy approximately **70% to 85% of the image frame**, depending on the angle.
+* Do not make the product tiny, distant, or lost in excessive empty space.
+* Keep comfortable margins around the product, but prioritize clear visibility and product detail.
+* Frame the entire product naturally without cropping important parts.
+* Maintain realistic proportions and consistent scale across all generated images.
+* One product angle per image only. **Never create collages, grids, contact sheets, split screens, or multiple angles in a single image.**
+* Do not add angle numbers such as "01", "02", "03", or labels.
+
+#### Required separate product views
+
+Generate each as an individual image:
+
+1. Clean front view
+2. Clean back view
+3. Left side profile
+4. Right side profile
+5. Three-quarter front view
+6. Three-quarter rear view
+7. Top view
+8. Bottom / sole / base view where applicable
+9. Close-up detail view showing important material, hardware, stitching, texture, or craftsmanship
+10. Interior / open view where applicable
+11. Functional or capacity view where applicable, while keeping the product realistic and unchanged
+
+#### Studio photography style
+
+* Premium luxury e-commerce product photography
+* Clean professional studio setup
+* Soft neutral light gray, warm white, or off-white background
+* Subtle realistic contact shadow beneath the product
+* Soft diffused lighting with accurate highlights and material texture
+* Sharp focus, high detail, realistic edges
+* Centered and balanced composition
+* Consistent camera height, focal length, lighting, background, and visual style across the entire image set
+* Product should look naturally photographed in a high-end commercial studio, not artificially floating or rendered
+
+#### Critical consistency rules
+
+Every generated image must depict **the exact same product**, not a variation.
+
+Do not change:
+
+* Product shape or silhouette
+* Size or proportions
+* Color or color tone
+* Material or texture
+* Pattern placement
+* Stitching
+* Zippers
+* Straps or handles
+* Hardware
+* Logo placement
+* Number of compartments
+* Product construction
+
+**Important:** Each output must contain only **one angle or view of the product per image**, presented large and clearly, similar to premium product pages from luxury fashion brands. The result should feel like a consistent professional studio photoshoot, where the customer can swipe through each image to inspect the exact same product from every important angle.
+
+**Do not generate a collage or several miniature product images inside one frame. Each angle must be a full standalone product photograph.**
