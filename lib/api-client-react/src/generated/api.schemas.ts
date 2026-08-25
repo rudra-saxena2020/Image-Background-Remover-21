@@ -306,6 +306,8 @@ export interface CreateShootInput {
   campaign_format?: CreateShootInputCampaignFormat;
   /** Product-only catalog generation or category-aware human-model generation */
   generation_mode?: CreateShootInputGenerationMode;
+  /** Dedicated model master image. Required for human-model generation. */
+  model_reference?: Blob;
   /**
      * @minItems 1
      * @maxItems 6
