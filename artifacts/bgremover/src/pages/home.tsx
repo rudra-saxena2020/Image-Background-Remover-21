@@ -160,6 +160,7 @@ export function Home() {
   const [generationMode, setGenerationMode] = useState<GenerationMode>("product-only");
   const [engine, setEngine] = useState<EngineId>("qwen-runpod");
   const [references, setReferences] = useState<LocalReference[]>(starterReferences);
+  const [modelMaster, setModelMaster] = useState<LocalReference | null>(null);
   const [shopifyOpen, setShopifyOpen] = useState(false);
   const [shopifyQuery, setShopifyQuery] = useState("");
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
@@ -176,6 +177,7 @@ export function Home() {
   const [generationRefreshKey, setGenerationRefreshKey] = useState(0);
   const [progressNow, setProgressNow] = useState(() => Date.now());
   const inputRef = useRef<HTMLInputElement>(null);
+  const modelInputRef = useRef<HTMLInputElement>(null);
   const shotProgressStartedAt = useRef<Record<string, { progress: number; at: number }>>({});
   const { toast } = useToast();
 
@@ -399,6 +401,25 @@ export function Home() {
       return current.filter((ref) => ref.id !== id);
     });
   };
+  const setModelMasterFile = (file: File | undefined) => {
+    if (!file || !file.type.startsWith("image/")) return;
+    setModelMaster((current) => {
+      if (current?.file) URL.revokeObjectURL(current.url);
+      return {
+        id: `model-master-${file.name}-${file.lastModified}`,
+        file,
+        url: URL.createObjectURL(file),
+        name: file.name,
+      };
+    });
+    setLocalError(null);
+  };
+  const removeModelMaster = () => {
+    setModelMaster((current) => {
+      if (current?.file) URL.revokeObjectURL(current.url);
+      return null;
+    });
+  };
   useEffect(() => {
     return () => references.forEach((reference) => {
       if (reference.file) URL.revokeObjectURL(reference.url);
@@ -406,6 +427,10 @@ export function Home() {
   }, []);
   const startShoot = async () => {
     if (!activeReferences.length || !productName.trim() || !locked) return;
+    if (generationMode === "human-model" && !modelMaster) {
+      setLocalError("Human-model generation requires a dedicated Model Master image.");
+      return;
+    }
     if (strictFrontBack && activeReferences.length !== 2) {
       setLocalError("Front/back campaign needs exactly two references: one front view and one back view.");
       return;
@@ -434,6 +459,7 @@ export function Home() {
          campaign_format: campaignFormat,
          generation_mode: generationMode,
         engine,
+          model_reference: generationMode === "human-model" && modelMaster?.file ? modelMaster.file : undefined,
          references: files,
       };
       createShoot.mutate({ data: input }, { onSuccess: (created) => { setShootId(created.id); setShootStatus("running"); }, onError: (error) => { setShootStatus("error"); setLocalError(readableError(error)); } });
@@ -556,6 +582,30 @@ export function Home() {
              </div>
              <p className="mt-2 text-xs text-muted-foreground">{generationMode === "product-only" ? "Product-only mode keeps every frame focused on the supplied product and does not invoke human-scene validation." : "Human-model mode requires genuine product interaction when the selected category calls for a person; failed anatomy or contact checks are rejected."}</p>
            </div>
+            <div className={cn("mt-5 border p-4", generationMode === "human-model" ? "border-primary/30 bg-primary/5" : "border-border bg-card")} data-testid="model-master-panel">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className={cn("font-mono text-[10px] tracking-[.16em] uppercase", generationMode === "human-model" ? "text-primary" : "text-muted-foreground")}>{generationMode === "human-model" ? "Required model master" : "Model master · human mode only"}</div>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{generationMode === "human-model" ? "Upload one dedicated image of the exact person to keep across every human-model frame. Product references do not define model identity." : "Optional in Product only mode. Select Human model to use a dedicated person identity; product references will never be used as the model master."}</p>
+                  </div>
+                  <button type="button" onClick={() => modelInputRef.current?.click()} className="shrink-0 border border-primary px-3 py-2 text-[10px] uppercase tracking-wider text-primary hover:bg-primary hover:text-primary-foreground" data-testid="button-add-model-master">
+                    {modelMaster ? "Replace" : "Upload"}
+                  </button>
+                </div>
+                {modelMaster ? (
+                  <div className="mt-4 flex items-center gap-3 border border-border bg-background p-2">
+                    <img src={modelMaster.url} alt="Model master reference" className="h-16 w-16 object-cover" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-xs font-medium">{modelMaster.name}</p>
+                      <p className="mt-1 text-[10px] text-muted-foreground">Used as the immutable model identity source.</p>
+                    </div>
+                    <button type="button" onClick={removeModelMaster} className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-destructive" data-testid="button-remove-model-master">Remove</button>
+                  </div>
+                ) : (
+                  <p className="mt-3 text-[10px] uppercase tracking-wider text-destructive">No model master selected</p>
+                )}
+                <input ref={modelInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => setModelMasterFile(event.target.files?.[0])} data-testid="input-model-master" />
+              </div>
           <div className="mt-12">
               <div className="flex items-center justify-between mb-3"><label className="font-mono text-[10px] tracking-[.16em] uppercase text-muted-foreground">{strictFrontBack ? "Front / back references" : "Source references"}</label><div className="flex items-center gap-3"><button type="button" onClick={() => { setShopifyOpen(true); void loadShopifyProducts(); }} className="text-[10px] uppercase tracking-wider text-primary hover:underline" data-testid="button-import-shopify">Import from Shopify</button><span className="font-mono text-[10px] text-muted-foreground">{activeReferences.length} / {strictFrontBack ? 2 : 6}</span></div></div>
              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
@@ -690,7 +740,7 @@ export function Home() {
                          </p>
                        </div>
                      )}
-                     <Button onClick={startShoot} disabled={!canStartShoot || !locked || !productName.trim() || createShoot.isPending || generationLoading || (strictFrontBack && activeReferences.length !== 2)} className="w-full mt-6 h-12 rounded-sm text-sm" data-testid="button-start-shoot">{createShoot.isPending ? <><RefreshCw className="h-4 w-4 animate-spin" /> Opening studio…</> : runpodReferenceLimitExceeded ? <><CircleAlert className="h-4 w-4" /> Remove extra references <ArrowUpRight className="h-4 w-4 ml-auto" /></> : cpuCampaignBlocked ? <><CircleAlert className="h-4 w-4" /> Fast preview required <ArrowUpRight className="h-4 w-4 ml-auto" /></> : !engineReady && !generationLoading ? <><CircleAlert className="h-4 w-4" /> {engine === "flux2-pro" || engine === "bfl-flux2" || engine === "qwen-runpod" || engine === "flux1-runpod" ? "Provider unavailable" : "Colab verification required"} <ArrowUpRight className="h-4 w-4 ml-auto" /></> : <><Sparkles className="h-4 w-4" /> {speedMode === "fast" ? "Generate fast preview" : strictFrontBack ? "Start seven-image campaign" : "Start eight-frame shoot"} <ArrowUpRight className="h-4 w-4 ml-auto" /></>}</Button>
+                      <Button onClick={startShoot} disabled={!canStartShoot || !locked || !productName.trim() || createShoot.isPending || generationLoading || (strictFrontBack && activeReferences.length !== 2) || (generationMode === "human-model" && !modelMaster)} className="w-full mt-6 h-12 rounded-sm text-sm" data-testid="button-start-shoot">{createShoot.isPending ? <><RefreshCw className="h-4 w-4 animate-spin" /> Opening studio…</> : generationMode === "human-model" && !modelMaster ? <><CircleAlert className="h-4 w-4" /> Upload Model Master <ArrowUpRight className="h-4 w-4 ml-auto" /></> : runpodReferenceLimitExceeded ? <><CircleAlert className="h-4 w-4" /> Remove extra references <ArrowUpRight className="h-4 w-4 ml-auto" /></> : cpuCampaignBlocked ? <><CircleAlert className="h-4 w-4" /> Fast preview required <ArrowUpRight className="h-4 w-4 ml-auto" /></> : !engineReady && !generationLoading ? <><CircleAlert className="h-4 w-4" /> {engine === "flux2-pro" || engine === "bfl-flux2" || engine === "qwen-runpod" || engine === "flux1-runpod" ? "Provider unavailable" : "Colab verification required"} <ArrowUpRight className="h-4 w-4 ml-auto" /></> : <><Sparkles className="h-4 w-4" /> {speedMode === "fast" ? "Generate fast preview" : strictFrontBack ? "Start seven-image campaign" : "Start eight-frame shoot"} <ArrowUpRight className="h-4 w-4 ml-auto" /></>}</Button>
                 <p className="text-center text-[10px] text-muted-foreground mt-3">{engine === "flux2-pro" ? "Paid fal.ai FLUX.2 Pro · server-routed references · validation required before delivery" : engine === "bfl-flux2" ? "Paid Black Forest FLUX.2 Pro · server-routed binary references · validation required before delivery" : engine === "qwen-runpod" ? "Paid RunPod Qwen Image Edit · $0.02/image · up to 3 server-routed references" : engine === "flux1-runpod" ? "Paid RunPod FLUX.1 Dev · $0.02/megapixel · usage is tracked in Operations" : `${selectedEngineLabel} · no hosted API or per-image billing`}</p>
         </section>
       </div>
