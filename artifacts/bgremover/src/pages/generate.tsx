@@ -54,7 +54,7 @@ const STUDIO_ANGLE_DIRECTIONS = [
 ];
 const FOUR_ANGLE_INDICES = [0, 1, 3, 5];
 const NINE_ANGLE_INDICES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-const STRICT_PRODUCT_IDENTITY_PROMPT = `STRICT PRODUCT IDENTITY LOCK — all supplied reference images are evidence of the same single physical product. Use them together as the absolute and immutable identity source. Generate the exact same physical product, not a similar product or a new colorway.
+const STRICT_PRODUCT_IDENTITY_PROMPT = `STRICT PRODUCT IDENTITY LOCK — all supplied reference images must be individual photographs and evidence of the same single physical product. Use valid individual views together as the absolute and immutable identity source. If any supplied file is a collage, contact sheet, grid, split screen, thumbnail board, screenshot layout, or image containing multiple panels, reject it as an invalid reference instead of interpreting it as one product. Generate the exact same physical product, not a similar product or a new colorway.
 
 NON-NEGOTIABLE CONSISTENCY:
 Preserve the exact product color and color distribution, pattern, panels, artwork, silhouette, shape, proportions, dimensions, material, texture, stitching, seams, folds, edges, construction, logos, handles, straps, chains, buckles, zippers, hardware, attachment points, and hardware colors. The product must remain 100% identical to the identity master. The camera angle, crop, lighting, and background may change; the product itself may not.
