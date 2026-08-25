@@ -605,6 +605,10 @@ components:
           enum: [product-only, human-model]
           default: product-only
           description: Product-only catalog generation or category-aware human-model generation
+        model_reference:
+          type: string
+          format: binary
+          description: Dedicated model master image. Required for human-model generation.
         references:
           type: array
           minItems: 1
