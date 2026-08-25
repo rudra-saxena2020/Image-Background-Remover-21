@@ -20,6 +20,12 @@ from app.services.model_registry import decorate, reference_preview_status
 router = APIRouter()
 
 
+@router.get("")
+async def api_root_health():
+    """Lightweight readiness response for the mounted /api artifact path."""
+    return {"status": "ok"}
+
+
 def available_generation_engines(
     generation: dict[str, dict],
 ) -> list[dict[str, object]]:
