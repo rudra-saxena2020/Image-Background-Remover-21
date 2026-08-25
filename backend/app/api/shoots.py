@@ -977,7 +977,11 @@ async def _preprocess_and_save(
     return path
 
 
-async def _run_shoot(shoot: Shoot, reference_files: list[tuple[bytes, str, str]]) -> None:
+async def _run_shoot(
+    shoot: Shoot,
+    reference_files: list[tuple[bytes, str, str]],
+    model_reference: tuple[bytes, str, str] | None = None,
+) -> None:
     work_dir = tempfile.mkdtemp(prefix=f"atelier-{shoot.id[:8]}-")
     try:
         _assert_engine_still_verified(shoot.engine, shoot.remote_model)
@@ -1016,7 +1020,6 @@ async def _run_shoot(shoot: Shoot, reference_files: list[tuple[bytes, str, str]]
         base_seed = int.from_bytes(seed_bytes[:4], "big")
         accepted_frames: list[bytes] = []
         model_anchor_path: str | None = None
-        model_reference_index = _preferred_model_reference_index(reference_files)
         reference_identity_lock_used = False
 
         for index, shot in enumerate(shoot.shots or []):
@@ -1049,23 +1052,30 @@ async def _run_shoot(shoot: Shoot, reference_files: list[tuple[bytes, str, str]]
                 )
                 try:
                     _assert_engine_still_verified(shoot.engine)
-                    frame_references = reference_urls.copy()
                     human_scene_frame = (
                         shoot.generation_mode == GENERATION_MODE_HUMAN_MODEL
                         and shoot.category in HUMAN_MODEL_CATEGORIES
                         and shot.kind in HUMAN_MODEL_SHOTS
                     )
-                    if model_anchor_path and shot.kind in HUMAN_MODEL_SHOTS:
-                        frame_references = (
-                            [model_anchor_path]
-                            + frame_references[: MAX_REFERENCES - 1]
-                        )
                     generation_references = reference_files
-                    if model_anchor_path and human_scene_frame:
-                        with open(model_anchor_path, "rb") as anchor_file:
-                            model_anchor_bytes = anchor_file.read()
+                    if human_scene_frame and model_reference is not None:
+                        model_identity_bytes = model_reference[0]
+                        model_identity_file = (
+                            model_anchor_path
+                            if model_anchor_path
+                            else model_reference[1]
+                        )
+                        if model_anchor_path:
+                            with open(model_anchor_path, "rb") as anchor_file:
+                                model_identity_bytes = anchor_file.read()
                         generation_references = [
-                            (model_anchor_bytes, "model-identity-anchor.png", "image/png"),
+                            (
+                                model_identity_bytes,
+                                "model-identity-anchor.png"
+                                if model_anchor_path
+                                else model_identity_file,
+                                "image/png",
+                            ),
                             reference_files[0],
                         ]
                     generation_prompt = (
@@ -1084,18 +1094,11 @@ async def _run_shoot(shoot: Shoot, reference_files: list[tuple[bytes, str, str]]
                         )
                     )
                     if shoot.engine == "cpu" and human_scene_frame:
-                        source_candidates = [
-                            model_reference_index,
-                            *[
-                                candidate
-                                for candidate in range(len(reference_files))
-                                if candidate != model_reference_index
-                            ],
-                        ]
+                        source_candidates = [model_reference]
                         source_image: bytes | None = None
                         source_validation: dict[str, object] | None = None
-                        for candidate in source_candidates:
-                            candidate_image = reference_files[candidate][0]
+                        for candidate_reference in source_candidates:
+                            candidate_image = candidate_reference[0]
                             candidate_validation = validate_human_product(
                                 candidate_image,
                                 [
@@ -1293,18 +1296,11 @@ async def _run_shoot(shoot: Shoot, reference_files: list[tuple[bytes, str, str]]
                     92,
                     "preserving supplied model reference",
                 )
-                source_candidates = [
-                    model_reference_index,
-                    *[
-                        candidate
-                        for candidate in range(len(reference_files))
-                        if candidate != model_reference_index
-                    ],
-                ]
+                source_candidates = [model_reference] if model_reference is not None else []
                 source_image: bytes | None = None
                 source_validation: dict[str, object] | None = None
-                for candidate in source_candidates:
-                    candidate_image = reference_files[candidate][0]
+                for candidate_reference in source_candidates:
+                    candidate_image = candidate_reference[0]
                     candidate_validation = validate_human_product(
                         candidate_image,
                         [
@@ -1414,6 +1410,7 @@ async def create_shoot(
     speed_mode: str = Form(default="fast"),
     campaign_format: str = Form(default=CAMPAIGN_FORMAT_FLEXIBLE),
     generation_mode: str = Form(default=GENERATION_MODE_PRODUCT_ONLY),
+    model_reference: UploadFile | None = File(default=None),
     references: list[UploadFile] = File(...),
 ):
     try:
@@ -1426,6 +1423,11 @@ async def create_shoot(
         raise HTTPException(status_code=422, detail="Unsupported output format")
     if not product_name.strip():
         raise HTTPException(status_code=422, detail="Product name is required")
+    if generation_mode == GENERATION_MODE_HUMAN_MODEL and model_reference is None:
+        raise HTTPException(
+            status_code=422,
+            detail="Human-model generation requires a dedicated Model Master reference image.",
+        )
     if engine not in ENGINE_MODES:
         raise HTTPException(status_code=422, detail="Unsupported generation engine")
     if speed_mode not in {"fast", "campaign"}:
@@ -1490,6 +1492,18 @@ async def create_shoot(
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc))
         reference_files.append((content, file.filename or "reference.png", file.content_type or ""))
+    model_reference_file: tuple[bytes, str, str] | None = None
+    if model_reference is not None:
+        model_content = await _read_bounded(model_reference)
+        try:
+            validate_image(model_content)
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=f"Invalid model master image: {exc}") from exc
+        model_reference_file = (
+            model_content,
+            model_reference.filename or "model-master.png",
+            model_reference.content_type or "",
+        )
 
     shoot_id = str(uuid.uuid4())
     detected_category = _detect_product_category(
@@ -1615,7 +1629,9 @@ async def create_shoot(
     )
     _shoots[shoot_id] = shoot
     _persist_shoot(shoot)
-    _tasks[shoot_id] = asyncio.create_task(_run_shoot(shoot, reference_files))
+    _tasks[shoot_id] = asyncio.create_task(
+        _run_shoot(shoot, reference_files, model_reference_file)
+    )
     return _serialize(shoot)
 
 
