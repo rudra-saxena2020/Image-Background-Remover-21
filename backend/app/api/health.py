@@ -50,7 +50,7 @@ def available_generation_engines(
         available.append(
             {
                 "id": "qwen-runpod",
-                "label": "Qwen Image Edit 2511 · RunPod",
+                "label": "RunPod image generator · Qwen Edit",
                 "provider": runpod_qwen.get("provider") or "RunPod",
                 "status": runpod_qwen,
             }
