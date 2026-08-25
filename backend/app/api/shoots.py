@@ -145,9 +145,10 @@ SOURCE_IMAGE_ENFORCEMENT = (
 
 MODEL_CONSISTENCY_AND_REALISM_LOCK = (
     "ABSOLUTE HUMAN MODEL CONSISTENCY AND REALISM LOCK — when a human model is included, treat the model as a "
-    "second fixed identity, completely separate from the product identity. A dedicated uploaded model reference, or "
-    "the first accepted model anchor from this campaign, is the absolute identity source. If multiple references show "
-    "the same approved model, use them together as evidence of one person. Preserve the same face, facial proportions, "
+    "second fixed identity, completely separate from the product identity. The dedicated uploaded Model Master is "
+    "always the absolute identity source and must be included on every human-model generation request. The first "
+    "accepted model frame may be supplied only as secondary consistency evidence, never as a replacement. Preserve "
+    "the same face, facial proportions, "
     "eyes, nose, lips, jawline, skin tone and texture, hair color, length, style and hairline, body proportions, height "
     "appearance, body shape, age appearance and distinguishing features in every frame. Never generate a similar-looking "
     "person, a new model, or a different ethnicity, facial structure, hairstyle, age appearance, body proportion or "
@@ -1059,22 +1060,23 @@ async def _run_shoot(
                     )
                     generation_references = reference_files
                     if human_scene_frame and model_reference is not None:
-                        model_identity_bytes = model_reference[0]
-                        model_identity_file = (
-                            model_anchor_path
-                            if model_anchor_path
-                            else model_reference[1]
-                        )
                         if model_anchor_path:
                             with open(model_anchor_path, "rb") as anchor_file:
-                                model_identity_bytes = anchor_file.read()
+                                model_anchor_bytes = anchor_file.read()
+                        else:
+                            model_anchor_bytes = None
                         generation_references = [
-                            (
-                                model_identity_bytes,
-                                "model-identity-anchor.png"
-                                if model_anchor_path
-                                else model_identity_file,
-                                "image/png",
+                            model_reference,
+                            *(
+                                [
+                                    (
+                                        model_anchor_bytes,
+                                        "model-identity-anchor.png",
+                                        "image/png",
+                                    )
+                                ]
+                                if model_anchor_bytes is not None
+                                else []
                             ),
                             reference_files[0],
                         ]
