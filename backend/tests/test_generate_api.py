@@ -144,6 +144,40 @@ class GenerateApiTests(unittest.TestCase):
             _validate_single_product_output(buffer.getvalue())
         self.assertIn("multi-view collage", str(raised.exception.detail))
 
+    def test_output_validator_rejects_obvious_product_color_swap(self):
+        from app.api.generate import _validate_product_identity
+
+        reference = Image.new("RGB", (512, 512), "white")
+        reference_draw = ImageDraw.Draw(reference)
+        reference_draw.ellipse((120, 120, 392, 420), fill=(235, 235, 230))
+        output = Image.new("RGB", (512, 512), "white")
+        output_draw = ImageDraw.Draw(output)
+        output_draw.ellipse((120, 120, 392, 420), fill=(20, 20, 20))
+        reference_buffer = BytesIO()
+        output_buffer = BytesIO()
+        reference.save(reference_buffer, format="PNG")
+        output.save(output_buffer, format="PNG")
+
+        with self.assertRaises(Exception) as raised:
+            _validate_product_identity(reference_buffer.getvalue(), output_buffer.getvalue())
+        self.assertIn("color or material", str(raised.exception.detail))
+
+    def test_output_validator_allows_reasonable_lighting_change(self):
+        from app.api.generate import _validate_product_identity
+
+        reference = Image.new("RGB", (512, 512), "white")
+        reference_draw = ImageDraw.Draw(reference)
+        reference_draw.ellipse((120, 120, 392, 420), fill=(235, 235, 230))
+        output = Image.new("RGB", (512, 512), "white")
+        output_draw = ImageDraw.Draw(output)
+        output_draw.ellipse((120, 120, 392, 420), fill=(180, 180, 175))
+        reference_buffer = BytesIO()
+        output_buffer = BytesIO()
+        reference.save(reference_buffer, format="PNG")
+        output.save(output_buffer, format="PNG")
+
+        _validate_product_identity(reference_buffer.getvalue(), output_buffer.getvalue())
+
     def test_generate_returns_502_on_runpod_http_error(self):
         exc = urllib.error.HTTPError(
             url="https://pod.example/generate",
