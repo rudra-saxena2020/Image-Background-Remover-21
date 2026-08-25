@@ -276,7 +276,7 @@ export function Home() {
     ...(!generation?.available_engines?.some((choice) => choice.id === "qwen-runpod")
       ? [{
           id: "qwen-runpod" as const,
-          label: "Qwen Image Edit · RunPod",
+          label: "RunPod image generator · Qwen Edit",
           ready: generation?.qwen_runpod?.ready === true,
         }]
       : []),
@@ -604,7 +604,7 @@ export function Home() {
                   className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-primary hover:underline"
                   data-testid="link-runpod-generator"
                 >
-                  <Zap className="h-3 w-3" /> Generate image
+                   <Zap className="h-3 w-3" /> RunPod generator
                 </Link>
               </div>
                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
