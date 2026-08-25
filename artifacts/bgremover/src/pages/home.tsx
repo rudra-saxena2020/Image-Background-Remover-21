@@ -273,6 +273,13 @@ export function Home() {
       label: choice.label,
       ready: choice.status?.ready === true,
     })),
+    ...(!generation?.available_engines?.some((choice) => choice.id === "qwen-runpod")
+      ? [{
+          id: "qwen-runpod" as const,
+          label: "Qwen Image Edit · RunPod",
+          ready: generation?.qwen_runpod?.ready === true,
+        }]
+      : []),
     { id: "cpu", label: "Reference-locked preview", ready: true },
   ];
   const backendAudit = [
@@ -296,7 +303,8 @@ export function Home() {
   };
 
   useEffect(() => {
-    if (!generationLoading && engine !== "cpu" && !generation?.available_engines?.some((choice) => choice.id === engine)) {
+    const hasPersistentProviderOption = engine === "qwen-runpod";
+    if (!generationLoading && engine !== "cpu" && !hasPersistentProviderOption && !generation?.available_engines?.some((choice) => choice.id === engine)) {
       setEngine("cpu");
     }
   }, [generationLoading, generation?.available_engines, engine]);
@@ -640,7 +648,7 @@ export function Home() {
                           Black Forest FLUX.2: {generation.black_forest_flux2.reason}
                         </p>
                       )}
-                      <p className="text-[10px] text-muted-foreground mt-2">{engine === "cpu" ? "Fast mode can create a source-preserved human preview when one uploaded reference already shows the model carrying the product. Campaign mode requires a verified Colab human-generation model." : engine === "flux2-pro" ? "Uploaded references are sent to the connected fal.ai FLUX.2 Pro image-editing API. Atelier does not mark output ready until the provider and quality gates pass." : engine === "bfl-flux2" ? "Uploaded references are sent as binary multipart files to Atelier, then forwarded server-side to Black Forest Labs. No provider upload URL, token, or MCP callback reaches the browser." : "Uploaded references and the verified provider model are sent only to the authenticated Colab worker; no unverified model fallback is used."}</p>
+                       <p className="text-[10px] text-muted-foreground mt-2">{engine === "cpu" ? "Fast mode can create a source-preserved human preview when one uploaded reference already shows the model carrying the product. Campaign mode requires a verified Colab human-generation model." : engine === "flux2-pro" ? "Uploaded references are sent to the connected fal.ai FLUX.2 Pro image-editing API. Atelier does not mark output ready until the provider and quality gates pass." : engine === "bfl-flux2" ? "Uploaded references are sent as binary multipart files to Atelier, then forwarded server-side to Black Forest Labs. No provider upload URL, token, or MCP callback reaches the browser." : engine === "qwen-runpod" ? "New Studio will send up to three uploaded references to the server-routed RunPod Qwen Image Edit endpoint. The option stays visible while RunPod is offline, but generation remains blocked until the endpoint is verified." : "Uploaded references and the verified provider model are sent only to the authenticated Colab worker; no unverified model fallback is used."}</p>
                <div className="mt-4 border border-border bg-background/60 p-3" data-testid="status-backend-audit">
                  <div className="flex items-center justify-between mb-3"><div className="font-mono text-[9px] uppercase tracking-[.16em] text-muted-foreground">Backend audit</div><button type="button" onClick={() => { setGenerationLoading(true); setGenerationRefreshKey((value) => value + 1); }} className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground" data-testid="button-refresh-generation-status"><RefreshCw className={cn("h-3 w-3", generationLoading && "animate-spin")} /> Refresh</button></div>
                  <div className="mt-2 space-y-2">
